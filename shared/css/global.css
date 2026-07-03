@@ -1,0 +1,371 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+
+/* ==========================================================================
+المتغيرات العامة للألوان والثيمات (CSS Variables)
+========================================================================== */
+:root {
+    /* === الخلفيات (Light Theme) === */
+    --bg-primary: #f8f9fa;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f3f5;
+    --bg-accent: #e9ecef;
+    
+    /* === النصوص (Light Theme) === */
+    --text-primary: #212529;
+    --text-secondary: #495057;
+    --text-muted: #868e96;
+    --text-light: #adb5bd;
+    
+    /* === ألوان العلامة التجارية === */
+    --brand-primary: #1a1a1a;
+    --brand-accent: #d4af37;
+    --brand-accent-light: #f4d03f;
+    --brand-accent-dark: #aa841b;
+    --brand-success: #2b8a3e;
+    --brand-danger: #c92a2a;
+    --brand-warning: #e8590c;
+    
+    /* === الحدود والظلال === */
+    --border-color: #dee2e6;
+    --border-gold: rgba(212, 175, 55, 0.3);
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 30px;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.12);
+    
+    /* === الانتقالات === */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* === المسافات === */
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-xxl: 48px;
+}
+
+/* === الثيم الداكن === */
+[data-theme="dark"] {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-tertiary: #2d2d2d;
+    --bg-accent: #3d3d3d;
+    
+    --text-primary: #f8f9fa;
+    --text-secondary: #ced4da;
+    --text-muted: #adb5bd;
+    --text-light: #868e96;
+    
+    --brand-primary: #ffffff;
+    --border-color: #495057;
+    --border-gold: rgba(212, 175, 55, 0.4);
+    
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+2. إعادة الضبط الأساسية (Reset & Base)
+========================================================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    direction: rtl;
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+/* ==========================================================================
+3. الطباعة (Typography)
+========================================================================== */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+h1 { font-size: 1.8rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.2rem; }
+h4 { font-size: 1.1rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.9rem; }
+
+a {
+    color: var(--brand-accent);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--brand-accent-light);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ==========================================================================
+4. الحاويات والتخطيط
+========================================================================== */
+.container {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 16px;
+    padding-left: 16px;
+}
+
+/* ==========================================================================
+5. البطاقات العامة
+========================================================================== */
+.card {
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================================
+6. الأزرار
+========================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    gap: 8px;
+    width: 100%;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: var(--brand-primary);
+    color: var(--bg-secondary);
+}
+
+.btn-accent {
+    background-color: var(--brand-accent);
+    color: #1a1a1a;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--brand-primary);
+    color: var(--brand-primary);
+}
+
+.btn-outline:hover {
+    background-color: var(--brand-primary);
+    color: var(--bg-secondary);
+}
+
+/* ==========================================================================
+7. الفلاتر والتصنيفات
+========================================================================== */
+.scroll-categories {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px 4px;
+    gap: 12px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.scroll-categories::-webkit-scrollbar {
+    display: none;
+}
+
+.category-chip {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    white-space: nowrap;
+}
+
+.category-chip:hover {
+    border-color: var(--brand-accent);
+    color: var(--brand-accent);
+}
+
+.category-chip.active {
+    background-color: var(--brand-accent);
+    color: #1a1a1a;
+    border-color: var(--brand-accent);
+    font-weight: 600;
+}
+
+/* ==========================================================================
+8. حقول الإدخال
+========================================================================== */
+.form-group {
+    margin-bottom: 16px;
+    display: block;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.form-input:focus {
+    border-color: var(--brand-accent);
+}
+
+/* ==========================================================================
+9. شريط التنقل السفلي
+========================================================================== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.bottom-nav-item.active {
+    color: var(--brand-accent);
+}
+
+/* ==========================================================================
+10. حالات التحميل والفارغة
+========================================================================== */
+.loading-skeleton {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.empty-state, .no-results, .error-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state i, .no-results i, .error-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    display: block;
+    color: var(--brand-accent);
+}
+
+/* ==========================================================================
+11. الاستجابة (Responsive)
+========================================================================== */
+@media (min-width: 576px) {
+    .container { max-width: 540px; }
+    .btn { width: auto; }
+}
+
+@media (min-width: 768px) {
+    .container { max-width: 720px; }
+    html { font-size: 16px; }
+}
+
+@media (min-width: 992px) {
+    .container { max-width: 960px; }
+}
+
+@media (min-width: 1200px) {
+    .container { max-width: 1140px; }
+}
+
+/* ==========================================================================
+12. أدوات مساعدة
+========================================================================== */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.text-gold { color: var(--brand-accent); }
+.mt-1 { margin-top: var(--spacing-xs); }
+.mt-2 { margin-top: var(--spacing-sm); }
+.mt-3 { margin-top: var(--spacing-md); }
+.mt-4 { margin-top: var(--spacing-lg); }
+.mb-1 { margin-bottom: var(--spacing-xs); }
+.mb-2 { margin-bottom: var(--spacing-sm); }
+.mb-3 { margin-bottom: var(--spacing-md); }
+.mb-4 { margin-bottom: var(--spacing-lg); }
+

@@ -1,0 +1,486 @@
+/* ==========================================================================
+BarberFlow Pro - About Page
+المسار: support/css/about.css
+========================================================================== */
+
+/* ============================================
+Hero Section
+============================================ */
+.about-hero {
+    position: relative;
+    padding: 100px 20px 60px;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
+    text-align: center;
+    overflow: hidden;
+}
+
+.about-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+    animation: rotate 30s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.about-hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid var(--border-gold);
+    border-radius: 50px;
+    color: var(--brand-accent);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.about-hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    font-weight: 800;
+}
+
+.about-hero h1 span {
+    color: var(--brand-accent);
+}
+
+.about-hero p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+/* ============================================
+Story Section
+============================================ */
+.story-section {
+    padding: 60px 20px;
+    background: var(--bg-primary);
+}
+
+.story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.story-content h2 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.story-content h2 i {
+    color: var(--brand-accent);
+}
+
+.story-content p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.highlight-gold {
+    color: var(--brand-accent);
+    font-weight: 700;
+}
+
+.story-visual {
+    position: relative;
+    height: 400px;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+}
+
+.story-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(0,0,0,0.2) 0%, transparent 50%);
+}
+
+.story-visual i {
+    font-size: 8rem;
+    color: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+/* ============================================
+Vision & Mission Cards
+============================================ */
+.vision-mission-section {
+    padding: 60px 20px;
+    background: var(--bg-tertiary);
+}
+
+.vm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.vm-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-lg);
+    padding: 35px;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.vm-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+}
+
+.vm-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--brand-accent);
+}
+
+.vm-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #000;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.vm-card h3 {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.vm-card p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+Values Section
+============================================ */
+.values-section {
+    padding: 60px 20px;
+    background: var(--bg-primary);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-header h2 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.section-header h2 i {
+    color: var(--brand-accent);
+}
+
+.section-header p {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.value-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    text-align: center;
+    transition: all var(--transition-normal);
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--brand-accent);
+    box-shadow: var(--shadow-md);
+}
+
+.value-icon {
+    width: 70px;
+    height: 70px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--brand-accent);
+    margin: 0 auto 20px;
+    transition: all var(--transition-normal);
+}
+
+.value-card:hover .value-icon {
+    background: var(--brand-accent);
+    color: #000;
+    transform: scale(1.1);
+}
+
+.value-card h4 {
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.value-card p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ============================================
+Statistics Section
+============================================ */
+.stats-section {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 20px;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--brand-accent);
+    margin-bottom: 10px;
+    font-family: 'Cairo', sans-serif;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* ============================================
+Security Section
+============================================ */
+.security-section {
+    padding: 60px 20px;
+    background: var(--bg-tertiary);
+    text-align: center;
+}
+
+.security-badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-lg);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.security-badge i {
+    font-size: 4rem;
+    color: var(--brand-accent);
+}
+
+.security-badge h3 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+}
+
+.security-badge p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+/* ============================================
+CTA Section
+============================================ */
+.cta-section {
+    padding: 60px 20px;
+    background: var(--bg-primary);
+    text-align: center;
+}
+
+.cta-box {
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    border-radius: var(--radius-lg);
+    padding: 50px 30px;
+    max-width: 800px;
+    margin: 0 auto;
+    color: #000;
+}
+
+.cta-box h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+.cta-box p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-btn {
+    padding: 14px 30px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all var(--transition-fast);
+    font-family: 'Cairo', sans-serif;
+}
+
+.cta-btn.primary {
+    background: #000;
+    color: var(--brand-accent);
+}
+
+.cta-btn.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.cta-btn.outline {
+    background: transparent;
+    color: #000;
+    border: 2px solid #000;
+}
+
+.cta-btn.outline:hover {
+    background: #000;
+    color: var(--brand-accent);
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 768px) {
+    .story-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .story-visual {
+        height: 300px;
+    }
+    
+    .story-visual i {
+        font-size: 5rem;
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+    }
+    
+    .cta-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+

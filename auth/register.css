@@ -1,0 +1,379 @@
+/* ==========================================================================
+BarberFlow Pro - صفحة إنشاء حساب جديد
+المسار: auth/register.css
+ملاحظة: هذا الملف مطابق لـ login.css مع إمكانية إضافة تنسيقات خاصة لاحقاً
+========================================================================== */
+
+/* ============================================
+صفحة المصادقة
+============================================ */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-page::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+    animation: rotate 30s linear infinite;
+    z-index: 0;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.auth-container {
+    background: var(--bg-secondary);
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-gold);
+    box-shadow: var(--shadow-xl);
+    position: relative;
+    z-index: 1;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    color: var(--brand-accent);
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.auth-logo i {
+    font-size: 1.8rem;
+}
+
+.auth-header h2 {
+    color: var(--text-primary);
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+}
+
+.auth-header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* ============================================
+حقول الإدخال
+============================================ */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: 'Cairo', sans-serif;
+    outline: none;
+    transition: all var(--transition-fast);
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: var(--brand-accent);
+    background: var(--bg-secondary);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+.input-group input::placeholder {
+    color: var(--text-muted);
+}
+
+.forgot-link {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: var(--brand-accent);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.forgot-link:hover {
+    color: var(--brand-accent-light);
+}
+
+/* ============================================
+الأزرار الرئيسية
+============================================ */
+.auth-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 1.05rem;
+    font-family: 'Cairo', sans-serif;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.auth-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+}
+
+.auth-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.auth-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ============================================
+زر Google
+============================================ */
+.google-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    transition: all var(--transition-fast);
+}
+
+.google-btn:hover:not(:disabled) {
+    background: var(--bg-accent);
+    border-color: var(--brand-accent);
+}
+
+.google-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+/* ============================================
+الفاصل
+============================================ */
+.divider {
+    text-align: center;
+    margin: 25px 0;
+    position: relative;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--border-color);
+    z-index: 1;
+}
+
+.divider span {
+    background: var(--bg-secondary);
+    padding: 0 15px;
+    position: relative;
+    z-index: 2;
+}
+
+/* ============================================
+روابط التذييل
+============================================ */
+.auth-footer {
+    text-align: center;
+    margin-top: 25px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.auth-footer a {
+    color: var(--brand-accent);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color var(--transition-fast);
+}
+
+.auth-footer a:hover {
+    color: var(--brand-accent-light);
+}
+
+.back-home-container {
+    margin-top: 20px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+}
+
+.outline-btn {
+    background: transparent;
+    border: 1px solid var(--brand-accent);
+    color: var(--brand-accent);
+    padding: 12px;
+    border-radius: var(--radius-md);
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    transition: all var(--transition-fast);
+}
+
+.outline-btn:hover {
+    background: var(--brand-accent);
+    color: #000;
+}
+
+/* ============================================
+خطوات التحقق OTP
+============================================ */
+.hidden-step {
+    display: none !important;
+}
+
+.show-step-animation {
+    display: block !important;
+    animation: slideDownFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideDownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.verify-icon {
+    text-align: center;
+    font-size: 4rem;
+    color: var(--brand-accent);
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+.step-desc {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+}
+
+.back-link-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    font-family: 'Cairo', sans-serif;
+    transition: color var(--transition-fast);
+}
+
+.back-link-btn:hover {
+    color: var(--brand-accent);
+}
+
+#timerContainer {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 15px;
+    text-align: center;
+}
+
+#timer {
+    color: var(--brand-accent);
+    font-weight: bold;
+}
+
+/* ============================================
+Recaptcha
+============================================ */
+#recaptcha-container {
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+}
+
+#recaptcha-container:empty {
+    display: none;
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 25px;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+    }
+}
+

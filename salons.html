@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اكتشف أفضل صالونات الحلاقة - BarberFlow</title>
+    <meta name="description" content="تصفح واكتشف أفضل صالونات الحلاقة والتجميل القريبة منك. احجز موعدك بنقرة واحدة مع BarberFlow.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="اكتشف أفضل صالونات الحلاقة - BarberFlow">
+    <meta property="og:description" content="ابحث عن أفضل صالونات الحلاقة والتجميل في المغرب.">
+    <meta property="og:type" content="website">
+    
+    <!-- CSS المركزي -->
+    <link rel="stylesheet" href="shared/css/global.css">
+    <link rel="stylesheet" href="shared/css/global-navbar.css">
+    <link rel="stylesheet" href="shared/css/notifications.css">
+    
+    <!-- تنسيقات البطاقات المشتركة -->
+    <link rel="stylesheet" href="shared/css/cards.css">
+    
+    <!-- CSS الخاص بالصفحة -->
+    <link rel="stylesheet" href="salons.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+</head>
+<body data-theme="dark">
+    <!-- حاوية الشريط العلوي -->
+    <div id="global-navbar-container"></div>
+
+    <!-- ============================================
+    قسم البحث والفلاتر
+    ============================================ -->
+    <section class="salons-header">
+        <div class="container">
+            <div class="salons-header__content">
+                <div class="salons-header__title">
+                    <i class="fas fa-cut"></i>
+                    <h1>اكتشف أفضل الصالونات</h1>
+                </div>
+                <p class="salons-header__subtitle">
+                    ابحث عن الصالون المثالي واحجز موعدك في دقائق
+                </p>
+                
+                <!-- شريط البحث -->
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="ابحث عن صالون بالاسم أو المدينة..."
+                    >
+                    <button class="search-clear-btn" id="searchClearBtn" style="display:none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم الفلاتر
+    ============================================ -->
+    <section class="filters-section">
+        <div class="container">
+            <div class="filter-chips" id="salonFilters">
+                <button class="filter-chip active" data-type="الكل">
+                    <i class="fas fa-th-large"></i>
+                    <span>الكل</span>
+                </button>
+                <button class="filter-chip" data-type="رجال">
+                    <i class="fas fa-male"></i>
+                    <span>صالونات رجالية</span>
+                </button>
+                <button class="filter-chip" data-type="نسائي">
+                    <i class="fas fa-female"></i>
+                    <span>صالونات نسائية</span>
+                </button>
+                <button class="filter-chip" data-type="يونيسكس">
+                    <i class="fas fa-users"></i>
+                    <span>صالونات مشتركة</span>
+                </button>
+                <button class="filter-chip" data-type="أطفال">
+                    <i class="fas fa-child"></i>
+                    <span>صالونات أطفال</span>
+                </button>
+                <button class="filter-chip" data-type="متنقل">
+                    <i class="fas fa-truck"></i>
+                    <span>صالونات متنقلة</span>
+                </button>
+                <button class="filter-chip" data-type="سبا">
+                    <i class="fas fa-spa"></i>
+                    <span>مراكز سبا</span>
+                </button>
+                <button class="filter-chip" data-type="المفضلة">
+                    <i class="fas fa-heart"></i>
+                    <span>المفضلة</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم عرض الصالونات
+    ============================================ -->
+    <section class="salons-main">
+        <div class="container">
+            <!-- إحصائيات سريعة -->
+            <div class="salons-stats" id="salonsStats">
+                <span class="salons-stats__count">
+                    <i class="fas fa-store"></i>
+                    <span id="salonsCount">0</span> صالون متاح
+                </span>
+                <span class="salons-stats__filter" id="activeFilter">
+                    <i class="fas fa-filter"></i>
+                    <span>الكل</span>
+                </span>
+            </div>
+
+            <!-- شبكة الصالونات -->
+            <div class="salons-grid" id="salonContainer">
+                <!-- سيتم ملؤها ديناميكياً -->
+            </div>
+
+            <!-- حالة التحميل -->
+            <div class="loading-state hidden" id="loadingState">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <p>جاري تحميل الصالونات...</p>
+            </div>
+
+            <!-- حالة عدم وجود نتائج -->
+            <div class="empty-state hidden" id="emptyState">
+                <i class="fas fa-search"></i>
+                <h3>لا توجد نتائج</h3>
+                <p>لم نعثر على صالونات تطابق بحثك. جرب تغيير الفلتر أو كلمة البحث.</p>
+            </div>
+
+            <!-- حالة الخطأ -->
+            <div class="error-state hidden" id="errorState">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>حدث خطأ</h3>
+                <p>تعذر تحميل الصالونات. يرجى التحقق من اتصالك بالإنترنت.</p>
+                <button class="retry-btn" id="retryBtn">
+                    <i class="fas fa-redo"></i>
+                    <span>إعادة المحاولة</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="shared/js/paths.js"></script>
+    <script type="module" src="shared/js/notifications.js"></script>
+    <script type="module" src="shared/js/global-navbar.js"></script>
+    <script type="module" src="salons.js"></script>
+</body>
+</html>
+

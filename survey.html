@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="شاركنا رأيك لتطوير BarberFlow Pro">
+    <title>استطلاع الرأي | BarberFlow Pro</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- التنسيقات -->
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="../shared/css/global-navbar.css">
+    <link rel="stylesheet" href="shared/css/notifications.css">
+    <link rel="stylesheet" href="survey.css">
+</head>
+<body data-theme="dark">
+    <!-- حاوية الإشعارات -->
+    <div id="notification-container"></div>
+
+    <!-- شريط التنقل -->
+    <header class="main-header">
+        <nav id="global-navbar-container"></nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="survey-hero">
+        <div class="container">
+            <h1>تطوير <span>تجربة المستخدم</span></h1>
+            <p>رأيك الإستراتيجي يرسم ملامح وتحديثات ومستقبل المنصة. نعدك بأن كل إجابة ستُدرس بعناية</p>
+        </div>
+    </section>
+
+    <!-- Survey Section -->
+    <section class="survey-section">
+        <div class="survey-container">
+            <!-- Progress Bar -->
+            <div class="survey-progress">
+                <div class="progress-info">
+                    <span>تقدم الاستطلاع</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- Survey Form -->
+            <form id="surveyForm">
+                <!-- Question 1: General Rating -->
+                <div class="question-card">
+                    <span class="question-number">1</span>
+                    <div class="question-text">
+                        كيف تقيم تجربتك العامة مع واجهات وسلاسة نظام الحجز؟
+                        <span class="required-mark">*</span>
+                    </div>
+                    <div class="rating-container" data-question="q1">
+                        <i class="fas fa-star rating-star" data-value="1"></i>
+                        <i class="fas fa-star rating-star" data-value="2"></i>
+                        <i class="fas fa-star rating-star" data-value="3"></i>
+                        <i class="fas fa-star rating-star" data-value="4"></i>
+                        <i class="fas fa-star rating-star" data-value="5"></i>
+                    </div>
+                    <input type="hidden" name="q1" id="q1" required>
+                </div>
+
+                <!-- Question 2: Speed Rating -->
+                <div class="question-card">
+                    <span class="question-number">2</span>
+                    <div class="question-text">
+                        ما مدى رضاك عن سرعة استجابة وسحب البيانات الفورية؟
+                        <span class="required-mark">*</span>
+                    </div>
+                    <div class="rating-container" data-question="q2">
+                        <i class="fas fa-star rating-star" data-value="1"></i>
+                        <i class="fas fa-star rating-star" data-value="2"></i>
+                        <i class="fas fa-star rating-star" data-value="3"></i>
+                        <i class="fas fa-star rating-star" data-value="4"></i>
+                        <i class="fas fa-star rating-star" data-value="5"></i>
+                    </div>
+                    <input type="hidden" name="q2" id="q2" required>
+                </div>
+
+                <!-- Question 3: Feature Priority -->
+                <div class="question-card">
+                    <span class="question-number">3</span>
+                    <div class="question-text">
+                        ما الميزة التي تود رؤيتها في التحديث القادم؟
+                        <span class="required-mark">*</span>
+                    </div>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="radio" name="q3" id="q3_1" value="booking_system" required>
+                            <label for="q3_1">نظام حجوزات أكثر تطوراً مع تذكيرات تلقائية</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="q3" id="q3_2" value="loyalty_program">
+                            <label for="q3_2">برنامج ولاء ونقاط مكافآت للزبائن الدائمين</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="q3" id="q3_3" value="ai_recommendations">
+                            <label for="q3_3">توصيات ذكية بالصالونات بناءً على تفضيلاتك</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="q3" id="q3_4" value="video_consultation">
+                            <label for="q3_4">استشارات فيديو مع الحلاقين قبل الحجز</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="q3" id="q3_5" value="other">
+                            <label for="q3_5">ميزة أخرى (اذكرها في السؤال الأخير)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 4: Usage Frequency -->
+                <div class="question-card">
+                    <span class="question-number">4</span>
+                    <div class="question-text">
+                        كم مرة تستخدم المنصة شهرياً؟
+                        <span class="required-mark">*</span>
+                    </div>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="radio" name="q4" id="q4_1" value="daily" required>
+                            <label for="q4_1">يومياً</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="q4" id="q4_2" value="weekly">
+                            <label for="q4_2">أسبوعياً</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="q4" id="q4_3" value="monthly">
+                            <label for="q4_3">شهرياً</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="q4" id="q4_4" value="rarely">
+                            <label for="q4_4">نادراً</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 5: Improvements -->
+                <div class="question-card">
+                    <span class="question-number">5</span>
+                    <div class="question-text">
+                        ما الذي يمكن تحسينه في المنصة؟ (اختر كل ما ينطبق)
+                    </div>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="checkbox" name="q5" id="q5_1" value="ui_design">
+                            <label for="q5_1">تصميم الواجهة وسهولة الاستخدام</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="q5" id="q5_2" value="speed">
+                            <label for="q5_2">سرعة تحميل الصفحات</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="q5" id="q5_3" value="mobile_experience">
+                            <label for="q5_3">تجربة الهاتف المحمول</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="q5" id="q5_4" value="customer_support">
+                            <label for="q5_4">جودة الدعم الفني</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="q5" id="q5_5" value="pricing">
+                            <label for="q5_5">الأسعار والاشتراكات</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 6: Open Feedback -->
+                <div class="question-card">
+                    <span class="question-number">6</span>
+                    <div class="question-text">
+                        ميزة إضافية تود رؤيتها أو ملاحظات أخرى؟
+                    </div>
+                    <textarea name="q6" id="q6" class="survey-textarea" placeholder="شاركنا أفكارك واقتراحاتك..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="survey-submit" id="submitSurveyBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>إرسال وتأكيد البيانات</span>
+                </button>
+            </form>
+
+            <!-- Success Message -->
+            <div class="survey-success" id="surveySuccess">
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h2>شكراً لمشاركتك القيمة! 🎉</h2>
+                <p>تم تسجيل إجاباتك بنجاح. سنأخذ رأيك بعين الاعتبار في التطويرات القادمة. مساهمتك تساعدنا في بناء منصة أفضل للجميع.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- السكربتات -->
+    <script type="module" src="../shared/js/global-navbar.js"></script>
+    <script type="module" src="survey.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,711 @@
+/* ==========================================================================
+BarberFlow Pro - مكونات البطاقات
+المسار: shared/components/css/cards.css
+========================================================================== */
+
+/* ============================================
+بطاقة الصالون
+============================================ */
+.salon-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.salon-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--brand-accent);
+}
+
+.salon-card__image-wrapper {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.salon-card__placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #fff;
+}
+
+.salon-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.salon-card__badges {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.salon-card__status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+}
+
+.salon-card__status[data-status="open"] {
+    background: rgba(43, 138, 62, 0.9);
+    color: #fff;
+}
+
+.salon-card__status[data-status="closed"] {
+    background: rgba(201, 42, 42, 0.9);
+    color: #fff;
+}
+
+.salon-card__featured {
+    padding: 6px 12px;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    align-items: center;
+    gap: 5px;
+}
+
+.salon-card__favorite {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.salon-card__favorite:hover {
+    transform: scale(1.1);
+}
+
+.salon-card__favorite.active i {
+    color: var(--brand-danger);
+}
+
+.salon-card__content {
+    padding: 20px;
+}
+
+.salon-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 10px;
+}
+
+.salon-card__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    flex: 1;
+}
+
+.salon-card__rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--brand-accent);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.salon-card__rating-count {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.salon-card__info {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.salon-card__location,
+.salon-card__services {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.salon-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.salon-card__price-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+
+.salon-card__price-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--brand-accent);
+}
+
+.salon-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--brand-accent);
+    color: #000;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.salon-card__cta:hover {
+    background: var(--brand-accent-dark);
+    gap: 12px;
+}
+
+/* ============================================
+بطاقة المنتج/المتجر
+============================================ */
+.store-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.store-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--brand-accent);
+}
+
+.store-card__image-wrapper {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.store-card__placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: var(--text-muted);
+}
+
+.store-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.store-card__badges {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.store-card__discount {
+    padding: 6px 12px;
+    background: var(--brand-danger);
+    color: #fff;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.store-card__new {
+    padding: 6px 12px;
+    background: var(--brand-success);
+    color: #fff;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.store-card__quick-view {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.store-card:hover .store-card__quick-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.store-card__content {
+    padding: 20px;
+}
+
+.store-card__category {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--brand-accent);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.store-card__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+}
+
+.store-card__rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.store-card__stars {
+    display: flex;
+    gap: 2px;
+    color: var(--brand-accent);
+    font-size: 0.9rem;
+}
+
+.store-card__rating-value {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.store-card__price-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.store-card__price-current {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--brand-accent);
+}
+
+.store-card__price-old {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+    margin-right: 8px;
+}
+
+.store-card__add-cart {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--brand-accent);
+    border: none;
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.store-card__add-cart:hover {
+    transform: scale(1.1);
+    background: var(--brand-accent-dark);
+}
+
+.store-card__cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.store-card__cta:hover {
+    background: var(--brand-accent);
+    color: #000;
+}
+
+/* ============================================
+بطاقة العرض
+============================================ */
+.offer-card {
+    position: relative;
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-gold);
+    padding: 30px;
+    transition: all 0.3s ease;
+}
+
+.offer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.2);
+}
+
+.offer-card__background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.offer-card__pattern {
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+}
+
+.offer-card__content {
+    position: relative;
+    z-index: 1;
+}
+
+.offer-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.offer-card__discount-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    border-radius: var(--radius-md);
+    color: #000;
+}
+
+.offer-card__discount-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.offer-card__discount-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.offer-card__icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--brand-accent);
+}
+
+.offer-card__title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+}
+
+.offer-card__description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+}
+
+.offer-card__timer {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(212, 175, 55, 0.05);
+    border-radius: var(--radius-md);
+}
+
+.offer-card__timer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.offer-card__timer-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--brand-accent);
+}
+
+.offer-card__timer-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.offer-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--brand-accent);
+    color: #000;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.offer-card__cta:hover {
+    background: var(--brand-accent-dark);
+    gap: 12px;
+}
+
+/* ============================================
+بطاقة الكونسيرج
+============================================ */
+.concierge-card {
+    position: relative;
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-gold);
+    padding: 30px;
+    transition: all 0.3s ease;
+}
+
+.concierge-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.2);
+}
+
+.concierge-card__badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.concierge-card__icon-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.concierge-card__icon {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #000;
+    position: relative;
+    z-index: 1;
+}
+
+.concierge-card__icon-glow {
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.3) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.concierge-card__title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+}
+
+.concierge-card__description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+}
+
+.concierge-card__features {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.concierge-card__feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.concierge-card__feature i {
+    color: var(--brand-success);
+}
+
+.concierge-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.concierge-card__price-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+
+.concierge-card__price-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--brand-accent);
+}
+
+.concierge-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--brand-accent);
+    color: #000;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.concierge-card__cta:hover {
+    background: var(--brand-accent-dark);
+    gap: 12px;
+}
+
+/* ============================================
+تنبيه إضافة للسلة
+============================================ */
+.add-to-cart-feedback {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--brand-success);
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 10000;
+}
+
+.add-to-cart-feedback.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 768px) {
+    .salon-card__image-wrapper,
+    .store-card__image-wrapper {
+        height: 180px;
+    }
+    
+    .offer-card,
+    .concierge-card {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .salon-card__footer,
+    .concierge-card__footer {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .salon-card__cta,
+    .concierge-card__cta {
+        justify-content: center;
+    }
+}
+

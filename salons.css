@@ -1,0 +1,339 @@
+/* ==========================================================================
+BarberFlow Pro - صفحة استكشاف الصالونات
+المسار: salons.css
+ملاحظة: تنسيقات البطاقات موجودة في shared/components/css/cards.css
+========================================================================== */
+
+/* ============================================
+قسم الهيدر
+============================================ */
+.salons-header {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    padding: 40px 0 30px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.salons-header__content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.salons-header__title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.salons-header__title i {
+    font-size: 2rem;
+    color: var(--brand-accent);
+}
+
+.salons-header__title h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.salons-header__subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 25px;
+}
+
+/* ============================================
+شريط البحث
+============================================ */
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 12px 18px;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-fast);
+}
+
+.search-box:focus-within {
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+.search-icon {
+    color: var(--text-muted);
+    margin-left: 12px;
+    font-size: 1.1rem;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-family: 'Cairo', sans-serif;
+    background: transparent;
+    color: var(--text-primary);
+}
+
+.search-box input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-clear-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.search-clear-btn:hover {
+    background: var(--brand-danger);
+    color: #fff;
+}
+
+/* ============================================
+قسم الفلاتر
+============================================ */
+.filters-section {
+    background: var(--bg-primary);
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 70px;
+    z-index: 100;
+}
+
+.filter-chips {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 5px 4px;
+    scrollbar-width: none;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+}
+
+.filter-chips::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    color: var(--text-secondary);
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.filter-chip:hover {
+    border-color: var(--brand-accent);
+    color: var(--brand-accent);
+    transform: translateY(-2px);
+}
+
+.filter-chip.active {
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+    border-color: var(--brand-accent);
+}
+
+.filter-chip i {
+    font-size: 0.9rem;
+}
+
+/* ============================================
+القسم الرئيسي
+============================================ */
+.salons-main {
+    padding: 30px 0 60px;
+    background: var(--bg-primary);
+    min-height: 60vh;
+}
+
+/* ============================================
+إحصائيات سريعة
+============================================ */
+.salons-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 12px 18px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.salons-stats__count,
+.salons-stats__filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.salons-stats__count i,
+.salons-stats__filter i {
+    color: var(--brand-accent);
+}
+
+.salons-stats__count span {
+    color: var(--brand-accent);
+    font-weight: 700;
+}
+
+/* ============================================
+شبكة الصالونات
+============================================ */
+.salons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+/* ============================================
+حالات التحميل والفارغة والخطأ
+============================================ */
+.loading-state,
+.empty-state,
+.error-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    grid-column: 1 / -1;
+}
+
+.loading-state i,
+.empty-state i,
+.error-state i {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: block;
+    color: var(--brand-accent);
+}
+
+.loading-state p,
+.empty-state p,
+.error-state p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.loading-state h3,
+.empty-state h3,
+.error-state h3 {
+    color: var(--text-primary);
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+/* سبينر التحميل */
+.loading-spinner {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* زر إعادة المحاولة */
+.retry-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--brand-accent);
+    color: #000;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-top: 15px;
+}
+
+.retry-btn:hover {
+    background: var(--brand-accent-light);
+    transform: translateY(-2px);
+}
+
+/* إخفاء العناصر */
+.hidden {
+    display: none !important;
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 768px) {
+    .salons-header {
+        padding: 30px 0 20px;
+    }
+    
+    .salons-header__title i {
+        font-size: 1.5rem;
+    }
+    
+    .filters-section {
+        top: 60px;
+    }
+    
+    .filter-chip {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+    
+    .salons-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .salons-stats {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .salons-header__title h1 {
+        font-size: 1.5rem;
+    }
+    
+    .search-box {
+        padding: 10px 14px;
+    }
+    
+    .search-box input {
+        font-size: 0.9rem;
+    }
+}
+

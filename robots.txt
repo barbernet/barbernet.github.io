@@ -1,0 +1,51 @@
+# ============================================
+# BarberFlow Pro - Robots.txt
+# ============================================
+
+# السماح لجميع محركات البحث
+User-agent: *
+Allow: /
+
+# منع فهرسة صفحات المصادقة والإعدادات
+Disallow: /auth/
+Disallow: /onboarding/
+Disallow: /dashboard/
+Disallow: /profile/
+Disallow: /shared/
+Disallow: /middleware/
+Disallow: /core/
+
+# منع فهرسة الملفات الحساسة
+Disallow: /.git/
+Disallow: /.htaccess
+Disallow: /firebase-config.js
+
+# السماح بفهرسة الصفحات العامة
+Allow: /index.html
+Allow: /salons.html
+Allow: /booking.html
+Allow: /shop.html
+Allow: /product.html
+Allow: /pro.html
+Allow: /about.html
+Allow: /contact.html
+Allow: /survey.html
+
+# قواعد خاصة بـ Google
+User-agent: Googlebot
+Allow: /
+Disallow: /auth/
+Disallow: /dashboard/
+
+# قواعد خاصة بـ Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /auth/
+Disallow: /dashboard/
+
+# موقع خريطة الموقع
+Sitemap: https://barberflow.com/sitemap.xml
+
+# معلومات الاتصال
+# Email: contact@barberflow.com
+

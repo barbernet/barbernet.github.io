@@ -1,0 +1,261 @@
+<!-- ============================================
+شريط التنقل العلوي (Header Navbar)
+============================================ -->
+<header class="global-navbar">
+    <div class="navbar-content">
+        <!-- الشعار -->
+        <a href="#" class="navbar-brand" data-path="INDEX">
+            <i class="fas fa-cut"></i>
+            <strong>BarberFlow</strong>
+        </a>
+
+        <!-- روابط التنقل الرئيسية -->
+        <ul class="navbar-links">
+            <li>
+                <a href="#" class="nav-link" data-page="home" data-path="INDEX">
+                    <i class="fas fa-home"></i>
+                    <span>الرئيسية</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link" data-page="salons" data-path="SALONS">
+                    <i class="fas fa-cut"></i>
+                    <span>الصالونات</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link" data-page="shop" data-path="SHOP">
+                    <i class="fas fa-store"></i>
+                    <span>المتجر</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link" data-page="pro" data-path="PRO">
+                    <i class="fas fa-star"></i>
+                    <span>Pro</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link" data-page="about" data-path="ABOUT">
+                    <i class="fas fa-info-circle"></i>
+                    <span>من نحن</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- أزرار الإجراءات -->
+        <div class="navbar-actions">
+            <!-- زر السلة -->
+            <a href="#" class="action-btn" aria-label="سلة التسوق" data-path="SHOP">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-badge" id="cartBadge">0</span>
+            </a>
+
+            <!-- زر المستخدم -->
+            <a href="#" id="userBtn" class="action-btn" aria-label="تسجيل الدخول" data-path="LOGIN">
+                <i class="fas fa-user"></i>
+            </a>
+
+            <!-- زر الإعدادات مع القائمة المنسدلة -->
+            <div class="settings-dropdown">
+                <button id="settingsBtn" class="action-btn" aria-label="الإعدادات">
+                    <i class="fas fa-cog"></i>
+                </button>
+                
+                <div class="dropdown-menu" id="settingsDropdown">
+                    <div class="dropdown-header">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>الإعدادات</span>
+                    </div>
+                    
+                    <div class="dropdown-divider"></div>
+                    
+                    <!-- تغيير الثيم -->
+                    <button class="dropdown-item" id="themeToggleBtn">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                        <span id="themeText">الوضع الداكن</span>
+                    </button>
+                    
+                    <!-- اللغة -->
+                    <div class="dropdown-item has-submenu">
+                        <i class="fas fa-globe"></i>
+                        <span>اللغة</span>
+                        <i class="fas fa-chevron-left submenu-arrow"></i>
+                        
+                        <div class="submenu">
+                            <button class="submenu-item active" data-lang="ar">
+                                <span>العربية</span>
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="submenu-item" data-lang="fr">
+                                <span>Français</span>
+                            </button>
+                            <button class="submenu-item" data-lang="en">
+                                <span>English</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- الإشعارات -->
+                    <button class="dropdown-item" id="notificationsToggleBtn">
+                        <i class="fas fa-bell" id="notifIcon"></i>
+                        <span id="notifText">إيقاف الإشعارات</span>
+                    </button>
+                    
+                    <!-- الخصوصية -->
+                    <button class="dropdown-item" id="privacyBtn">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>الخصوصية</span>
+                    </button>
+                    
+                    <div class="dropdown-divider"></div>
+                    
+                    <!-- المساعدة -->
+                    <button class="dropdown-item" id="helpBtn">
+                        <i class="fas fa-question-circle"></i>
+                        <span>المساعدة والدعم</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- زر القائمة الجانبية -->
+            <button id="navMenuBtn" class="action-btn" aria-label="القائمة">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- ============================================
+القائمة الجانبية (Side Drawer)
+============================================ -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<aside class="side-drawer" id="sideDrawer">
+    <!-- رأس القائمة -->
+    <div class="drawer-header">
+        <div class="drawer-brand">
+            <i class="fas fa-cut"></i>
+            <span>BarberFlow</span>
+        </div>
+        <button id="closeMenuBtn" class="close-btn" aria-label="إغلاق القائمة">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- معلومات المستخدم -->
+    <div class="drawer-user-info" id="drawerUserInfo" style="display: none;">
+        <div class="user-avatar">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-details">
+            <h4 id="drawerUserName">مرحباً بك</h4>
+            <span class="user-role" id="drawerUserRole">زبون</span>
+        </div>
+    </div>
+
+    <!-- محتوى القائمة -->
+    <div class="drawer-content">
+        <!-- التنقل الرئيسي -->
+        <div class="drawer-section">
+            <h3 class="drawer-section-title">التنقل الرئيسي</h3>
+            <ul class="drawer-links">
+                <li>
+                    <a href="#" class="drawer-link" data-page="home" data-path="INDEX">
+                        <i class="fas fa-home"></i>
+                        <span>الرئيسية</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="drawer-link" data-page="salons" data-path="SALONS">
+                        <i class="fas fa-cut"></i>
+                        <span>الصالونات</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="drawer-link" data-page="shop" data-path="SHOP">
+                        <i class="fas fa-store"></i>
+                        <span>المتجر</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="drawer-link" data-page="pro" data-path="PRO">
+                        <i class="fas fa-star"></i>
+                        <span>BarberFlow Pro</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- الدعم والمعلومات -->
+        <div class="drawer-section">
+            <h3 class="drawer-section-title">الدعم والمعلومات</h3>
+            <ul class="drawer-links">
+                <li>
+                    <a href="#" class="drawer-link" data-path="ABOUT">
+                        <i class="fas fa-info-circle"></i>
+                        <span>من نحن</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="drawer-link" data-path="CONTACT">
+                        <i class="fas fa-envelope"></i>
+                        <span>اتصل بنا</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="drawer-link" data-path="SURVEY">
+                        <i class="fas fa-poll"></i>
+                        <span>استطلاع الرأي</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- الحساب -->
+        <div class="drawer-section">
+            <h3 class="drawer-section-title">الحساب</h3>
+            <ul class="drawer-links">
+                <li>
+                    <a href="#" class="drawer-link" id="drawerProfileLink" data-path="PROFILE_CUSTOMER">
+                        <i class="fas fa-user"></i>
+                        <span>ملفي الشخصي</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="drawer-link" id="drawerDashboardLink" style="display: none;" data-path="DASHBOARD">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="drawer-link" id="drawerSettingsLink" style="display: none;" data-path="DASHBOARD_SETTINGS">
+                        <i class="fas fa-cog"></i>
+                        <span>إعدادات الحساب</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="drawer-link" id="drawerLoginLink" data-path="LOGIN">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>تسجيل الدخول</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="drawer-link" id="drawerLogoutLink" style="display: none;">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>تسجيل الخروج</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- تذييل القائمة -->
+    <div class="drawer-footer">
+        <button id="drawerThemeToggle" class="theme-toggle-btn">
+            <i class="fas fa-moon"></i>
+            <span id="drawerThemeText">الوضع الداكن</span>
+        </button>
+    </div>
+</aside>
+

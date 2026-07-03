@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+    <!-- الصفحة الرئيسية -->
+    <url>
+        <loc>https://barberflow.com/</loc>
+        <lastmod>2026-07-03</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- دليل الصالونات -->
+    <url>
+        <loc>https://barberflow.com/salons.html</loc>
+        <lastmod>2026-07-03</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- صفحة الحجز -->
+    <url>
+        <loc>https://barberflow.com/booking.html</loc>
+        <lastmod>2026-07-03</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- المتجر -->
+    <url>
+        <loc>https://barberflow.com/shop.html</loc>
+        <lastmod>2026-07-03</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- الباقات المميزة -->
+    <url>
+        <loc>https://barberflow.com/pro.html</loc>
+        <lastmod>2026-07-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- من نحن -->
+    <url>
+        <loc>https://barberflow.com/about.html</loc>
+        <lastmod>2026-07-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- اتصل بنا -->
+    <url>
+        <loc>https://barberflow.com/contact.html</loc>
+        <lastmod>2026-07-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- استطلاع الرأي -->
+    <url>
+        <loc>https://barberflow.com/survey.html</loc>
+        <lastmod>2026-07-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <!-- تسجيل الدخول -->
+    <url>
+        <loc>https://barberflow.com/auth/login.html</loc>
+        <lastmod>2026-07-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.4</priority>
+    </url>
+
+    <!-- إنشاء حساب -->
+    <url>
+        <loc>https://barberflow.com/auth/register.html</loc>
+        <lastmod>2026-07-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.4</priority>
+    </url>
+
+</urlset>
+

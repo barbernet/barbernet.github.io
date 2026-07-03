@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarberFlow Pro - منصة حجز الصالونات الأولى في المغرب</title>
+    <meta name="description" content="احجز موعدك في أفضل صالونات الحلاقة والتجميل بالمغرب بسهولة وسرعة. منصة BarberFlow تربطك بأمهر الحلاقين.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="BarberFlow Pro - منصة حجز الصالونات الأولى في المغرب">
+    <meta property="og:description" content="احجز موعدك في أفضل صالونات الحلاقة والتجميل بالمغرب بسهولة وسرعة.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://barberflow.com/">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="shared/css/global.css">
+    <link rel="stylesheet" href="shared/css/global-navbar.css">
+    <link rel="stylesheet" href="shared/css/notifications.css">
+    <link rel="stylesheet" href="index.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+</head>
+<body data-theme="dark">
+    <!-- حاوية الشريط العلوي -->
+    <div id="global-navbar-container"></div>
+
+    <!-- ============================================
+    قسم البطل (Hero Section)
+    ============================================ -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-pattern"></div>
+        
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-star"></i>
+                <span>المنصة الأولى في المغرب</span>
+            </div>
+            
+            <h1 class="hero-title">
+                <span class="gold-text">BarberFlow Pro</span>
+                <br>
+                منصة حجز الصالونات
+            </h1>
+            
+            <p class="hero-subtitle">
+                احجز صالونك المفضل واشترِ منتجات العناية بأعلى جودة
+                <br>
+                في مكان واحد وبضغطة زر
+            </p>
+            
+            <!-- شريط البحث -->
+            <div class="hero-search">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="ابحث عن صالون، خدمة، أو منتج..." id="heroSearchInput">
+                    <button class="search-btn" id="heroSearchBtn">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+            
+            <!-- الإحصائيات -->
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="statSalons">0</div>
+                    <div class="stat-label">صالون موثق</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statStores">0</div>
+                    <div class="stat-label">متجر احترافي</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statServices">0</div>
+                    <div class="stat-label">خدمة متاحة</div>
+                </div>
+            </div>
+            
+            <!-- أزرار CTA -->
+            <div class="hero-cta">
+                <a href="salons.html" class="cta-btn primary">
+                    <i class="fas fa-cut"></i>
+                    <span>استكشف الصالونات</span>
+                </a>
+                <a href="shop.html" class="cta-btn secondary">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>تصفح المتجر</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- الموجة السفلية -->
+        <div class="hero-wave">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,179.21,34.77,239-16.08V120H0V95.8C59.71,118.11,130.83,141.14,321.39,56.44Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم الفئات (Categories)
+    ============================================ -->
+    <section class="categories-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title">
+                        <i class="fas fa-th-large"></i>
+                        <span>استكشف حسب الفئة</span>
+                    </h2>
+                </div>
+                <p class="section-subtitle">اختر الفئة المناسبة لاحتياجاتك</p>
+            </div>
+            
+            <div class="categories-grid">
+                <a href="salons.html?type=men" class="category-card">
+                    <div class="category-icon men">
+                        <i class="fas fa-male"></i>
+                    </div>
+                    <h3>صالونات رجالية</h3>
+                    <span class="category-count"><span id="countMen">0</span> صالون</span>
+                </a>
+                
+                <a href="salons.html?type=women" class="category-card">
+                    <div class="category-icon women">
+                        <i class="fas fa-female"></i>
+                    </div>
+                    <h3>صالونات نسائية</h3>
+                    <span class="category-count"><span id="countWomen">0</span> صالون</span>
+                </a>
+                
+                <a href="salons.html?type=kids" class="category-card">
+                    <div class="category-icon kids">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <h3>صالونات أطفال</h3>
+                    <span class="category-count"><span id="countKids">0</span> صالون</span>
+                </a>
+                
+                <a href="shop.html?category=cosmetics" class="category-card">
+                    <div class="category-icon cosmetics">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3>مستحضرات تجميل</h3>
+                    <span class="category-count">متعدد</span>
+                </a>
+                
+                <a href="shop.html?category=tools" class="category-card">
+                    <div class="category-icon tools">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>أدوات ومعدات</h3>
+                    <span class="category-count">متعدد</span>
+                </a>
+                
+                <a href="pro.html" class="category-card">
+                    <div class="category-icon home-service">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3>خدمة منزلية</h3>
+                    <span class="category-count">جديد</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم العروض (Offers)
+    ============================================ -->
+    <section class="offers-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title">
+                        <i class="fas fa-gift"></i>
+                        <span>العروض والهدايا الحصرية</span>
+                    </h2>
+                    <span class="offers-badge">محدودة</span>
+                </div>
+                <p class="section-subtitle">استفد من أقوى العروض قبل انتهائها</p>
+            </div>
+            
+            <div class="offers-grid" id="offersGrid">
+                <!-- سيتم ملؤها ديناميكياً -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم أبرز الصالونات
+    ============================================ -->
+    <section class="salons-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title">
+                        <i class="fas fa-cut"></i>
+                        <span>أبرز الصالونات المتاحة</span>
+                    </h2>
+                </div>
+                <a href="salons.html" class="view-all-link">
+                    <span>عرض الكل</span>
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            
+            <!-- فلاتر -->
+            <div class="filter-chips" id="salonFilters">
+                <button class="filter-chip active" data-filter="all">الكل</button>
+                <button class="filter-chip" data-filter="men">رجال</button>
+                <button class="filter-chip" data-filter="women">نساء</button>
+                <button class="filter-chip" data-filter="kids">أطفال</button>
+                <button class="filter-chip" data-filter="mixed">مختلط</button>
+            </div>
+            
+            <div class="salons-grid" id="salonsGrid">
+                <!-- سيتم ملؤها ديناميكياً -->
+                <div class="empty-state">
+                    <i class="fas fa-cut"></i>
+                    <h3>لا توجد صالونات متاحة حالياً</h3>
+                    <p>يرجى التحقق لاحقاً أو تغيير الفلتر</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم أبرز المتاجر
+    ============================================ -->
+    <section class="stores-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title">
+                        <i class="fas fa-store"></i>
+                        <span>أبرز المتاجر والمنتجات</span>
+                    </h2>
+                </div>
+                <a href="shop.html" class="view-all-link">
+                    <span>عرض المتجر بالكامل</span>
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            
+            <!-- فلاتر -->
+            <div class="filter-chips" id="storeFilters">
+                <button class="filter-chip active" data-filter="all">الكل</button>
+                <button class="filter-chip" data-filter="cosmetics">مستحضرات</button>
+                <button class="filter-chip" data-filter="tools">أدوات</button>
+                <button class="filter-chip" data-filter="hair">العناية بالشعر</button>
+                <button class="filter-chip" data-filter="beard">العناية باللحية</button>
+            </div>
+            
+            <div class="stores-grid" id="storesGrid">
+                <!-- سيتم ملؤها ديناميكياً -->
+                <div class="empty-state">
+                    <i class="fas fa-store"></i>
+                    <h3>لا توجد منتجات متاحة حالياً</h3>
+                    <p>يرجى التحقق لاحقاً أو تغيير الفلتر</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم الباقات المميزة (Pro)
+    ============================================ -->
+    <section class="pro-section">
+        <div class="container">
+            <div class="section-header light">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title">
+                        <i class="fas fa-crown"></i>
+                        <span>انضم إلى برنامج BarberFlow Pro</span>
+                    </h2>
+                    <span class="pro-badge">حصري</span>
+                </div>
+                <p class="section-subtitle">مزايا حصرية لأصحاب الصالونات والمحترفين</p>
+            </div>
+            
+            <div class="pro-features-grid">
+                <div class="pro-feature-card">
+                    <div class="pro-feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>إحصائيات متقدمة</h3>
+                    <p>تحليلات مفصلة لأداء صالونك وعملائك</p>
+                </div>
+                
+                <div class="pro-feature-card">
+                    <div class="pro-feature-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3>ترويج مميز</h3>
+                    <p>ظهور صالونك في النتائج الأولى</p>
+                </div>
+                
+                <div class="pro-feature-card">
+                    <div class="pro-feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>حجوزات غير محدودة</h3>
+                    <p>بدون حدود على عدد الحجوزات</p>
+                </div>
+                
+                <div class="pro-feature-card">
+                    <div class="pro-feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>دعم فني 24/7</h3>
+                    <p>فريق دعم مخصص على مدار الساعة</p>
+                </div>
+            </div>
+            
+            <div class="pro-cta">
+                <a href="pro.html" class="cta-btn primary">
+                    <i class="fas fa-crown"></i>
+                    <span>اكتشف باقات Pro</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم انضم إلينا (Join Us)
+    ============================================ -->
+    <section class="join-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i>
+                    <span>انضم إلى آلاف المحترفين</span>
+                </h2>
+                <p class="section-subtitle">سواء كنت صاحب صالون، متجر، أو زبون، BarberFlow Pro هو مكانك</p>
+            </div>
+            
+            <div class="join-grid">
+                <a href="auth/register.html?role=salon" class="join-card">
+                    <div class="join-icon">
+                        <i class="fas fa-cut"></i>
+                    </div>
+                    <h3>سجل كصالون</h3>
+                    <p>أدر مواعيدك واحصل على عملاء جدد</p>
+                </a>
+                
+                <a href="auth/register.html?role=store" class="join-card">
+                    <div class="join-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h3>سجل كمتجر</h3>
+                    <p>اعرض منتجاتك لآلاف العملاء</p>
+                </a>
+                
+                <a href="auth/register.html?role=customer" class="join-card">
+                    <div class="join-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>سجل كزبون</h3>
+                    <p>احجز بسهولة واحصل على عروض حصرية</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    التذييل (Footer)
+    ============================================ -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- عن BarberFlow -->
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fas fa-cut"></i>
+                        <span>BarberFlow Pro</span>
+                    </div>
+                    <p class="footer-desc">
+                        المنصة المغربية الأولى التي تجمع بين حجز الصالونات وشراء منتجات العناية في مكان واحد.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <!-- روابط سريعة -->
+                <div class="footer-col">
+                    <h4>روابط سريعة</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="salons.html">الصالونات</a></li>
+                        <li><a href="shop.html">المتجر</a></li>
+                        <li><a href="pro.html">باقات Pro</a></li>
+                    </ul>
+                </div>
+                
+                <!-- الدعم -->
+                <div class="footer-col">
+                    <h4>الدعم</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">من نحن</a></li>
+                        <li><a href="contact.html">اتصل بنا</a></li>
+                        <li><a href="survey.html">استطلاع الرأي</a></li>
+                        <li><a href="pro.html">الأسئلة الشائعة</a></li>
+                    </ul>
+                </div>
+                
+                <!-- تواصل معنا -->
+                <div class="footer-col">
+                    <h4>تواصل معنا</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>contact@barberflow.ma</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span dir="ltr">+212 5XX-XXXXXX</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>المغرب</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 BarberFlow Pro. جميع الحقوق محفوظة.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">سياسة الخصوصية</a>
+                    <a href="#">شروط الاستخدام</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="shared/js/paths.js"></script>
+    <script type="module" src="shared/js/notifications.js"></script>
+    <script type="module" src="shared/js/global-navbar.js"></script>
+    <script type="module" src="index.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="تواصل مع فريق دعم BarberFlow Pro">
+    <title>اتصل بنا | BarberFlow Pro</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- التنسيقات -->
+    <link rel="stylesheet" href="shared/css/global.css">
+    <link rel="stylesheet" href="shared/css/global-navbar.css">
+    <link rel="stylesheet" href="shared/css/notifications.css">
+    <link rel="stylesheet" href="contact.css">
+</head>
+<body data-theme="dark">
+    <!-- حاوية الإشعارات -->
+    <div id="notification-container"></div>
+
+    <!-- شريط التنقل -->
+    <header class="main-header">
+        <nav id="global-navbar-container"></nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="contact-hero">
+        <div class="container">
+            <h1>مركز <span>الدعم الفني</span></h1>
+            <p>فريقنا الاستشاري في خدمتك على مدار الساعة لضمان استمرارية تميز أعمالك وتجربتك</p>
+        </div>
+    </section>
+
+    <!-- Contact Methods -->
+    <section class="contact-methods-section">
+        <div class="methods-grid">
+            <a href="tel:+212500000000" class="method-card">
+                <div class="method-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <h3>الاتصال المباشر</h3>
+                <p>دعم هاتفي VIP على مدار 7/24</p>
+                <div class="method-contact">+212 5XX-XXXXXX</div>
+            </a>
+            
+            <a href="https://wa.me/212600000000" target="_blank" class="method-card">
+                <div class="method-icon" style="background: linear-gradient(135deg, #25D366, #128C7E);">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h3>محادثة الواتساب</h3>
+                <p>تواصل فوري وحلول ذكية</p>
+                <div class="method-contact">+212 6XX-XXXXXX</div>
+            </a>
+            
+            <a href="mailto:contact@barberflow.ma" class="method-card">
+                <div class="method-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3>البريد الإلكتروني</h3>
+                <p>للشكاوى والاقتراحات الرسمية</p>
+                <div class="method-contact">contact@barberflow.ma</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Ticket Form -->
+    <section class="ticket-section">
+        <div class="ticket-container">
+            <h2><i class="fas fa-ticket-alt"></i> فتح تذكرة دعم فني</h2>
+            <p class="ticket-subtitle">سنرد عليك خلال 24 ساعة كحد أقصى</p>
+            
+            <form id="ticketForm">
+                <div class="form-group">
+                    <label for="ticketName">الاسم الكامل <span class="required">*</span></label>
+                    <input type="text" id="ticketName" class="form-control" placeholder="أدخل اسمك الكامل" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ticketEmail">البريد الإلكتروني <span class="required">*</span></label>
+                    <input type="email" id="ticketEmail" class="form-control" placeholder="example@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ticketPhone">رقم الهاتف</label>
+                    <input type="tel" id="ticketPhone" class="form-control" placeholder="06XXXXXXXX">
+                </div>
+                
+                <div class="form-group">
+                    <label for="ticketCategory">نوع الإشكالية <span class="required">*</span></label>
+                    <select id="ticketCategory" class="form-control" required>
+                        <option value="">اختر القسم المختص...</option>
+                        <option value="technical">مشكلة تقنية / خلل في الواجهة</option>
+                        <option value="payment">المدفوعات، الاشتراكات والمحفظة</option>
+                        <option value="account">توثيق الحساب وإعدادات الصالون</option>
+                        <option value="booking">مشكلة في نظام الحجوزات</option>
+                        <option value="feature">اقتراح ميزة جديدة للمنصة</option>
+                        <option value="other">أخرى</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ticketSubject">موضوع التذكرة <span class="required">*</span></label>
+                    <input type="text" id="ticketSubject" class="form-control" placeholder="عنوان مختصر للمشكلة" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ticketMessage">شرح تفصيلي <span class="required">*</span></label>
+                    <textarea id="ticketMessage" class="form-control" rows="5" placeholder="اشرح مشكلتك أو طلبك بالتفصيل..." required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitTicketBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>إرسال التذكرة السحابية</span>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="faq-container">
+            <div class="section-header">
+                <h2><i class="fas fa-question-circle"></i> الأسئلة الشائعة</h2>
+                <p>إجابات سريعة لأكثر الأسئلة تكراراً</p>
+            </div>
+            
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>كيف يمكنني إنشاء حساب صالون جديد؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>يمكنك إنشاء حساب صالون جديد من خلال صفحة التسجيل واختيار دور "صاحب صالون". ستحتاج إلى إكمال بيانات الصالون الأساسية ثم توثيق الحساب عبر رفع الشهادات المطلوبة.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>ما هي طرق الدفع المتاحة؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>نقبل حالياً الدفع النقدي عند الخدمة، بالإضافة إلى التحويل البنكي والمحافظ الإلكترونية. نعمل على إضافة الدفع بالبطاقة البنكية قريباً.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>كيف يمكنني إلغاء أو تعديل حجزي؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>يمكنك إلغاء أو تعديل حجزك من خلال ملفك الشخصي في قسم "حجوزاتي" قبل 24 ساعة من الموعد المحدد. بعد هذا الوقت، يرجى التواصل مباشرة مع الصالون.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>هل بياناتي آمنة على المنصة؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>نعم، نستخدم تشفير SSL/TLS على جميع الاتصالات، ونخزن البيانات في خوادم سحابية مؤمنة. لا نشارك بياناتك مع أي طرف ثالث دون إذنك.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>كيف يمكنني إضافة منتجاتي كمتجر؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>بعد إنشاء حساب متجر وإكماله، ستتمكن من إضافة منتجاتك مع الصور والأسعار والأقسام. يمكنك أيضاً إدارة المخزون والطلبات من لوحة التحكم.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Working Hours -->
+    <section class="hours-section">
+        <div class="hours-card">
+            <h3><i class="fas fa-clock"></i> ساعات العمل</h3>
+            <ul class="hours-list">
+                <li>
+                    <span>الإثنين - الجمعة</span>
+                    <span>09:00 - 21:00</span>
+                </li>
+                <li>
+                    <span>السبت</span>
+                    <span>10:00 - 20:00</span>
+                </li>
+                <li>
+                    <span>الأحد</span>
+                    <span>10:00 - 18:00</span>
+                </li>
+                <li>
+                    <span>الدعم الفني (طوارئ)</span>
+                    <span>24/7</span>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- السكربتات -->
+    <script type="module" src="../shared/js/global-navbar.js"></script>
+    <script type="module" src="contact.js"></script>
+</body>
+</html>
+

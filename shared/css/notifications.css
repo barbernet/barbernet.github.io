@@ -1,0 +1,291 @@
+/* ==========================================================================
+BarberFlow Pro - نظام التنبيهات الموحد
+المسار: shared/css/notifications.css
+========================================================================== */
+
+/* ============================================
+حاوية التنبيهات
+============================================ */
+#notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: calc(100% - 40px);
+  pointer-events: none;
+}
+
+/* ============================================
+التنبيه الفردي
+============================================ */
+.notification {
+  min-width: 280px;
+  max-width: 380px;
+  padding: 15px 20px;
+  border-radius: var(--radius-md, 12px);
+  background: var(--bg-secondary, #1e1e1e);
+  color: var(--text-primary, #f8f9fa);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border-gold, rgba(212, 175, 55, 0.3));
+  box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.4));
+  animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  direction: rtl;
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.notification:active {
+  cursor: grabbing;
+}
+
+.notification.dragging {
+  opacity: 0.7;
+  transform: scale(0.95);
+}
+
+/* أنواع التنبيهات */
+.notification.success {
+  border-right: 4px solid var(--brand-success, #2b8a3e);
+}
+
+.notification.error {
+  border-right: 4px solid var(--brand-danger, #c92a2a);
+}
+
+.notification.info {
+  border-right: 4px solid var(--brand-accent, #d4af37);
+}
+
+.notification.warning {
+  border-right: 4px solid var(--brand-warning, #e8590c);
+}
+
+/* الأيقونات */
+.notification i {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.notification.success i {
+  color: var(--brand-success, #2b8a3e);
+}
+
+.notification.error i {
+  color: var(--brand-danger, #c92a2a);
+}
+
+.notification.info i {
+  color: var(--brand-accent, #d4af37);
+}
+
+.notification.warning i {
+  color: var(--brand-warning, #e8590c);
+}
+
+/* نص التنبيه */
+.notification span {
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* زر الإغلاق */
+.notification-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #adb5bd);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary, #f8f9fa);
+}
+
+/* ============================================
+أنيميشن الدخول والخروج
+============================================ */
+@keyframes slideIn {
+  from {
+    transform: translateY(-15px);
+    opacity: 0;
+  }
+  
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.notification.fade-out {
+  animation: fadeOut 0.3s cubic-bezier(0.5, 0, 1, 0.5) forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+  
+  to {
+    opacity: 0;
+    transform: scale(0.92) translateX(50px);
+  }
+}
+
+/* أنيميشن السحب */
+.notification.swipe-left {
+  animation: swipeLeft 0.3s ease forwards;
+}
+
+.notification.swipe-right {
+  animation: swipeRight 0.3s ease forwards;
+}
+
+.notification.swipe-up {
+  animation: swipeUp 0.3s ease forwards;
+}
+
+@keyframes swipeLeft {
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeRight {
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeUp {
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+نافذة OTP المنبثقة
+============================================ */
+.global-otp-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  padding: 20px;
+  box-sizing: border-box;
+  direction: rtl;
+}
+
+.global-otp-modal {
+  background: var(--bg-secondary, #1e1e1e);
+  border: 1px solid var(--border-gold, rgba(212, 175, 55, 0.3));
+  padding: 30px;
+  border-radius: var(--radius-lg, 16px);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-xl, 0 20px 50px rgba(0, 0, 0, 0.7));
+  text-align: center;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.global-otp-close {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #888);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.3s;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.global-otp-close:hover {
+  color: var(--brand-danger, #ff4d4d);
+  background: rgba(255, 77, 77, 0.1);
+}
+
+.global-otp-icon {
+  font-size: 2.5rem;
+  color: var(--brand-accent, #d4af37);
+  margin-bottom: 15px;
+}
+
+.global-otp-title {
+  color: var(--text-primary, #fff);
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+
+.global-otp-input-container {
+  margin: 25px 0;
+}
+
+.global-otp-input {
+  width: 100%;
+  padding: 14px;
+  background: var(--bg-tertiary, #2d2d2d);
+  border: 1px solid var(--border-color, #333);
+  border-radius: var(--radius-md, 10px);
+  color: var(--text-primary, #fff);
+  font-size: 1.5rem;
+  letter-spacing: 8px;
+  text-align: center;
+  box-sizing: border-box;
+  transition: all 0.3s;
+  font-family: 'Cairo', sans-serif;
+}
+
+.global-otp-input:focus {
+  border-color: var(--brand-accent, #d4af37);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+  outline: none;
+}
+
+/* ============================================
+Responsive Design
+============================================ */
+@media (max-width: 480px) {
+  #notification-container {
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+  
+  .notification {
+    min-width: auto;
+    max-width: none;
+  }
+}

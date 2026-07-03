@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر الحلاقة والتجميل - BarberFlow Shop</title>
+    <meta name="description" content="تسوق أفضل منتجات العناية بالشعر واللحية وأدوات الحلاقة الاحترافية من أميز المتاجر المغربية.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="متجر الحلاقة والتجميل - BarberFlow Shop">
+    <meta property="og:description" content="تسوق أفضل منتجات العناية بالشعر واللحية وأدوات الحلاقة الاحترافية.">
+    <meta property="og:type" content="website">
+    
+    <!-- CSS المركزي -->
+    <link rel="stylesheet" href="shared/css/global.css">
+    <link rel="stylesheet" href="shared/css/global-navbar.css">
+    <link rel="stylesheet" href="shared/css/notifications.css">
+    
+    <!-- تنسيقات البطاقات المشتركة -->
+    <link rel="stylesheet" href="shared/css/cards.css">
+    
+    <!-- CSS الخاص بالصفحة -->
+    <link rel="stylesheet" href="shop.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+</head>
+<body data-theme="dark">
+    <!-- حاوية الشريط العلوي -->
+    <div id="global-navbar-container"></div>
+
+    <!-- ============================================
+    قسم الهيدر
+    ============================================ -->
+    <section class="store-header">
+        <div class="store-header__pattern"></div>
+        <div class="container">
+            <div class="store-header__content">
+                <div class="store-header__icon">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <h1 class="store-header__title">متجر BarberFlow</h1>
+                <p class="store-header__subtitle">
+                    اكتشف أفضل منتجات العناية بأدوات احترافية من أميز المتاجر المغربية
+                </p>
+                
+                <!-- شريط البحث -->
+                <div class="store-search">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="ابحث عن منتج، متجر، أو ماركة..."
+                    >
+                    <button class="search-clear-btn" id="searchClearBtn" style="display:none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- إحصائيات سريعة -->
+                <div class="store-stats">
+                    <div class="store-stat">
+                        <i class="fas fa-store"></i>
+                        <span id="storesCount">0</span>
+                        <small>متجر</small>
+                    </div>
+                    <div class="store-stat">
+                        <i class="fas fa-box-open"></i>
+                        <span id="productsCount">0</span>
+                        <small>منتج</small>
+                    </div>
+                    <div class="store-stat">
+                        <i class="fas fa-tags"></i>
+                        <span id="categoriesCount">0</span>
+                        <small>تصنيف</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم التبويبات والفلاتر
+    ============================================ -->
+    <section class="store-tabs-section">
+        <div class="container">
+            <!-- التبويبات الرئيسية -->
+            <div class="main-tabs" id="mainTabs">
+                <button class="main-tab active" data-view="all">
+                    <i class="fas fa-th-large"></i>
+                    <span>الكل</span>
+                </button>
+                <button class="main-tab" data-view="stores">
+                    <i class="fas fa-store"></i>
+                    <span>المتاجر</span>
+                </button>
+                <button class="main-tab" data-view="products">
+                    <i class="fas fa-box-open"></i>
+                    <span>المنتجات</span>
+                </button>
+                <button class="main-tab" data-view="favorites">
+                    <i class="fas fa-heart"></i>
+                    <span>المفضلة</span>
+                </button>
+            </div>
+            
+            <!-- فلاتر التصنيفات (تظهر فقط عند عرض المنتجات) -->
+            <div class="category-filters hidden" id="categoryFilters">
+                <button class="filter-chip active" data-category="all">
+                    <span>الكل</span>
+                </button>
+                <button class="filter-chip" data-category="tools">
+                    <i class="fas fa-tools"></i>
+                    <span>أدوات ومعدات</span>
+                </button>
+                <button class="filter-chip" data-category="cosmetics">
+                    <i class="fas fa-spa"></i>
+                    <span>مستحضرات تجميل</span>
+                </button>
+                <button class="filter-chip" data-category="haircare">
+                    <i class="fas fa-cut"></i>
+                    <span>العناية بالشعر</span>
+                </button>
+                <button class="filter-chip" data-category="beardcare">
+                    <i class="fas fa-user-tie"></i>
+                    <span>العناية باللحية</span>
+                </button>
+                <button class="filter-chip" data-category="skincare">
+                    <i class="fas fa-hand-sparkles"></i>
+                    <span>العناية بالبشرة</span>
+                </button>
+                <button class="filter-chip" data-category="accessories">
+                    <i class="fas fa-gem"></i>
+                    <span>إكسسوارات</span>
+                </button>
+            </div>
+            
+            <!-- فلاتر المتاجر (تظهر فقط عند عرض المتاجر) -->
+            <div class="store-filters hidden" id="storeFilters">
+                <button class="filter-chip active" data-type="all">
+                    <span>جميع المتاجر</span>
+                </button>
+                <button class="filter-chip" data-type="featured">
+                    <i class="fas fa-crown"></i>
+                    <span>مميزة</span>
+                </button>
+                <button class="filter-chip" data-type="verified">
+                    <i class="fas fa-check-circle"></i>
+                    <span>موثقة</span>
+                </button>
+                <button class="filter-chip" data-type="new">
+                    <i class="fas fa-star"></i>
+                    <span>جديدة</span>
+                </button>
+            </div>
+            
+            <!-- فلاتر الترتيب -->
+            <div class="sort-filters">
+                <span class="sort-label">
+                    <i class="fas fa-sort-amount-down"></i>
+                    ترتيب حسب:
+                </span>
+                <select id="sortSelect" class="sort-select">
+                    <option value="popular">الأكثر شعبية</option>
+                    <option value="newest">الأحدث</option>
+                    <option value="price-low">السعر: من الأقل للأعلى</option>
+                    <option value="price-high">السعر: من الأعلى للأقل</option>
+                    <option value="rating">الأعلى تقييماً</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    القسم الرئيسي للعرض
+    ============================================ -->
+    <section class="store-main">
+        <div class="container">
+            <!-- عرض المتاجر -->
+            <div class="view-section" id="storesView">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-store"></i>
+                        <span>المتاجر المميزة</span>
+                    </h2>
+                    <span class="results-count" id="storesResultsCount">0 متجر</span>
+                </div>
+                <div class="stores-grid" id="storesGrid">
+                    <!-- سيتم ملؤها ديناميكياً -->
+                </div>
+            </div>
+            
+            <!-- عرض المنتجات -->
+            <div class="view-section" id="productsView">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-box-open"></i>
+                        <span>المنتجات</span>
+                    </h2>
+                    <span class="results-count" id="productsResultsCount">0 منتج</span>
+                </div>
+                <div class="products-grid" id="productsGrid">
+                    <!-- سيتم ملؤها ديناميكياً -->
+                </div>
+            </div>
+            
+            <!-- حالة التحميل -->
+            <div class="loading-state hidden" id="loadingState">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <p>جاري تحميل المتجر...</p>
+            </div>
+            
+            <!-- حالة عدم وجود نتائج -->
+            <div class="empty-state hidden" id="emptyState">
+                <i class="fas fa-search"></i>
+                <h3>لا توجد نتائج</h3>
+                <p>لم نعثر على ما يطابق بحثك. جرب تغيير الفلتر أو كلمة البحث.</p>
+                <button class="reset-btn" id="resetBtn">
+                    <i class="fas fa-redo"></i>
+                    <span>إعادة تعيين الفلاتر</span>
+                </button>
+            </div>
+            
+            <!-- حالة الخطأ -->
+            <div class="error-state hidden" id="errorState">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>حدث خطأ</h3>
+                <p>تعذر تحميل بيانات المتجر. يرجى التحقق من اتصالك بالإنترنت.</p>
+                <button class="retry-btn" id="retryBtn">
+                    <i class="fas fa-redo"></i>
+                    <span>إعادة المحاولة</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="shared/js/paths.js"></script>
+    <script type="module" src="shared/js/notifications.js"></script>
+    <script type="module" src="shared/js/global-navbar.js"></script>
+    <script type="module" src="shop.js"></script>
+</body>
+</html>
+
