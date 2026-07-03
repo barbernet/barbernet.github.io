@@ -1,14 +1,206 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إعداد الصالون | BarberFlow Pro</title>
+    <meta name="description" content="أكمل إعداد صالونك وأضف الصور والمعلومات التجميلية">
+    
+    <!-- CSS المركزي -->
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    
+    <!-- CSS الخاص بالصفحة -->
+    <link rel="stylesheet" href="setup-salon.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
 </head>
+<body data-theme="dark">
+    <div class="wizard-page">
+        <div class="wizard-container">
+            <!-- رأس الصفحة -->
+            <div class="wizard-header">
+                <button class="back-btn" id="backBtn" aria-label="العودة">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <div class="wizard-title">
+                    <h1>إعداد الصالون</h1>
+                    <p>أضف اللمسات الأخيرة لصالونك</p>
+                </div>
+                <button class="skip-btn" id="skipBtn" aria-label="تخطي">
+                    <i class="fas fa-forward"></i>
+                </button>
+            </div>
 
-<body>
-  
+            <!-- شريط التقدم -->
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- خطوات الـ Stepper -->
+            <div class="stepper" id="stepper">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">صورة الواجهة</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">نبذة عن الصالون</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">معرض الصور</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">الشهادات</div>
+                </div>
+            </div>
+
+            <!-- محتوى المراحل -->
+            <form id="setupSalonForm" class="wizard-form">
+                <!-- المرحلة 1: صورة الواجهة -->
+                <div class="wizard-step active" data-step="1">
+                    <div class="step-header">
+                        <i class="fas fa-image"></i>
+                        <h2>صورة الواجهة الرئيسية</h2>
+                        <p>اختر صورة مميزة تعبر عن صالونك</p>
+                    </div>
+                    
+                    <div class="cover-uploader" id="coverUploader">
+                        <input type="file" id="coverInput" accept="image/*" hidden>
+                        <img id="coverPreview" style="display: none;">
+                        <div class="upload-placeholder" id="uploadPlaceholder">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>اضغط لاختيار صورة</p>
+                            <small>PNG, JPG حتى 5MB</small>
+                        </div>
+                        <button type="button" class="delete-cover-btn" id="deleteCoverBtn" style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="step-hint">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>نصيحة: اختر صورة عالية الجودة تعرض واجهة صالونك أو أعمالك</span>
+                    </div>
+                </div>
+
+                <!-- المرحلة 2: نبذة عن الصالون -->
+                <div class="wizard-step" data-step="2">
+                    <div class="step-header">
+                        <i class="fas fa-pen"></i>
+                        <h2>نبذة عن الصالون</h2>
+                        <p>اكتب وصفاً مختصراً وجذاباً لصالونك</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="salonDescription">
+                            <i class="fas fa-align-right"></i>
+                            الوصف
+                        </label>
+                        <textarea 
+                            id="salonDescription" 
+                            placeholder="اكتب نبذة عن صالونك، خدماتك المميزة، وما يميزك عن الآخرين..."
+                            rows="6"
+                            maxlength="500"
+                        ></textarea>
+                        <div class="char-counter">
+                            <span id="charCount">0</span> / 500
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة 3: معرض الصور -->
+                <div class="wizard-step" data-step="3">
+                    <div class="step-header">
+                        <i class="fas fa-images"></i>
+                        <h2>معرض الصور</h2>
+                        <p>أضف صوراً لأعمالك وصالونك (حتى 6 صور)</p>
+                    </div>
+                    
+                    <div class="gallery-grid" id="galleryGrid">
+                        <label class="add-photo-btn">
+                            <input type="file" id="galleryInput" accept="image/*" multiple hidden>
+                            <i class="fas fa-plus"></i>
+                            <span>إضافة صور</span>
+                        </label>
+                        <!-- الصور تضاف ديناميكياً -->
+                    </div>
+                    
+                    <div class="step-hint">
+                        <i class="fas fa-info-circle"></i>
+                        <span>يمكنك إضافة حتى 6 صور بصيغة PNG أو JPG</span>
+                    </div>
+                </div>
+
+                <!-- المرحلة 4: الشهادات والدبلومات -->
+                <div class="wizard-step" data-step="4">
+                    <div class="step-header">
+                        <i class="fas fa-certificate"></i>
+                        <h2>الشهادات والدبلومات</h2>
+                        <p>أضف شهاداتك المهنية لتوثيق حسابك (اختياري)</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="certificateTitle">
+                            <i class="fas fa-award"></i>
+                            عنوان الشهادة (اختياري)
+                        </label>
+                        <input 
+                            type="text" 
+                            id="certificateTitle" 
+                            placeholder="مثال: دبلوم حلاقة احترافية"
+                        >
+                    </div>
+                    
+                    <div class="certificates-grid" id="certificatesGrid">
+                        <label class="add-photo-btn">
+                            <input type="file" id="certificateInput" accept="image/*" multiple hidden>
+                            <i class="fas fa-plus"></i>
+                            <span>إضافة شهادات</span>
+                        </label>
+                        <!-- الشهادات تضاف ديناميكياً -->
+                    </div>
+                    
+                    <div class="step-hint">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>الشهادات تساعد في بناء ثقة الزبائن (حتى 3 شهادات)</span>
+                    </div>
+                </div>
+
+                <!-- أزرار التنقل -->
+                <div class="wizard-actions">
+                    <button type="button" class="nav-btn prev-btn" id="prevBtn" style="display: none;">
+                        <i class="fas fa-arrow-right"></i>
+                        <span>السابق</span>
+                    </button>
+                    
+                    <button type="button" class="nav-btn next-btn" id="nextBtn">
+                        <span>التالي</span>
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+
+                    <button type="submit" class="nav-btn submit-btn" id="submitBtn" style="display: none;">
+                        <i class="fas fa-check"></i>
+                        <span>إنهاء الإعداد</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="../shared/js/paths.js"></script>
+    <script type="module" src="../shared/js/notifications.js"></script>
+    <script type="module" src="setup-salon.js"></script>
 </body>
-
 </html>
+

@@ -1,0 +1,721 @@
+/* ==========================================================================
+BarberFlow Pro - إضافة صالون (Wizard)
+المسار: onboarding/css/add-salon.css
+========================================================================== */
+
+/* ============================================
+الصفحة العامة
+============================================ */
+.wizard-page {
+    min-height: 100vh;
+    background: var(--bg-primary);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.wizard-container {
+    width: 100%;
+    max-width: 800px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-gold);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+}
+
+/* ============================================
+رأس الصفحة
+============================================ */
+.wizard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+}
+
+.wizard-title {
+    flex: 1;
+    text-align: center;
+}
+
+.wizard-title h1 {
+    font-size: 1.5rem;
+    margin: 0 0 5px 0;
+    color: #000;
+}
+
+.wizard-title p {
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.back-btn,
+.cancel-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.1);
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    font-size: 1rem;
+}
+
+.back-btn:hover,
+.cancel-btn:hover {
+    background: rgba(0, 0, 0, 0.2);
+    transform: scale(1.1);
+}
+
+/* ============================================
+شريط التقدم
+============================================ */
+.progress-bar-container {
+    height: 4px;
+    background: var(--bg-tertiary);
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand-accent), var(--brand-accent-dark));
+    transition: width 0.5s ease;
+    width: 0%;
+}
+
+/* ============================================
+الـ Stepper
+============================================ */
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.stepper::-webkit-scrollbar {
+    display: none;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 80px;
+    position: relative;
+}
+
+.step-number {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: 2px solid var(--border-color);
+    transition: all var(--transition-fast);
+}
+
+.step-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.step.active .step-number {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+    transform: scale(1.1);
+}
+
+.step.active .step-label {
+    color: var(--brand-accent);
+    font-weight: 600;
+}
+
+.step.completed .step-number {
+    background: var(--brand-success);
+    color: #fff;
+    border-color: var(--brand-success);
+}
+
+.step.completed .step-number::after {
+    content: '✓';
+    font-size: 1rem;
+}
+
+.step.completed .step-number {
+    font-size: 0;
+}
+
+/* ============================================
+محتوى المراحل
+============================================ */
+.wizard-form {
+    padding: 30px;
+}
+
+.wizard-step {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.wizard-step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.step-header i {
+    font-size: 2.5rem;
+    color: var(--brand-accent);
+    margin-bottom: 10px;
+}
+
+.step-header h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+}
+
+.step-header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ============================================
+حقول الإدخال
+============================================ */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.form-group label i {
+    color: var(--brand-accent);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: 'Cairo', sans-serif;
+    outline: none;
+    transition: all var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--brand-accent);
+    background: var(--bg-secondary);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+.field-hint {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ============================================
+بطاقات نوع الصالون
+============================================ */
+.salon-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.type-card {
+    position: relative;
+    cursor: pointer;
+}
+
+.type-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.type-content {
+    padding: 20px;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.type-content i {
+    font-size: 2rem;
+    color: var(--brand-accent);
+    margin-bottom: 10px;
+}
+
+.type-content span {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+.type-content small {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.type-card input[type="radio"]:checked + .type-content {
+    border-color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.1);
+    transform: translateY(-2px);
+}
+
+.type-card:hover .type-content {
+    border-color: var(--brand-accent);
+}
+
+/* ============================================
+الخدمات
+============================================ */
+.services-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.service-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.service-fields {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+}
+
+.field-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.field-group input {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: 'Cairo', sans-serif;
+    outline: none;
+    transition: all var(--transition-fast);
+}
+
+.field-group input:focus {
+    border-color: var(--brand-accent);
+}
+
+.delete-service-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--brand-danger);
+    background: rgba(201, 42, 42, 0.1);
+    color: var(--brand-danger);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    margin-top: 20px;
+}
+
+.delete-service-btn:hover {
+    background: var(--brand-danger);
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.add-service-btn {
+    width: 100%;
+    padding: 15px;
+    background: transparent;
+    border: 2px dashed var(--brand-accent);
+    color: var(--brand-accent);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all var(--transition-fast);
+}
+
+.add-service-btn:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-style: solid;
+}
+
+.empty-services {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+}
+
+.empty-services i {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+.empty-services p {
+    margin: 0 0 5px 0;
+    font-size: 1rem;
+}
+
+.empty-services small {
+    font-size: 0.85rem;
+}
+
+/* ============================================
+أيام العمل
+============================================ */
+.form-section {
+    margin-bottom: 25px;
+}
+
+.section-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.days-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.day-chip {
+    padding: 10px 20px;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: 25px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.day-chip:hover {
+    border-color: var(--brand-accent);
+    color: var(--brand-accent);
+}
+
+.day-chip.selected {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+    transform: scale(1.05);
+}
+
+.time-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.time-input label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.time-input input {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: 'Cairo', sans-serif;
+    outline: none;
+}
+
+/* ============================================
+طريقة الحجز
+============================================ */
+.booking-types {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.booking-card {
+    position: relative;
+    cursor: pointer;
+}
+
+.booking-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.booking-content {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.booking-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--brand-accent);
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.booking-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.booking-info p {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.booking-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(212, 175, 55, 0.2);
+    color: var(--brand-accent);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.booking-card input[type="radio"]:checked + .booking-content {
+    border-color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.booking-card:hover .booking-content {
+    border-color: var(--brand-accent);
+}
+
+/* ============================================
+أزرار التنقل
+============================================ */
+.wizard-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.nav-btn {
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    border: none;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all var(--transition-fast);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.prev-btn {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.prev-btn:hover:not(:disabled) {
+    background: var(--border-color);
+}
+
+.next-btn,
+.submit-btn {
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+}
+
+.next-btn:hover:not(:disabled),
+.submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 768px) {
+    .wizard-page {
+        padding: 10px;
+    }
+    
+    .wizard-container {
+        border-radius: var(--radius-md);
+    }
+    
+    .wizard-header {
+        padding: 15px;
+    }
+    
+    .wizard-title h1 {
+        font-size: 1.2rem;
+    }
+    
+    .stepper {
+        padding: 15px;
+    }
+    
+    .step-label {
+        font-size: 0.7rem;
+    }
+    
+    .wizard-form {
+        padding: 20px;
+    }
+    
+    .salon-types-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .service-fields {
+        grid-template-columns: 1fr;
+    }
+    
+    .time-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .booking-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .booking-icon {
+        margin: 0 auto;
+    }
+    
+    .wizard-actions {
+        flex-direction: column;
+    }
+    
+    .nav-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .step-number {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+    
+    .step-label {
+        display: none;
+    }
+}
+

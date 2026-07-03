@@ -1,0 +1,563 @@
+/* ==========================================================================
+BarberFlow Pro - إعداد الصالون (Wizard)
+المسار: onboarding/css/setup-salon.css
+========================================================================== */
+
+/* ============================================
+الصفحة العامة
+============================================ */
+.wizard-page {
+    min-height: 100vh;
+    background: var(--bg-primary);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.wizard-container {
+    width: 100%;
+    max-width: 800px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-gold);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+}
+
+/* ============================================
+رأس الصفحة
+============================================ */
+.wizard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+}
+
+.wizard-title {
+    flex: 1;
+    text-align: center;
+}
+
+.wizard-title h1 {
+    font-size: 1.5rem;
+    margin: 0 0 5px 0;
+    color: #000;
+}
+
+.wizard-title p {
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.back-btn,
+.skip-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.1);
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    font-size: 1rem;
+}
+
+.back-btn:hover,
+.skip-btn:hover {
+    background: rgba(0, 0, 0, 0.2);
+    transform: scale(1.1);
+}
+
+/* ============================================
+شريط التقدم والـ Stepper
+============================================ */
+.progress-bar-container {
+    height: 4px;
+    background: var(--bg-tertiary);
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand-accent), var(--brand-accent-dark));
+    transition: width 0.5s ease;
+    width: 0%;
+}
+
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.stepper::-webkit-scrollbar {
+    display: none;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 80px;
+}
+
+.step-number {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: 2px solid var(--border-color);
+    transition: all var(--transition-fast);
+}
+
+.step-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.step.active .step-number {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+    transform: scale(1.1);
+}
+
+.step.active .step-label {
+    color: var(--brand-accent);
+    font-weight: 600;
+}
+
+.step.completed .step-number {
+    background: var(--brand-success);
+    color: #fff;
+    border-color: var(--brand-success);
+}
+
+.step.completed .step-number::after {
+    content: '✓';
+    font-size: 1rem;
+}
+
+.step.completed .step-number {
+    font-size: 0;
+}
+
+/* ============================================
+محتوى المراحل
+============================================ */
+.wizard-form {
+    padding: 30px;
+}
+
+.wizard-step {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.wizard-step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.step-header i {
+    font-size: 2.5rem;
+    color: var(--brand-accent);
+    margin-bottom: 10px;
+}
+
+.step-header h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+}
+
+.step-header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ============================================
+رفع صورة الواجهة
+============================================ */
+.cover-uploader {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background: var(--bg-tertiary);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.cover-uploader:hover {
+    border-color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.cover-uploader img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.upload-placeholder {
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.upload-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: var(--brand-accent);
+}
+
+.upload-placeholder p {
+    margin: 0 0 5px 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.upload-placeholder small {
+    font-size: 0.85rem;
+}
+
+.delete-cover-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: var(--brand-danger);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all var(--transition-fast);
+}
+
+.delete-cover-btn:hover {
+    transform: scale(1.1);
+    background: #a02020;
+}
+
+/* ============================================
+الوصف
+============================================ */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.form-group label i {
+    color: var(--brand-accent);
+}
+
+.form-group textarea,
+.form-group input {
+    width: 100%;
+    padding: 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: 'Cairo', sans-serif;
+    outline: none;
+    transition: all var(--transition-fast);
+    resize: vertical;
+}
+
+.form-group textarea:focus,
+.form-group input:focus {
+    border-color: var(--brand-accent);
+    background: var(--bg-secondary);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+.char-counter {
+    text-align: left;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* ============================================
+معرض الصور والشهادات
+============================================ */
+.gallery-grid,
+.certificates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.add-photo-btn {
+    aspect-ratio: 1;
+    background: var(--bg-tertiary);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    color: var(--text-muted);
+    gap: 10px;
+}
+
+.add-photo-btn:hover {
+    border-color: var(--brand-accent);
+    color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.add-photo-btn i {
+    font-size: 2rem;
+}
+
+.add-photo-btn span {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.gallery-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    animation: fadeIn 0.3s ease;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.delete-photo-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--brand-danger);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: all var(--transition-fast);
+}
+
+.delete-photo-btn:hover {
+    transform: scale(1.1);
+    background: #a02020;
+}
+
+/* ============================================
+نصائح وملاحظات
+============================================ */
+.step-hint {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(212, 175, 55, 0.1);
+    border-right: 3px solid var(--brand-accent);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 20px;
+}
+
+.step-hint i {
+    color: var(--brand-accent);
+    font-size: 1.2rem;
+}
+
+/* ============================================
+أزرار التنقل
+============================================ */
+.wizard-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.nav-btn {
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    border: none;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all var(--transition-fast);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.prev-btn {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.prev-btn:hover:not(:disabled) {
+    background: var(--border-color);
+}
+
+.next-btn,
+.submit-btn {
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+}
+
+.next-btn:hover:not(:disabled),
+.submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 768px) {
+    .wizard-page {
+        padding: 10px;
+    }
+    
+    .wizard-container {
+        border-radius: var(--radius-md);
+    }
+    
+    .wizard-header {
+        padding: 15px;
+    }
+    
+    .wizard-title h1 {
+        font-size: 1.2rem;
+    }
+    
+    .stepper {
+        padding: 15px;
+    }
+    
+    .step-label {
+        font-size: 0.7rem;
+    }
+    
+    .wizard-form {
+        padding: 20px;
+    }
+    
+    .cover-uploader {
+        height: 200px;
+    }
+    
+    .gallery-grid,
+    .certificates-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .wizard-actions {
+        flex-direction: column;
+    }
+    
+    .nav-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .step-number {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+    
+    .step-label {
+        display: none;
+    }
+    
+    .gallery-grid,
+    .certificates-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+}
+
