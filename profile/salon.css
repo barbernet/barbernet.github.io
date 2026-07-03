@@ -1,0 +1,830 @@
+/* ==========================================================================
+BarberFlow Pro - صفحة بروفايل الصالون
+المسار: profile/salon.css
+========================================================================== */
+
+/* ============================================
+قسم البطل (Hero)
+============================================ */
+.profile-hero {
+    position: relative;
+    margin-top: 0;
+}
+
+.hero-image-container {
+    position: relative;
+    height: 350px;
+    overflow: hidden;
+}
+
+.hero-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    color: var(--brand-accent);
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
+}
+
+.hero-badges {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(10px);
+}
+
+.badge.verified {
+    background: var(--brand-accent);
+    color: #000;
+}
+
+.badge.featured {
+    background: linear-gradient(135deg, #f4d03f, #d4af37);
+    color: #000;
+}
+
+.badge.status {
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+}
+
+.badge.status.open {
+    background: var(--brand-success);
+    color: #fff;
+}
+
+.badge.status.closed {
+    background: var(--brand-danger);
+    color: #fff;
+}
+
+.hero-actions {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.hero-action-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-fast);
+}
+
+.hero-action-btn:hover {
+    background: var(--brand-accent);
+    color: #000;
+    transform: scale(1.1);
+}
+
+.hero-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 30px 20px;
+    z-index: 2;
+}
+
+.salon-header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.salon-name {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.salon-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    color: #fff;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+
+.meta-item i {
+    color: var(--brand-accent);
+}
+
+.meta-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+}
+
+.meta-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.salon-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--brand-danger);
+}
+
+.status-dot.active {
+    background: var(--brand-success);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.status-text {
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ============================================
+أزرار الإدارة السريعة
+============================================ */
+.admin-actions {
+    background: var(--bg-secondary);
+    padding: 25px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+}
+
+.admin-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 15px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: 'Cairo', sans-serif;
+}
+
+.admin-btn:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--brand-accent);
+    transform: translateY(-3px);
+}
+
+.admin-btn.primary {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+}
+
+.admin-btn.primary:hover {
+    background: var(--brand-accent-light);
+}
+
+.admin-btn i {
+    font-size: 1.5rem;
+}
+
+.admin-btn span {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ============================================
+المحتوى الرئيسي
+============================================ */
+.profile-content {
+    padding: 30px 0 60px;
+    background: var(--bg-primary);
+}
+
+.info-section {
+    margin-bottom: 30px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    color: var(--brand-accent);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+}
+
+.section-title i {
+    font-size: 1.2rem;
+}
+
+.edit-section-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.edit-section-btn:hover {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+}
+
+.about-text {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* ============================================
+أوقات العمل
+============================================ */
+.working-hours-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.hours-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    color: var(--text-secondary);
+}
+
+.hours-row:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.hours-row i {
+    color: var(--brand-accent);
+    width: 20px;
+}
+
+/* ============================================
+الخدمات
+============================================ */
+.services-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.service-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-fast);
+}
+
+.service-item:hover {
+    border-color: var(--brand-accent);
+}
+
+.service-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.service-info i {
+    color: var(--brand-accent);
+}
+
+.service-name {
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.service-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.service-price {
+    color: var(--brand-accent);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.service-edit-btn,
+.service-delete-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.service-edit-btn:hover {
+    background: var(--brand-accent);
+    color: #000;
+}
+
+.service-delete-btn:hover {
+    background: var(--brand-danger);
+    color: #fff;
+}
+
+/* ============================================
+المعرض
+============================================ */
+.gallery-wrapper {
+    position: relative;
+}
+
+.gallery-slider {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 15px;
+    scrollbar-width: none;
+}
+
+.gallery-slider::-webkit-scrollbar {
+    display: none;
+}
+
+.gallery-item {
+    flex: 0 0 280px;
+    height: 220px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    scroll-snap-align: start;
+    position: relative;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-fast);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.gallery-delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--brand-danger);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all var(--transition-fast);
+}
+
+.gallery-item:hover .gallery-delete-btn {
+    opacity: 1;
+}
+
+.gallery-placeholder {
+    width: 100%;
+    padding: 60px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    text-align: center;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.gallery-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: var(--brand-accent);
+    display: block;
+}
+
+/* ============================================
+الشهادات
+============================================ */
+.certificates-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.cert-item {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.cert-item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    transition: transform var(--transition-fast);
+}
+
+.cert-item:hover img {
+    transform: scale(1.05);
+}
+
+.cert-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.cert-delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--brand-danger);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all var(--transition-fast);
+}
+
+.cert-item:hover .cert-delete-btn {
+    opacity: 1;
+}
+
+/* ============================================
+التقييمات
+============================================ */
+.reviews-summary {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 30px;
+    padding: 25px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    margin-bottom: 25px;
+}
+
+.summary-rating {
+    text-align: center;
+}
+
+.big-rating {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--brand-accent);
+    margin-bottom: 10px;
+}
+
+.stars-display {
+    color: var(--brand-accent);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.total-reviews {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.rating-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rating-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.star-label {
+    width: 50px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.star-label i {
+    color: var(--brand-accent);
+}
+
+.rating-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.rating-bar-fill {
+    height: 100%;
+    background: var(--brand-accent);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.bar-count {
+    width: 30px;
+    text-align: left;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.review-card {
+    background: var(--bg-secondary);
+    padding: 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.review-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.reviewer-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--brand-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.reviewer-info {
+    flex: 1;
+}
+
+.reviewer-info strong {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
+
+.review-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.review-stars {
+    color: var(--brand-accent);
+    font-size: 0.9rem;
+}
+
+.review-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.review-text {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.review-reply {
+    background: var(--bg-tertiary);
+    padding: 15px;
+    border-radius: var(--radius-sm);
+    border-right: 3px solid var(--brand-accent);
+    margin-top: 12px;
+}
+
+.reply-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: var(--brand-accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.reply-header i {
+    font-size: 0.9rem;
+}
+
+.review-reply p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.reply-to-review-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    transition: all var(--transition-fast);
+}
+
+.reply-to-review-btn:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--brand-accent);
+    color: var(--brand-accent);
+}
+
+.empty-reviews {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+}
+
+.empty-reviews i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: var(--brand-accent);
+    display: block;
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 1024px) {
+    .admin-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-image-container {
+        height: 280px;
+    }
+    
+    .salon-name {
+        font-size: 1.5rem;
+    }
+    
+    .salon-meta {
+        gap: 12px;
+    }
+    
+    .meta-divider {
+        display: none;
+    }
+    
+    .admin-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .reviews-summary {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .certificates-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-image-container {
+        height: 220px;
+    }
+    
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gallery-item {
+        flex: 0 0 240px;
+        height: 180px;
+    }
+    
+    .certificates-container {
+        grid-template-columns: 1fr;
+    }
+}
+
