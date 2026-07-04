@@ -1,14 +1,189 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إعداد الهوية | BarberFlow Pro</title>
+    <meta name="description" content="أضف الصور والنبذة التعريفية لمتجرك لجعله يبدو احترافياً أمام الزبائن">
+    
+    <!-- CSS المركزي -->
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    
+    <!-- CSS الخاص بالصفحة -->
+    <link rel="stylesheet" href="setup-store.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
 </head>
+<body data-theme="dark">
+    <div class="setup-page">
+        <div class="setup-container">
+            <!-- رأس الصفحة -->
+            <div class="page-header">
+                <button class="icon-btn back-btn" id="backBtn" aria-label="العودة">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <div class="header-content">
+                    <h1>الخطوة الأخيرة 🪄</h1>
+                    <p class="page-subtitle">دعنا نجعل متجرك يبدو احترافياً أمام الزبائن</p>
+                </div>
+                <button class="icon-btn skip-btn" id="skipBtn" aria-label="تخطي">
+                    <i class="fas fa-forward"></i>
+                </button>
+            </div>
 
-<body>
-  
+            <!-- شريط التقدم -->
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- خطوات الـ Stepper -->
+            <div class="stepper" id="stepper">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">صورة الواجهة</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">نبذة عن المتجر</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">معرض الصور</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">الشهادات</div>
+                </div>
+            </div>
+
+            <form id="setupStoreForm" class="setup-form">
+                <!-- المرحلة 1: صورة الواجهة -->
+                <div class="setup-step active" data-step="1">
+                    <div class="step-header">
+                        <i class="fas fa-image"></i>
+                        <h2>صورة الواجهة الرئيسية للمتجر</h2>
+                        <p>اختر صورة مميزة تعبر عن هوية متجرك</p>
+                    </div>
+                    
+                    <div class="cover-uploader" id="coverUploader">
+                        <input type="file" id="coverFileInput" accept="image/*" hidden>
+                        <img id="coverImg" style="display: none;" alt="صورة الغلاف">
+                        <div class="cover-placeholder" id="coverPlaceholder">
+                            <i class="fas fa-cloud-upload-alt placeholder-icon"></i>
+                            <span class="uploader-label">اضغط لاختيار صورة مميزة للمتجر</span>
+                        </div>
+                        <button type="button" class="delete-cover-btn" id="deleteCoverBtn" style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="step-hint">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>نصيحة: اختر صورة عالية الجودة تعرض واجهة متجرك أو منتجاتك</span>
+                    </div>
+                </div>
+
+                <!-- المرحلة 2: نبذة عن المتجر -->
+                <div class="setup-step" data-step="2">
+                    <div class="step-header">
+                        <i class="fas fa-pen-fancy"></i>
+                        <h2>نبذة عن المتجر</h2>
+                        <p>اكتب وصفاً مختصراً وجذاباً لمتجرك ومنتجاتك</p>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="input-group">
+                            <textarea 
+                                id="storeDescription" 
+                                placeholder="مثال: متجر متخصص في بيع أفضل منتجات الحلاقة والتجميل، نوفر أدوات احترافية ومستحضرات عالمية الجودة..."
+                                rows="5"
+                                maxlength="500"
+                            ></textarea>
+                            <div class="char-counter">
+                                <span id="descCharCount">0</span> / 500
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة 3: معرض صور المنتجات -->
+                <div class="setup-step" data-step="3">
+                    <div class="step-header">
+                        <i class="fas fa-images"></i>
+                        <h2>معرض صور المنتجات والمعروضات</h2>
+                        <p>أضف حتى 6 صور لأبرز منتجاتك (اختياري)</p>
+                    </div>
+                    
+                    <div class="photos-grid" id="galleryPreviewsContainer">
+                        <label class="add-photo-btn" for="galleryFileInput">
+                            <i class="fas fa-plus"></i>
+                            <span>أضف صورة</span>
+                        </label>
+                        <input type="file" id="galleryFileInput" accept="image/*" multiple hidden>
+                    </div>
+                </div>
+
+                <!-- المرحلة 4: السجل التجاري والشهادات -->
+                <div class="setup-step" data-step="4">
+                    <div class="step-header">
+                        <i class="fas fa-certificate"></i>
+                        <h2>السجل التجاري والشهادات الرسمية</h2>
+                        <p>أضف شهاداتك الرسمية لتوثيق حسابك وزيادة ثقة الزبائن (اختياري)</p>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="input-group">
+                            <label for="certificateText">عنوان الشهادة / السجل التجاري (اختياري)</label>
+                            <input 
+                                type="text" 
+                                id="certificateText" 
+                                placeholder="مثال: سجل تجاري رقم 12345"
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="photos-grid" id="certPreviewsContainer">
+                        <label class="add-photo-btn" for="certFileInput">
+                            <i class="fas fa-plus"></i>
+                            <span>أضف وثيقة</span>
+                        </label>
+                        <input type="file" id="certFileInput" accept="image/*" multiple hidden>
+                    </div>
+                </div>
+
+                <!-- أزرار التحكم -->
+                <div class="form-actions">
+                    <button type="button" class="nav-btn prev-btn" id="prevBtn" style="display: none;">
+                        <i class="fas fa-arrow-right"></i>
+                        <span>السابق</span>
+                    </button>
+                    
+                    <button type="button" class="nav-btn next-btn" id="nextBtn">
+                        <span>التالي</span>
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+
+                    <button type="submit" class="nav-btn submit-btn" id="submitBtn" style="display: none;">
+                        <i class="fas fa-check"></i>
+                        <span>حفظ وإنشاء الملف الشخصي</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="../shared/js/paths.js"></script>
+    <script type="module" src="../shared/js/notifications.js"></script>
+    <script type="module" src="setup-store.js"></script>
 </body>
-
 </html>
+

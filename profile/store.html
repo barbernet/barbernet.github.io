@@ -1,14 +1,355 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بروفايل المتجر | BarberFlow Pro</title>
+    <meta name="description" content="إدارة متجرك ومنتجاتك من مكان واحد">
+    
+    <!-- CSS المركزي -->
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="../shared/css/global-navbar.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    
+    <!-- CSS الخاص بالصفحة -->
+    <link rel="stylesheet" href="store.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
 </head>
+<body data-theme="dark">
+    <!-- حاوية الشريط العلوي -->
+    <div id="global-navbar-container"></div>
 
-<body>
-  
+    <!-- ============================================
+    رأس البروفايل
+    ============================================ -->
+    <section class="profile-header">
+        <div class="profile-cover">
+            <img id="profileCover" style="display: none;" alt="غلاف المتجر">
+            <div class="cover-placeholder" id="coverPlaceholder">
+                <i class="fas fa-store"></i>
+            </div>
+            <button class="edit-cover-btn" id="editCoverBtn" aria-label="تعديل الغلاف">
+                <i class="fas fa-camera"></i>
+            </button>
+        </div>
+        
+        <div class="profile-info-bar">
+            <div class="container">
+                <div class="profile-main-info">
+                    <div class="profile-avatar-container">
+                        <div class="profile-avatar">
+                            <img id="profileAvatar" style="display: none;" alt="شعار المتجر">
+                            <div class="avatar-placeholder" id="avatarPlaceholder">
+                                <i class="fas fa-store"></i>
+                            </div>
+                        </div>
+                        <button class="edit-avatar-btn" id="editAvatarBtn" aria-label="تعديل الشعار">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="profile-details">
+                        <h1 class="profile-name" id="profileName">اسم المتجر</h1>
+                        <div class="profile-meta">
+                            <span class="meta-item" id="profileType">
+                                <i class="fas fa-tag"></i>
+                                <span>نوع المتجر</span>
+                            </span>
+                            <span class="meta-item" id="profileLocation">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>الموقع</span>
+                            </span>
+                            <span class="meta-item" id="profileRating">
+                                <i class="fas fa-star"></i>
+                                <span>0.0</span>
+                                <span class="rating-count">(<span id="reviewsCount">0</span> تقييم)</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-status">
+                        <span class="status-badge" id="profileStatus">
+                            <i class="fas fa-check-circle"></i>
+                            <span>نشط</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    المحتوى الرئيسي
+    ============================================ -->
+    <main class="profile-main">
+        <div class="container">
+            <div class="profile-layout">
+                <!-- الشريط الجانبي: أزرار الإدارة -->
+                <aside class="profile-sidebar">
+                    <!-- أزرار الإدارة السريعة -->
+                    <div class="action-cards">
+                        <div class="action-card primary" onclick="window.location.href='../dashboard/appointments.html'">
+                            <i class="fas fa-box-open"></i>
+                            <span>إدارة المنتجات</span>
+                            <div class="action-badge" id="pendingOrders">0</div>
+                        </div>
+                        
+                        <div class="action-card" onclick="window.location.href='../dashboard/analytics.html'">
+                            <i class="fas fa-chart-line"></i>
+                            <span>الإحصائيات</span>
+                        </div>
+                        
+                        <div class="action-card" onclick="window.location.href='../dashboard/settings.html'">
+                            <i class="fas fa-cog"></i>
+                            <span>إعدادات الحساب</span>
+                        </div>
+                        
+                        <div class="action-card" onclick="window.location.href='store.html?edit=true'">
+                            <i class="fas fa-edit"></i>
+                            <span>تعديل البروفايل</span>
+                        </div>
+                    </div>
+
+                    <!-- إحصائيات سريعة -->
+                    <div class="stats-card">
+                        <h3>إحصائيات سريعة</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalProducts">0</div>
+                                <div class="stat-label">إجمالي المنتجات</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalOrders">0</div>
+                                <div class="stat-label">إجمالي الطلبات</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalRevenue">0 DH</div>
+                                <div class="stat-label">إجمالي الإيرادات</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="avgRating">0.0</div>
+                                <div class="stat-label">متوسط التقييم</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- حالة الحساب -->
+                    <div class="account-status-card">
+                        <h3>حالة الحساب</h3>
+                        <div class="status-info">
+                            <div class="status-item">
+                                <i class="fas fa-envelope"></i>
+                                <span id="accountEmail">البريد الإلكتروني</span>
+                            </div>
+                            <div class="status-item">
+                                <i class="fas fa-phone"></i>
+                                <span id="accountPhone">رقم الهاتف</span>
+                            </div>
+                            <div class="status-item">
+                                <i class="fas fa-calendar"></i>
+                                <span id="accountCreated">تاريخ الإنشاء</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- أزرار الخطر -->
+                    <div class="danger-actions">
+                        <button class="danger-btn" id="pauseAccountBtn">
+                            <i class="fas fa-pause"></i>
+                            <span>إيقاف الحساب مؤقتاً</span>
+                        </button>
+                        <button class="danger-btn" id="deleteAccountBtn">
+                            <i class="fas fa-trash"></i>
+                            <span>حذف الحساب نهائياً</span>
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- المحتوى الرئيسي -->
+                <div class="profile-content">
+                    <!-- تبويبات المحتوى -->
+                    <div class="profile-tabs">
+                        <button class="tab-btn active" data-tab="overview">
+                            <i class="fas fa-info-circle"></i>
+                            <span>نظرة عامة</span>
+                        </button>
+                        <button class="tab-btn" data-tab="products">
+                            <i class="fas fa-box-open"></i>
+                            <span>المنتجات</span>
+                        </button>
+                        <button class="tab-btn" data-tab="gallery">
+                            <i class="fas fa-images"></i>
+                            <span>المعرض</span>
+                        </button>
+                        <button class="tab-btn" data-tab="reviews">
+                            <i class="fas fa-star"></i>
+                            <span>التقييمات</span>
+                        </button>
+                        <button class="tab-btn" data-tab="schedule">
+                            <i class="fas fa-clock"></i>
+                            <span>أوقات العمل</span>
+                        </button>
+                    </div>
+
+                    <!-- تبويب النظرة العامة -->
+                    <div class="tab-content active" id="overviewTab">
+                        <div class="overview-section">
+                            <h2 class="section-title">
+                                <i class="fas fa-info-circle"></i>
+                                <span>عن المتجر</span>
+                            </h2>
+                            <p class="overview-description" id="overviewDescription">
+                                مرحباً بكم في متجرنا المميز.
+                            </p>
+                            
+                            <div class="overview-features" id="overviewFeatures">
+                                <!-- المميزات تضاف ديناميكياً -->
+                            </div>
+                        </div>
+                        
+                        <div class="quick-actions">
+                            <button class="quick-action-btn" id="addProductBtn">
+                                <i class="fas fa-plus"></i>
+                                <span>إضافة منتج جديد</span>
+                            </button>
+                            <button class="quick-action-btn" id="addPhotoBtn">
+                                <i class="fas fa-camera"></i>
+                                <span>إضافة صورة للمعرض</span>
+                            </button>
+                            <button class="quick-action-btn" id="updateHoursBtn">
+                                <i class="fas fa-clock"></i>
+                                <span>تحديث أوقات العمل</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- تبويب المنتجات -->
+                    <div class="tab-content" id="productsTab">
+                        <div class="products-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-box-open"></i>
+                                <span>منتجات المتجر</span>
+                            </h2>
+                            <button class="add-product-btn" id="addProductBtnTab">
+                                <i class="fas fa-plus"></i>
+                                <span>إضافة منتج</span>
+                            </button>
+                        </div>
+                        <div class="products-list" id="productsList">
+                            <!-- المنتجات تضاف ديناميكياً -->
+                        </div>
+                    </div>
+
+                    <!-- تبويب المعرض -->
+                    <div class="tab-content" id="galleryTab">
+                        <div class="gallery-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-images"></i>
+                                <span>معرض المتجر</span>
+                            </h2>
+                            <button class="add-photo-btn" id="addGalleryPhotoBtn">
+                                <i class="fas fa-plus"></i>
+                                <span>إضافة صور</span>
+                            </button>
+                        </div>
+                        <div class="gallery-grid" id="galleryGrid">
+                            <!-- الصور تضاف ديناميكياً -->
+                        </div>
+                    </div>
+
+                    <!-- تبويب التقييمات -->
+                    <div class="tab-content" id="reviewsTab">
+                        <h2 class="section-title">
+                            <i class="fas fa-star"></i>
+                            <span>تقييمات الزبائن</span>
+                        </h2>
+                        <div class="reviews-summary">
+                            <div class="overall-rating">
+                                <div class="rating-big" id="overallRating">0.0</div>
+                                <div class="rating-stars" id="overallStars"></div>
+                                <div class="rating-count" id="overallCount">0 تقييم</div>
+                            </div>
+                            <div class="rating-bars">
+                                <!-- أشرطة التقييم تضاف ديناميكياً -->
+                            </div>
+                        </div>
+                        <div class="reviews-list" id="reviewsList">
+                            <!-- التقييمات تضاف ديناميكياً -->
+                        </div>
+                    </div>
+
+                    <!-- تبويب أوقات العمل -->
+                    <div class="tab-content" id="scheduleTab">
+                        <h2 class="section-title">
+                            <i class="fas fa-clock"></i>
+                            <span>أيام وأوقات العمل</span>
+                        </h2>
+                        <div class="schedule-container">
+                            <div class="schedule-days" id="scheduleDays">
+                                <!-- الأيام تضاف ديناميكياً -->
+                            </div>
+                            <div class="schedule-actions">
+                                <button class="save-schedule-btn" id="saveScheduleBtn">
+                                    <i class="fas fa-save"></i>
+                                    <span>حفظ التغييرات</span>
+                                </button>
+                                <button class="reset-schedule-btn" id="resetScheduleBtn">
+                                    <i class="fas fa-undo"></i>
+                                    <span>إعادة تعيين</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================
+    نافذة تعديل الغلاف/الشعار
+    ============================================ -->
+    <div class="modal-overlay" id="imageUploadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="imageUploadTitle">رفع صورة</h3>
+                <button class="modal-close" id="closeImageModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>اسحب الصورة هنا أو اضغط للاختيار</p>
+                    <small>PNG, JPG حتى 5MB</small>
+                </div>
+                <div class="image-preview" id="imagePreview" style="display: none;">
+                    <img id="previewImage" alt="معاينة">
+                    <button class="remove-preview-btn" id="removePreviewBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="cancelUploadBtn">إلغاء</button>
+                <button class="submit-btn" id="submitImageBtn" disabled>حفظ الصورة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="../shared/js/paths.js"></script>
+    <script type="module" src="../shared/js/notifications.js"></script>
+    <script type="module" src="../shared/js/global-navbar.js"></script>
+    <script type="module" src="store.js"></script>
 </body>
-
 </html>
+

@@ -1,14 +1,373 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بيانات المتجر | BarberFlow Pro</title>
+    <meta name="description" content="أضف متجرك الإلكتروني لمنتجات الحلاقة والتجميل وابدأ في البيع">
+    
+    <!-- CSS المركزي -->
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    
+    <!-- CSS الخاص بالصفحة -->
+    <link rel="stylesheet" href="add-store.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
 </head>
+<body data-theme="dark">
+    <div class="wizard-page">
+        <div class="wizard-container">
+            <!-- رأس الصفحة -->
+            <div class="wizard-header">
+                <button class="icon-btn back-btn" id="backBtn" aria-label="العودة">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <div class="wizard-title">
+                    <h1>إضافة متجر جديد</h1>
+                    <p>خطوة بخطوة نحو متجرك الاحترافي</p>
+                </div>
+                <button class="icon-btn cancel-btn" id="cancelBtn" aria-label="إلغاء">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
 
-<body>
-  
+            <!-- شريط التقدم -->
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- خطوات الـ Stepper -->
+            <div class="stepper" id="stepper">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">المعلومات الأساسية</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">نوع المتجر</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">الأقسام التجارية</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">التوصيل والدفع</div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-label">أوقات العمل</div>
+                </div>
+            </div>
+
+            <!-- محتوى المراحل -->
+            <form id="addStoreForm" class="wizard-form">
+                <!-- المرحلة 1: المعلومات الأساسية -->
+                <div class="wizard-step active" data-step="1">
+                    <div class="step-header">
+                        <i class="fas fa-store"></i>
+                        <h2>المعلومات الأساسية</h2>
+                        <p>أخبرنا عن متجرك بشكل عام</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="storeName">
+                            <i class="fas fa-store"></i>
+                            اسم المتجر
+                        </label>
+                        <input 
+                            type="text" 
+                            id="storeName" 
+                            placeholder="مثال: متجر الأناقة للحلاقة"
+                            required
+                            minlength="3"
+                        >
+                        <span class="field-hint">اسم واضح ومميز لمتجرك</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="storeLocation">
+                            <i class="fas fa-map-marker-alt"></i>
+                            المدينة / الحي
+                        </label>
+                        <input 
+                            type="text" 
+                            id="storeLocation" 
+                            placeholder="مثال: الدار البيضاء، المعاريف"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="storePhone">
+                            <i class="fas fa-phone"></i>
+                            رقم الهاتف
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="storePhone" 
+                            placeholder="0612345678"
+                            required
+                            pattern="[0-9]{10}"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="storeEmail">
+                            <i class="fas fa-envelope"></i>
+                            البريد الإلكتروني (اختياري)
+                        </label>
+                        <input 
+                            type="email" 
+                            id="storeEmail" 
+                            placeholder="contact@store.com"
+                        >
+                    </div>
+                </div>
+
+                <!-- المرحلة 2: نوع المتجر -->
+                <div class="wizard-step" data-step="2">
+                    <div class="step-header">
+                        <i class="fas fa-tags"></i>
+                        <h2>نوع المتجر</h2>
+                        <p>اختر النوع الذي يناسب نشاطك التجاري</p>
+                    </div>
+                    
+                    <div class="store-types-grid">
+                        <label class="type-card">
+                            <input type="radio" name="storeType" value="متجر منتجات التجميل والعناية" required>
+                            <div class="type-content">
+                                <i class="fas fa-spa"></i>
+                                <span>منتجات التجميل</span>
+                                <small>مستحضرات تجميل وعناية</small>
+                            </div>
+                        </label>
+
+                        <label class="type-card">
+                            <input type="radio" name="storeType" value="متجر أدوات الحلاقة المهنية">
+                            <div class="type-content">
+                                <i class="fas fa-cut"></i>
+                                <span>أدوات الحلاقة</span>
+                                <small>مقصات، أمواس، معدات</small>
+                            </div>
+                        </label>
+
+                        <label class="type-card">
+                            <input type="radio" name="storeType" value="متجر العناية بالشعر واللحية">
+                            <div class="type-content">
+                                <i class="fas fa-user-tie"></i>
+                                <span>العناية بالشعر</span>
+                                <small>شامبو، زيوت، كريمات</small>
+                            </div>
+                        </label>
+
+                        <label class="type-card">
+                            <input type="radio" name="storeType" value="متجر إكسسوارات ومستلزمات">
+                            <div class="type-content">
+                                <i class="fas fa-gem"></i>
+                                <span>إكسسوارات</span>
+                                <small>مشط، فرش، حافظات</small>
+                            </div>
+                        </label>
+
+                        <label class="type-card">
+                            <input type="radio" name="storeType" value="متجر متعدد الأقسام (شامل)">
+                            <div class="type-content">
+                                <i class="fas fa-th-large"></i>
+                                <span>متجر شامل</span>
+                                <small>جميع منتجات الحلاقة</small>
+                            </div>
+                        </label>
+
+                        <label class="type-card">
+                            <input type="radio" name="storeType" value="متجر إلكتروني فقط (بدون موقع فعلي)">
+                            <div class="type-content">
+                                <i class="fas fa-laptop"></i>
+                                <span>متجر إلكتروني</span>
+                                <small>بيع أونلاين فقط</small>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- المرحلة 3: الأقسام التجارية -->
+                <div class="wizard-step" data-step="3">
+                    <div class="step-header">
+                        <i class="fas fa-list"></i>
+                        <h2>الأقسام التجارية</h2>
+                        <p>أضف الأقسام التي سيحتويها متجرك</p>
+                    </div>
+                    
+                    <div class="categories-list" id="categoriesList">
+                        <!-- الأقسام تضاف ديناميكياً -->
+                    </div>
+
+                    <button type="button" class="add-category-btn" id="addCategoryBtn">
+                        <i class="fas fa-plus"></i>
+                        <span>إضافة قسم جديد</span>
+                    </button>
+
+                    <div class="empty-categories" id="emptyCategories">
+                        <i class="fas fa-folder-open"></i>
+                        <p>لم تضف أي قسم بعد</p>
+                        <small>اضغط على الزر أعلاه لإضافة أول قسم</small>
+                    </div>
+
+                    <div class="step-hint">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>أضف على الأقل قسماً واحداً (مثال: شامبو، مقصات، كريمات...)</span>
+                    </div>
+                </div>
+
+                <!-- المرحلة 4: التوصيل والدفع -->
+                <div class="wizard-step" data-step="4">
+                    <div class="step-header">
+                        <i class="fas fa-truck"></i>
+                        <h2>التوصيل والدفع</h2>
+                        <p>كيف تريد إدارة الطلبات والمدفوعات؟</p>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label class="section-label">خيارات التوصيل</label>
+                        <div class="options-grid">
+                            <label class="option-card">
+                                <input type="checkbox" name="deliveryOptions" value="pickup">
+                                <div class="option-content">
+                                    <i class="fas fa-store"></i>
+                                    <div>
+                                        <h4>الاستلام من المتجر</h4>
+                                        <p>العميل يأتي لاستلام طلبه</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="option-card">
+                                <input type="checkbox" name="deliveryOptions" value="local">
+                                <div class="option-content">
+                                    <i class="fas fa-motorcycle"></i>
+                                    <div>
+                                        <h4>توصيل محلي</h4>
+                                        <p>داخل نفس المدينة</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="option-card">
+                                <input type="checkbox" name="deliveryOptions" value="national">
+                                <div class="option-content">
+                                    <i class="fas fa-shipping-fast"></i>
+                                    <div>
+                                        <h4>توصيل وطني</h4>
+                                        <p>لجميع مدن المغرب</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <label class="section-label">طرق الدفع المقبولة</label>
+                        <div class="options-grid">
+                            <label class="option-card">
+                                <input type="checkbox" name="paymentMethods" value="cash">
+                                <div class="option-content">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <div>
+                                        <h4>الدفع عند الاستلام</h4>
+                                        <p>نقداً عند التوصيل</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="option-card">
+                                <input type="checkbox" name="paymentMethods" value="transfer">
+                                <div class="option-content">
+                                    <i class="fas fa-university"></i>
+                                    <div>
+                                        <h4>تحويل بنكي</h4>
+                                        <p>عبر الحساب البنكي</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="option-card">
+                                <input type="checkbox" name="paymentMethods" value="card">
+                                <div class="option-content">
+                                    <i class="fas fa-credit-card"></i>
+                                    <div>
+                                        <h4>بطاقة بنكية</h4>
+                                        <p>Visa, Mastercard</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة 5: أيام وأوقات العمل -->
+                <div class="wizard-step" data-step="5">
+                    <div class="step-header">
+                        <i class="fas fa-clock"></i>
+                        <h2>أيام وأوقات العمل</h2>
+                        <p>حدد متى يكون متجرك متاحاً للطلبات</p>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label class="section-label">أيام العمل</label>
+                        <div class="days-selector" id="daysSelector">
+                            <!-- الأيام تضاف ديناميكياً -->
+                        </div>
+                        <span class="field-hint">اختر يوم عمل واحد على الأقل</span>
+                    </div>
+
+                    <div class="form-section">
+                        <label class="section-label">ساعات العمل</label>
+                        <div class="time-group">
+                            <div class="time-input">
+                                <label for="openTime">من</label>
+                                <input type="time" id="openTime" value="09:00" required>
+                            </div>
+                            <div class="time-input">
+                                <label for="closeTime">إلى</label>
+                                <input type="time" id="closeTime" value="21:00" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- أزرار التنقل -->
+                <div class="wizard-actions">
+                    <button type="button" class="nav-btn prev-btn" id="prevBtn" style="display: none;">
+                        <i class="fas fa-arrow-right"></i>
+                        <span>السابق</span>
+                    </button>
+                    
+                    <button type="button" class="nav-btn next-btn" id="nextBtn">
+                        <span>التالي</span>
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+
+                    <button type="submit" class="nav-btn submit-btn" id="submitBtn" style="display: none;">
+                        <i class="fas fa-check"></i>
+                        <span>حفظ ومتابعة الإعداد</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="../shared/js/paths.js"></script>
+    <script type="module" src="../shared/js/notifications.js"></script>
+    <script type="module" src="add-store.js"></script>
 </body>
-
 </html>
+
