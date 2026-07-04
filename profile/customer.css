@@ -1,0 +1,1261 @@
+/* ==========================================================================
+BarberFlow Pro - بروفايل الزبون
+المسار: profile/customer.css
+========================================================================== */
+
+/* ============================================
+رأس البروفايل
+============================================ */
+.profile-header {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.profile-cover {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.profile-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cover-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    color: #fff;
+}
+
+.edit-cover-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.edit-cover-btn:hover {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+}
+
+.profile-info-bar {
+    background: var(--bg-secondary);
+    padding: 20px 0;
+    margin-top: -40px;
+    position: relative;
+    z-index: 10;
+}
+
+.profile-main-info {
+    display: flex;
+    align-items: flex-end;
+    gap: 25px;
+}
+
+.profile-avatar-container {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 4px solid var(--bg-secondary);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    font-size: 3rem;
+    color: var(--brand-accent);
+}
+
+.edit-avatar-btn {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: var(--brand-accent);
+    border: 2px solid var(--bg-secondary);
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.edit-avatar-btn:hover {
+    transform: scale(1.1);
+}
+
+.profile-details {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 1.8rem;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+}
+
+.profile-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.meta-item i {
+    color: var(--brand-accent);
+}
+
+.profile-badges {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.customer-badge {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--brand-accent);
+    border: 1px solid var(--brand-accent);
+}
+
+.since-badge {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.profile-actions {
+    flex-shrink: 0;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--brand-accent);
+    color: #000;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    transition: all var(--transition-fast);
+}
+
+.action-btn:hover {
+    background: var(--brand-accent-dark);
+    transform: translateY(-2px);
+}
+
+/* ============================================
+التخطيط الرئيسي
+============================================ */
+.profile-main {
+    padding: 30px 0;
+    background: var(--bg-primary);
+}
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+}
+
+/* ============================================
+الشريط الجانبي
+============================================ */
+.profile-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.stats-card,
+.quick-nav-card,
+.logout-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
+}
+
+.stats-card h3,
+.quick-nav-card h3 {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin: 0 0 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stats-card h3 i,
+.quick-nav-card h3 i {
+    color: var(--brand-accent);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px 10px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+}
+
+.stat-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--brand-accent);
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.quick-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.quick-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    margin-bottom: 5px;
+}
+
+.quick-nav-item:hover,
+.quick-nav-item.active {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--brand-accent);
+}
+
+.quick-nav-item i {
+    width: 20px;
+    text-align: center;
+}
+
+.quick-nav-item .badge {
+    margin-right: auto;
+    background: var(--brand-danger);
+    color: #fff;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--brand-danger);
+    color: var(--brand-danger);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    transition: all var(--transition-fast);
+}
+
+.logout-btn:hover {
+    background: var(--brand-danger);
+    color: #fff;
+}
+
+/* ============================================
+المحتوى الرئيسي
+============================================ */
+.profile-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 30px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.tab-header h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tab-header h2 i {
+    color: var(--brand-accent);
+}
+
+/* ============================================
+بطاقات الأقسام
+============================================ */
+.section-card {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.section-header h3 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-header h3 i {
+    color: var(--brand-accent);
+}
+
+.view-all-link {
+    color: var(--brand-accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+}
+
+.view-all-link:hover {
+    color: var(--brand-accent-dark);
+}
+
+/* ============================================
+بطاقات الحجوزات والطلبات
+============================================ */
+.bookings-list,
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.booking-card,
+.order-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    transition: all var(--transition-fast);
+}
+
+.booking-card:hover,
+.order-card:hover {
+    border-color: var(--brand-accent);
+    transform: translateX(-5px);
+}
+
+.booking-info h4,
+.order-info h4 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+}
+
+.booking-info p,
+.order-info p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.booking-info p i,
+.order-info p i {
+    color: var(--brand-accent);
+    width: 16px;
+}
+
+.booking-actions,
+.order-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.booking-status,
+.order-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.booking-status.confirmed,
+.order-status.delivered {
+    background: rgba(43, 138, 62, 0.1);
+    color: var(--brand-success);
+}
+
+.booking-status.pending,
+.order-status.pending,
+.order-status.shipped {
+    background: rgba(232, 89, 12, 0.1);
+    color: var(--brand-warning);
+}
+
+.booking-status.completed {
+    background: rgba(43, 138, 62, 0.1);
+    color: var(--brand-success);
+}
+
+.booking-status.cancelled,
+.order-status.cancelled {
+    background: rgba(201, 42, 42, 0.1);
+    color: var(--brand-danger);
+}
+
+.cancel-booking-btn,
+.view-order-btn {
+    padding: 8px 16px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    transition: all var(--transition-fast);
+}
+
+.cancel-booking-btn:hover {
+    background: var(--brand-danger);
+    color: #fff;
+    border-color: var(--brand-danger);
+}
+
+.view-order-btn:hover {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+}
+
+/* ============================================
+بطاقات المفضلة
+============================================ */
+.favorites-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.fav-tab-btn {
+    padding: 10px 20px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    transition: all var(--transition-fast);
+}
+
+.fav-tab-btn:hover,
+.fav-tab-btn.active {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.favorite-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+    transition: all var(--transition-fast);
+}
+
+.favorite-card:hover {
+    border-color: var(--brand-accent);
+    transform: translateY(-5px);
+}
+
+.favorite-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.favorite-info {
+    padding: 15px;
+}
+
+.favorite-info h4 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+}
+
+.favorite-info p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.favorite-info p i {
+    color: var(--brand-accent);
+    width: 16px;
+}
+
+.view-btn,
+.remove-fav-btn {
+    position: absolute;
+    top: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.view-btn {
+    left: 10px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.remove-fav-btn {
+    right: 10px;
+    background: var(--brand-danger);
+    color: #fff;
+}
+
+.view-btn:hover,
+.remove-fav-btn:hover {
+    transform: scale(1.1);
+}
+
+/* ============================================
+بطاقات العناوين
+============================================ */
+.addresses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.address-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    position: relative;
+}
+
+.address-card.default {
+    border-color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.address-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.address-header h4 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.default-badge {
+    padding: 4px 10px;
+    background: var(--brand-accent);
+    color: #000;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.address-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.address-card p i {
+    color: var(--brand-accent);
+    width: 16px;
+}
+
+.address-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.address-actions button {
+    flex: 1;
+    padding: 8px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    transition: all var(--transition-fast);
+}
+
+.address-actions button:hover {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+}
+
+/* ============================================
+الإعدادات
+============================================ */
+.settings-section {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.settings-section h3 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.settings-section h3 i {
+    color: var(--brand-accent);
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.form-group input {
+    padding: 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all var(--transition-fast);
+}
+
+.form-group input:focus {
+    border-color: var(--brand-accent);
+}
+
+.form-group input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.save-btn {
+    padding: 12px 24px;
+    background: var(--brand-accent);
+    color: #000;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    transition: all var(--transition-fast);
+    align-self: flex-start;
+}
+
+.save-btn:hover {
+    background: var(--brand-accent-dark);
+}
+
+/* ============================================
+إعدادات الإشعارات
+============================================ */
+.notification-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.toggle-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.toggle-item span:first-child {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.toggle-slider {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    background: var(--bg-tertiary);
+    border-radius: 13px;
+    transition: all var(--transition-fast);
+}
+
+.toggle-item input[type="checkbox"] {
+    display: none;
+}
+
+.toggle-item input[type="checkbox"]:checked + .toggle-slider {
+    background: var(--brand-accent);
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+}
+
+.toggle-item input[type="checkbox"]:checked + .toggle-slider::before {
+    transform: translateX(-24px);
+}
+
+/* ============================================
+منطقة الخطر
+============================================ */
+.danger-section {
+    border: 1px solid var(--brand-danger);
+}
+
+.danger-section h3 {
+    color: var(--brand-danger);
+}
+
+.danger-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.danger-btn {
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--brand-danger);
+    color: var(--brand-danger);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    transition: all var(--transition-fast);
+}
+
+.danger-btn:hover {
+    background: var(--brand-danger);
+    color: #fff;
+}
+
+/* ============================================
+الحالات الفارغة
+============================================ */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    display: block;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    margin-bottom: 20px;
+    font-size: 1rem;
+}
+
+.cta-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--brand-accent);
+    color: #000;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+}
+
+.cta-btn:hover {
+    background: var(--brand-accent-dark);
+    transform: translateY(-2px);
+}
+
+/* ============================================
+الفلاتر
+============================================ */
+.filter-chips {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-chip {
+    padding: 8px 16px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    transition: all var(--transition-fast);
+}
+
+.filter-chip:hover,
+.filter-chip.active {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+}
+
+/* ============================================
+النوافذ المنبثقة
+============================================ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.modal-close {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+    background: var(--brand-danger);
+    color: #fff;
+}
+
+.modal-body {
+    padding: 20px 0;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-cancel,
+.btn-submit {
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    transition: all var(--transition-fast);
+}
+
+.btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.btn-submit {
+    background: var(--brand-accent);
+    border: none;
+    color: #000;
+}
+
+.btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+منطقة رفع الصور
+============================================ */
+.upload-area {
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.upload-area:hover {
+    border-color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.upload-area i {
+    font-size: 3rem;
+    color: var(--brand-accent);
+}
+
+.upload-area p {
+    margin: 0;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.upload-area small {
+    color: var(--text-muted);
+}
+
+.image-preview {
+    position: relative;
+    text-align: center;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: var(--radius-md);
+}
+
+.remove-preview-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--brand-danger);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 1024px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-sidebar {
+        order: 2;
+    }
+    
+    .profile-content {
+        order: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-cover {
+        height: 180px;
+    }
+    
+    .profile-avatar {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .profile-name {
+        font-size: 1.4rem;
+    }
+    
+    .profile-main-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .profile-meta {
+        justify-content: center;
+    }
+    
+    .profile-badges {
+        justify-content: center;
+    }
+    
+    .profile-actions {
+        width: 100%;
+    }
+    
+    .action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .booking-card,
+    .order-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .booking-actions,
+    .order-actions {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .favorites-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .addresses-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-content {
+        padding: 20px;
+    }
+    
+    .section-card {
+        padding: 15px;
+    }
+    
+    .tab-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .filter-chips {
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+    
+    .filter-chip {
+        flex-shrink: 0;
+    }
+}
+

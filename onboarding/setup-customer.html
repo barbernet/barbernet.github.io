@@ -1,14 +1,306 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تخصيص تجربتك | BarberFlow Pro</title>
+    <meta name="description" content="خصص تفضيلاتك للحصول على أفضل تجربة في BarberFlow Pro">
+    
+    <!-- CSS المركزي -->
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    
+    <!-- CSS الخاص بالصفحة -->
+    <link rel="stylesheet" href="setup-customer.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
 </head>
+<body data-theme="dark">
+    <div class="wizard-page">
+        <div class="wizard-container">
+            <!-- رأس الصفحة -->
+            <div class="wizard-header">
+                <button class="back-btn" id="backBtn" aria-label="العودة">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <div class="wizard-title">
+                    <h1>تخصيص تجربتك</h1>
+                    <p>اختر اهتماماتك لنقدم لك أفضل العروض</p>
+                </div>
+                <button class="skip-btn" id="skipBtn" aria-label="تخطي">
+                    <i class="fas fa-forward"></i>
+                </button>
+            </div>
 
-<body>
-  
+            <!-- شريط التقدم -->
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- خطوات الـ Stepper -->
+            <div class="stepper" id="stepper">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">الاهتمامات</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">الخدمات</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">الإشعارات</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">التأكيد</div>
+                </div>
+            </div>
+
+            <!-- محتوى المراحل -->
+            <form id="setupCustomerForm" class="wizard-form">
+                <!-- المرحلة 1: الاهتمامات -->
+                <div class="wizard-step active" data-step="1">
+                    <div class="step-header">
+                        <i class="fas fa-heart"></i>
+                        <h2>ما الذي يهمك؟</h2>
+                        <p>اختر اهتماماتك لنقدم لك محتوى مناسب</p>
+                    </div>
+                    
+                    <div class="interests-grid">
+                        <label class="interest-card">
+                            <input type="checkbox" name="interests" value="men-salons">
+                            <div class="interest-content">
+                                <i class="fas fa-male"></i>
+                                <span>صالونات رجالية</span>
+                            </div>
+                        </label>
+
+                        <label class="interest-card">
+                            <input type="checkbox" name="interests" value="women-salons">
+                            <div class="interest-content">
+                                <i class="fas fa-female"></i>
+                                <span>صالونات نسائية</span>
+                            </div>
+                        </label>
+
+                        <label class="interest-card">
+                            <input type="checkbox" name="interests" value="kids-salons">
+                            <div class="interest-content">
+                                <i class="fas fa-child"></i>
+                                <span>صالونات أطفال</span>
+                            </div>
+                        </label>
+
+                        <label class="interest-card">
+                            <input type="checkbox" name="interests" value="products">
+                            <div class="interest-content">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>منتجات العناية</span>
+                            </div>
+                        </label>
+
+                        <label class="interest-card">
+                            <input type="checkbox" name="interests" value="home-services">
+                            <div class="interest-content">
+                                <i class="fas fa-home"></i>
+                                <span>خدمات منزلية</span>
+                            </div>
+                        </label>
+
+                        <label class="interest-card">
+                            <input type="checkbox" name="interests" value="offers">
+                            <div class="interest-content">
+                                <i class="fas fa-percent"></i>
+                                <span>عروض وخصومات</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- المرحلة 2: الخدمات المفضلة -->
+                <div class="wizard-step" data-step="2">
+                    <div class="step-header">
+                        <i class="fas fa-cut"></i>
+                        <h2>الخدمات المفضلة</h2>
+                        <p>اختر الخدمات التي تستخدمها غالباً</p>
+                    </div>
+                    
+                    <div class="services-grid">
+                        <label class="service-card">
+                            <input type="checkbox" name="services" value="haircut">
+                            <div class="service-content">
+                                <i class="fas fa-cut"></i>
+                                <span>حلاقة شعر</span>
+                            </div>
+                        </label>
+
+                        <label class="service-card">
+                            <input type="checkbox" name="services" value="beard">
+                            <div class="service-content">
+                                <i class="fas fa-user-tie"></i>
+                                <span>تهذيب اللحية</span>
+                            </div>
+                        </label>
+
+                        <label class="service-card">
+                            <input type="checkbox" name="services" value="facial">
+                            <div class="service-content">
+                                <i class="fas fa-spa"></i>
+                                <span>عناية بالبشرة</span>
+                            </div>
+                        </label>
+
+                        <label class="service-card">
+                            <input type="checkbox" name="services" value="massage">
+                            <div class="service-content">
+                                <i class="fas fa-hand-sparkles"></i>
+                                <span>مساج</span>
+                            </div>
+                        </label>
+
+                        <label class="service-card">
+                            <input type="checkbox" name="services" value="styling">
+                            <div class="service-content">
+                                <i class="fas fa-wind"></i>
+                                <span>تصفيف شعر</span>
+                            </div>
+                        </label>
+
+                        <label class="service-card">
+                            <input type="checkbox" name="services" value="coloring">
+                            <div class="service-content">
+                                <i class="fas fa-palette"></i>
+                                <span>صبغة شعر</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- المرحلة 3: الإشعارات -->
+                <div class="wizard-step" data-step="3">
+                    <div class="step-header">
+                        <i class="fas fa-bell"></i>
+                        <h2>تفضيلات الإشعارات</h2>
+                        <p>تحكم في أنواع الإشعارات التي تصلك</p>
+                    </div>
+                    
+                    <div class="notifications-list">
+                        <label class="notification-item">
+                            <input type="checkbox" name="notifications" value="offers" checked>
+                            <div class="notification-content">
+                                <i class="fas fa-tag"></i>
+                                <div>
+                                    <span class="notification-title">عروض وخصومات</span>
+                                    <span class="notification-desc">احصل على أحدث العروض والخصومات الحصرية</span>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="notification-item">
+                            <input type="checkbox" name="notifications" value="new-salons" checked>
+                            <div class="notification-content">
+                                <i class="fas fa-store"></i>
+                                <div>
+                                    <span class="notification-title">صالونات جديدة</span>
+                                    <span class="notification-desc">اكتشف صالونات جديدة قريبة منك</span>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="notification-item">
+                            <input type="checkbox" name="notifications" value="tips">
+                            <div class="notification-content">
+                                <i class="fas fa-lightbulb"></i>
+                                <div>
+                                    <span class="notification-title">نصائح العناية</span>
+                                    <span class="notification-desc">نصائح احترافية للعناية بشعرك وبشرتك</span>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="notification-item">
+                            <input type="checkbox" name="notifications" value="reminders">
+                            <div class="notification-content">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <span class="notification-title">تذكير بالحجوزات</span>
+                                    <span class="notification-desc">تذكير بمواعيد حجوزاتك القادمة</span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- المرحلة 4: ملخص وتأكيد -->
+                <div class="wizard-step" data-step="4">
+                    <div class="step-header">
+                        <i class="fas fa-check-circle"></i>
+                        <h2>ملخص تفضيلاتك</h2>
+                        <p>راجع اختياراتك قبل البدء</p>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-section">
+                            <h3><i class="fas fa-heart"></i> اهتماماتك</h3>
+                            <div class="summary-list" id="interestsSummary">
+                                <p class="empty-summary">لم تختر أي اهتمامات بعد</p>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-section">
+                            <h3><i class="fas fa-cut"></i> خدماتك المفضلة</h3>
+                            <div class="summary-list" id="servicesSummary">
+                                <p class="empty-summary">لم تختر أي خدمات بعد</p>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-section">
+                            <h3><i class="fas fa-bell"></i> الإشعارات المفعلة</h3>
+                            <div class="summary-list" id="notificationsSummary">
+                                <p class="empty-summary">لم تختر أي إشعارات بعد</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-note">
+                        <i class="fas fa-info-circle"></i>
+                        <span>يمكنك تعديل هذه التفضيلات لاحقاً من إعدادات الحساب</span>
+                    </div>
+                </div>
+
+                <!-- أزرار التنقل -->
+                <div class="wizard-actions">
+                    <button type="button" class="nav-btn prev-btn" id="prevBtn" style="display: none;">
+                        <i class="fas fa-arrow-right"></i>
+                        <span>السابق</span>
+                    </button>
+                    
+                    <button type="button" class="nav-btn next-btn" id="nextBtn">
+                        <span>التالي</span>
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+
+                    <button type="submit" class="nav-btn submit-btn" id="submitBtn" style="display: none;">
+                        <span>بدء الاستكشاف</span>
+                        <i class="fas fa-rocket"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="../shared/js/paths.js"></script>
+    <script type="module" src="../shared/js/notifications.js"></script>
+    <script type="module" src="setup-customer.js"></script>
 </body>
-
 </html>
+

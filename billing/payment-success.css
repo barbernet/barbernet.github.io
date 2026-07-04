@@ -1,0 +1,296 @@
+/* ==========================================================================
+BarberFlow Pro - صفحة نجاح الدفع
+المسار: billing/payment-success.css
+========================================================================== */
+
+/* ============================================
+الصفحة العامة
+============================================ */
+.success-page {
+    min-height: 100vh;
+    padding: 20px;
+    background: var(--bg-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.success-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px 0;
+    position: relative;
+    z-index: 2;
+}
+
+/* ============================================
+أيقونة النجاح المتحركة
+============================================ */
+.success-icon-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+}
+
+.success-icon {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--brand-success), #1e7e34);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+    animation: successPulse 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(43, 138, 62, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 30px rgba(43, 138, 62, 0);
+    }
+}
+
+.success-ring {
+    position: absolute;
+    inset: -10px;
+    border: 3px solid var(--brand-success);
+    border-radius: 50%;
+    opacity: 0;
+    animation: ringExpand 2s ease-out infinite;
+}
+
+.success-ring.ring-2 {
+    animation-delay: 0.5s;
+}
+
+@keyframes ringExpand {
+    0% {
+        opacity: 1;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}
+
+/* ============================================
+محتوى النجاح
+============================================ */
+.success-content {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    border: 1px solid var(--border-gold);
+    box-shadow: var(--shadow-xl);
+}
+
+.success-title {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin: 0 0 15px 0;
+    text-align: center;
+}
+
+.success-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin: 0 0 30px 0;
+    text-align: center;
+}
+
+/* ============================================
+تفاصيل الاشتراك
+============================================ */
+.subscription-details {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.detail-value {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.ref-number {
+    font-family: 'Courier New', monospace;
+    color: var(--brand-accent);
+    font-size: 0.9rem;
+}
+
+/* ============================================
+المميزات المفعلة
+============================================ */
+.features-unlocked {
+    margin-bottom: 30px;
+}
+
+.features-unlocked h3 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 0 0 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.features-unlocked h3 i {
+    color: var(--brand-success);
+}
+
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.features-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.features-list li i {
+    color: var(--brand-success);
+    font-size: 1rem;
+}
+
+/* ============================================
+أزرار الإجراءات
+============================================ */
+.success-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.btn-primary,
+.btn-secondary {
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all var(--transition-fast);
+    font-family: 'Cairo', sans-serif;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+}
+
+.btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--border-color);
+}
+
+/* ============================================
+رسالة البريد الإلكتروني
+============================================ */
+.email-notice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.email-notice i {
+    color: var(--brand-accent);
+    font-size: 1.1rem;
+}
+
+/* ============================================
+تأثيرات الخلفية (Confetti)
+============================================ */
+.confetti-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 480px) {
+    .success-content {
+        padding: 25px;
+    }
+    
+    .success-title {
+        font-size: 1.6rem;
+    }
+    
+    .success-icon-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .success-icon {
+        font-size: 2.8rem;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+

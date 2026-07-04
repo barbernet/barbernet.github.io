@@ -1,0 +1,515 @@
+/* ==========================================================================
+BarberFlow Pro - صفحة تخصيص تفضيلات الزبون (Wizard)
+المسار: onboarding/css/setup-customer.css
+========================================================================== */
+
+/* ============================================
+الصفحة العامة
+============================================ */
+.wizard-page {
+    min-height: 100vh;
+    padding: 20px;
+    background: var(--bg-primary);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.wizard-container {
+    width: 100%;
+    max-width: 700px;
+    padding: 20px 0;
+}
+
+/* ============================================
+رأس الصفحة
+============================================ */
+.wizard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+.wizard-title {
+    flex: 1;
+    text-align: center;
+}
+
+.wizard-title h1 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+}
+
+.wizard-title p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.back-btn,
+.skip-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.back-btn:hover {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+}
+
+.skip-btn:hover {
+    background: var(--bg-accent);
+    color: var(--brand-accent);
+}
+
+/* ============================================
+شريط التقدم والـ Stepper
+============================================ */
+.progress-bar-container {
+    height: 4px;
+    background: var(--bg-tertiary);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand-accent), var(--brand-accent-dark));
+    transition: width 0.5s ease;
+    width: 0%;
+}
+
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.stepper::-webkit-scrollbar {
+    display: none;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 80px;
+    position: relative;
+}
+
+.step-number {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: 2px solid var(--border-color);
+    transition: all var(--transition-fast);
+}
+
+.step-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.step.active .step-number {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+    transform: scale(1.1);
+}
+
+.step.active .step-label {
+    color: var(--brand-accent);
+    font-weight: 600;
+}
+
+.step.completed .step-number {
+    background: var(--brand-success);
+    color: #fff;
+    border-color: var(--brand-success);
+}
+
+.step.completed .step-number::after {
+    content: '✓';
+    font-size: 1rem;
+}
+
+.step.completed .step-number {
+    font-size: 0;
+}
+
+/* ============================================
+محتوى المراحل
+============================================ */
+.wizard-form {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    border: 1px solid var(--border-color);
+}
+
+.wizard-step {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.wizard-step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.step-header i {
+    font-size: 2.5rem;
+    color: var(--brand-accent);
+    margin-bottom: 10px;
+}
+
+.step-header h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+}
+
+.step-header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ============================================
+شبكة الاهتمامات والخدمات
+============================================ */
+.interests-grid,
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.interest-card,
+.service-card {
+    position: relative;
+    cursor: pointer;
+}
+
+.interest-card input,
+.service-card input {
+    position: absolute;
+    opacity: 0;
+}
+
+.interest-content,
+.service-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 15px;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    text-align: center;
+}
+
+.interest-content i,
+.service-content i {
+    font-size: 2rem;
+    color: var(--brand-accent);
+}
+
+.interest-content span,
+.service-content span {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.interest-card input:checked + .interest-content,
+.service-card input:checked + .service-content {
+    border-color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.1);
+    transform: translateY(-2px);
+}
+
+.interest-card:hover .interest-content,
+.service-card:hover .service-content {
+    border-color: var(--brand-accent);
+}
+
+/* ============================================
+قائمة الإشعارات
+============================================ */
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.notification-item {
+    position: relative;
+    cursor: pointer;
+}
+
+.notification-item input {
+    position: absolute;
+    opacity: 0;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.notification-content > i {
+    font-size: 1.5rem;
+    color: var(--brand-accent);
+    width: 30px;
+    text-align: center;
+}
+
+.notification-content > div {
+    flex: 1;
+}
+
+.notification-title {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.notification-desc {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.notification-item input:checked + .notification-content {
+    border-color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.notification-item:hover .notification-content {
+    border-color: var(--brand-accent);
+}
+
+/* ============================================
+بطاقة الملخص
+============================================ */
+.summary-card {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.summary-section {
+    margin-bottom: 20px;
+}
+
+.summary-section:last-child {
+    margin-bottom: 0;
+}
+
+.summary-section h3 {
+    font-size: 1.1rem;
+    color: var(--brand-accent);
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.summary-section h3 i {
+    font-size: 1rem;
+}
+
+.summary-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.summary-tag {
+    padding: 6px 12px;
+    background: var(--brand-accent);
+    color: #000;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.empty-summary {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.summary-note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.summary-note i {
+    color: var(--brand-accent);
+    font-size: 1.2rem;
+}
+
+/* ============================================
+أزرار التنقل
+============================================ */
+.wizard-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.nav-btn {
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    border: none;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all var(--transition-fast);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.prev-btn {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.prev-btn:hover:not(:disabled) {
+    background: var(--border-color);
+}
+
+.next-btn,
+.submit-btn {
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+}
+
+.next-btn:hover:not(:disabled),
+.submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 768px) {
+    .wizard-page {
+        padding: 10px;
+    }
+    
+    .wizard-form {
+        padding: 20px;
+    }
+    
+    .interests-grid,
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .interest-content i,
+    .service-content i {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .wizard-header {
+        padding: 15px;
+    }
+    
+    .wizard-title h1 {
+        font-size: 1.3rem;
+    }
+    
+    .step-label {
+        font-size: 0.7rem;
+    }
+    
+    .nav-btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+    }
+}
+

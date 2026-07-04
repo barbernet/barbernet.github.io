@@ -1,14 +1,279 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">تفاصيل المنتج | BarberFlow Pro</title>
+    <meta name="description" content="استعرض تفاصيل المنتج وأضفه إلى سلة التسوق">
+    
+    <!-- CSS المركزي -->
+    <link rel="stylesheet" href="shared/css/global.css">
+    <link rel="stylesheet" href="shared/css/global-navbar.css">
+    <link rel="stylesheet" href="shared/css/notifications.css">
+    
+    <!-- CSS الخاص بالصفحة -->
+    <link rel="stylesheet" href="product.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
 </head>
+<body data-theme="dark">
+    <!-- حاوية الشريط العلوي -->
+    <div id="global-navbar-container"></div>
 
-<body>
-  
+    <!-- ============================================
+    مسار التنقل (Breadcrumb)
+    ============================================ -->
+    <nav class="breadcrumb">
+        <div class="container">
+            <a href="index.html" class="breadcrumb-item">
+                <i class="fas fa-home"></i>
+                <span>الرئيسية</span>
+            </a>
+            <i class="fas fa-chevron-left breadcrumb-separator"></i>
+            <a href="store.html" class="breadcrumb-item">
+                <span>المتجر</span>
+            </a>
+            <i class="fas fa-chevron-left breadcrumb-separator"></i>
+            <span class="breadcrumb-item active" id="breadcrumbProduct">المنتج</span>
+        </div>
+    </nav>
+
+    <!-- ============================================
+    المحتوى الرئيسي للمنتج
+    ============================================ -->
+    <main class="product-main">
+        <div class="container">
+            <div class="product-layout">
+                <!-- معرض الصور -->
+                <div class="product-gallery">
+                    <div class="main-image-container">
+                        <img id="mainProductImage" src="" alt="صورة المنتج" class="main-image">
+                        <div class="image-placeholder" id="imagePlaceholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="image-badges">
+                            <span class="badge discount-badge" id="discountBadge" style="display: none;">
+                                <i class="fas fa-tag"></i>
+                                <span id="discountText">-0%</span>
+                            </span>
+                            <span class="badge new-badge" id="newBadge" style="display: none;">
+                                جديد
+                            </span>
+                        </div>
+                        <button class="zoom-btn" id="zoomBtn" aria-label="تكبير الصورة">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="thumbnail-list" id="thumbnailList">
+                        <!-- الصور المصغرة تضاف ديناميكياً -->
+                    </div>
+                </div>
+
+                <!-- معلومات المنتج -->
+                <div class="product-info">
+                    <div class="product-header">
+                        <span class="product-category" id="productCategory">التصنيف</span>
+                        <h1 class="product-name" id="productName">اسم المنتج</h1>
+                        <div class="product-rating">
+                            <div class="stars-display" id="productStars">
+                                <!-- النجوم تضاف ديناميكياً -->
+                            </div>
+                            <span class="rating-count" id="ratingCount">(0 تقييم)</span>
+                        </div>
+                    </div>
+
+                    <div class="product-price-section">
+                        <div class="price-container">
+                            <span class="current-price" id="currentPrice">0 DH</span>
+                            <span class="old-price" id="oldPrice" style="display: none;">0 DH</span>
+                        </div>
+                        <span class="tax-info">شامل ضريبة القيمة المضافة</span>
+                    </div>
+
+                    <div class="product-description">
+                        <h3><i class="fas fa-info-circle"></i> وصف المنتج</h3>
+                        <p id="productDescription">وصف المنتج...</p>
+                    </div>
+
+                    <div class="product-features" id="productFeatures">
+                        <!-- المميزات تضاف ديناميكياً -->
+                    </div>
+
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-box"></i>
+                            <span>الماركة:</span>
+                            <strong id="productBrand">-</strong>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>التوفر:</span>
+                            <strong id="productStock" class="in-stock">متوفر</strong>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-truck"></i>
+                            <span>التوصيل:</span>
+                            <strong>متاح لجميع المدن</strong>
+                        </div>
+                    </div>
+
+                    <div class="quantity-selector">
+                        <label>الكمية:</label>
+                        <div class="quantity-controls">
+                            <button class="qty-btn" id="decreaseQty">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" id="quantityInput" value="1" min="1" max="10">
+                            <button class="qty-btn" id="increaseQty">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="btn-primary add-to-cart-btn" id="addToCartBtn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>أضف إلى السلة</span>
+                        </button>
+                        <button class="btn-secondary wishlist-btn" id="addToWishlistBtn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button class="btn-secondary share-btn" id="shareProductBtn">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+
+                    <div class="trust-badges">
+                        <div class="trust-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>ضمان الجودة</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="fas fa-undo"></i>
+                            <span>إرجاع خلال 7 أيام</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="fas fa-lock"></i>
+                            <span>دفع آمن</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================
+    تبويبات التفاصيل
+    ============================================ -->
+    <section class="product-tabs-section">
+        <div class="container">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="description">
+                    <i class="fas fa-file-alt"></i>
+                    <span>الوصف التفصيلي</span>
+                </button>
+                <button class="tab-btn" data-tab="specifications">
+                    <i class="fas fa-list"></i>
+                    <span>المواصفات</span>
+                </button>
+                <button class="tab-btn" data-tab="reviews">
+                    <i class="fas fa-star"></i>
+                    <span>التقييمات</span>
+                    <span class="tab-badge" id="reviewsTabBadge">0</span>
+                </button>
+            </div>
+
+            <div class="tabs-content">
+                <!-- تبويب الوصف -->
+                <div class="tab-content active" id="descriptionTab">
+                    <div class="tab-inner">
+                        <h3>وصف تفصيلي للمنتج</h3>
+                        <p id="detailedDescription">وصف تفصيلي...</p>
+                    </div>
+                </div>
+
+                <!-- تبويب المواصفات -->
+                <div class="tab-content" id="specificationsTab">
+                    <div class="tab-inner">
+                        <h3>المواصفات التقنية</h3>
+                        <table class="specs-table" id="specsTable">
+                            <!-- المواصفات تضاف ديناميكياً -->
+                        </table>
+                    </div>
+                </div>
+
+                <!-- تبويب التقييمات -->
+                <div class="tab-content" id="reviewsTab">
+                    <div class="tab-inner">
+                        <div class="reviews-summary">
+                            <div class="summary-rating">
+                                <div class="big-rating" id="bigRating">0.0</div>
+                                <div class="stars-display" id="bigStars"></div>
+                                <div class="total-reviews" id="totalReviews">0 تقييم</div>
+                            </div>
+                            <div class="rating-bars" id="ratingBars">
+                                <!-- أشرطة التقييم تضاف ديناميكياً -->
+                            </div>
+                        </div>
+                        <div class="reviews-list" id="reviewsList">
+                            <!-- التقييمات تضاف ديناميكياً -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    منتجات مشابهة
+    ============================================ -->
+    <section class="related-products-section">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-th-large"></i> منتجات مشابهة</h2>
+                <a href="store.html" class="view-all-link">
+                    <span>عرض الكل</span>
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="products-grid" id="relatedProductsGrid">
+                <!-- المنتجات المشابهة تضاف ديناميكياً -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    زر العودة للأعلى
+    ============================================ -->
+    <button class="scroll-top-btn" id="scrollTopBtn" aria-label="العودة للأعلى">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- ============================================
+    نافذة تكبير الصورة
+    ============================================ -->
+    <div class="modal-overlay" id="zoomModal">
+        <div class="modal-content zoom-modal">
+            <button class="modal-close" id="closeZoomModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="zoomedImage" src="" alt="صورة مكبرة">
+        </div>
+    </div>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="shared/js/paths.js"></script>
+    <script type="module" src="shared/js/notifications.js"></script>
+    <script type="module" src="shared/js/global-navbar.js"></script>
+    <script type="module" src="product.js"></script>
 </body>
-
 </html>
+

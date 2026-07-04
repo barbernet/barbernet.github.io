@@ -1,14 +1,343 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجز موعد | BarberFlow Pro</title>
+    <meta name="description" content="احجز موعدك في الصالون المختار بسهولة وسرعة">
+    
+    <!-- CSS المركزي -->
+    <link rel="stylesheet" href="shared/css/global.css">
+    <link rel="stylesheet" href="shared/css/global-navbar.css">
+    <link rel="stylesheet" href="shared/css/notifications.css">
+    
+    <!-- CSS الخاص بالصفحة -->
+    <link rel="stylesheet" href="booking.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
 </head>
+<body data-theme="dark">
+    <!-- حاوية الشريط العلوي -->
+    <div id="global-navbar-container"></div>
 
-<body>
-  
+    <!-- ============================================
+    رأس الصفحة مع معلومات الصالون
+    ============================================ -->
+    <section class="booking-header">
+        <div class="container">
+            <button class="back-btn" id="backBtn" aria-label="العودة">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+            
+            <div class="salon-info" id="salonInfo">
+                <div class="salon-avatar" id="salonAvatar">
+                    <i class="fas fa-store"></i>
+                </div>
+                <div class="salon-details">
+                    <h1 class="salon-name" id="salonName">جاري التحميل...</h1>
+                    <div class="salon-meta">
+                        <span class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span id="salonLocation">-</span>
+                        </span>
+                        <span class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <span id="salonRating">5.0</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    شريط التقدم
+    ============================================ -->
+    <div class="progress-container">
+        <div class="container">
+            <div class="progress-steps">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">الخدمة</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">التاريخ</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">الوقت</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <span class="step-label">التأكيد</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+    محتوى الحجز
+    ============================================ -->
+    <main class="booking-main">
+        <div class="container">
+            <form id="bookingForm" class="booking-form">
+                
+                <!-- المرحلة 1: اختيار الخدمة -->
+                <div class="booking-step active" data-step="1">
+                    <div class="step-header">
+                        <h2><i class="fas fa-cut"></i> اختر الخدمة</h2>
+                        <p>اختر الخدمة التي تريد حجزها</p>
+                    </div>
+                    
+                    <div class="services-grid" id="servicesGrid">
+                        <!-- الخدمات تضاف ديناميكياً -->
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>جاري تحميل الخدمات...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة 2: اختيار التاريخ -->
+                <div class="booking-step" data-step="2">
+                    <div class="step-header">
+                        <h2><i class="fas fa-calendar-alt"></i> اختر التاريخ</h2>
+                        <p>اختر اليوم المناسب لك</p>
+                    </div>
+                    
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button type="button" class="calendar-nav" id="prevMonth">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <h3 id="currentMonth">-</h3>
+                            <button type="button" class="calendar-nav" id="nextMonth">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="calendar-weekdays">
+                            <span>أحد</span>
+                            <span>إثنين</span>
+                            <span>ثلاثاء</span>
+                            <span>أربعاء</span>
+                            <span>خميس</span>
+                            <span>جمعة</span>
+                            <span>سبت</span>
+                        </div>
+                        
+                        <div class="calendar-days" id="calendarDays">
+                            <!-- الأيام تضاف ديناميكياً -->
+                        </div>
+                    </div>
+                    
+                    <div class="selected-date-info" id="selectedDateInfo" style="display: none;">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="selectedDateText">-</span>
+                    </div>
+                </div>
+
+                <!-- المرحلة 3: اختيار الوقت -->
+                <div class="booking-step" data-step="3">
+                    <div class="step-header">
+                        <h2><i class="fas fa-clock"></i> اختر الوقت</h2>
+                        <p>اختر الوقت المناسب لك</p>
+                    </div>
+                    
+                    <div class="time-slots-container">
+                        <div class="time-period">
+                            <h4><i class="fas fa-sun"></i> صباحاً</h4>
+                            <div class="time-slots" id="morningSlots">
+                                <!-- الأوقات الصباحية -->
+                            </div>
+                        </div>
+                        
+                        <div class="time-period">
+                            <h4><i class="fas fa-cloud-sun"></i> ظهراً</h4>
+                            <div class="time-slots" id="afternoonSlots">
+                                <!-- أوقات الظهر -->
+                            </div>
+                        </div>
+                        
+                        <div class="time-period">
+                            <h4><i class="fas fa-moon"></i> مساءً</h4>
+                            <div class="time-slots" id="eveningSlots">
+                                <!-- الأوقات المسائية -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="selected-time-info" id="selectedTimeInfo" style="display: none;">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="selectedTimeText">-</span>
+                    </div>
+                    
+                    <div class="empty-state" id="noSlotsAvailable" style="display: none;">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>لا توجد أوقات متاحة في هذا اليوم</p>
+                        <small>يرجى اختيار يوم آخر</small>
+                    </div>
+                </div>
+
+                <!-- المرحلة 4: التأكيد -->
+                <div class="booking-step" data-step="4">
+                    <div class="step-header">
+                        <h2><i class="fas fa-check-circle"></i> تأكيد الحجز</h2>
+                        <p>راجع تفاصيل حجزك قبل التأكيد</p>
+                    </div>
+                    
+                    <div class="booking-summary">
+                        <div class="summary-card">
+                            <div class="summary-header">
+                                <i class="fas fa-cut"></i>
+                                <h3>تفاصيل الخدمة</h3>
+                            </div>
+                            <div class="summary-content">
+                                <div class="summary-item">
+                                    <span class="label">الخدمة:</span>
+                                    <span class="value" id="summaryService">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">المدة:</span>
+                                    <span class="value" id="summaryDuration">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">السعر:</span>
+                                    <span class="value price" id="summaryPrice">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div class="summary-header">
+                                <i class="fas fa-calendar"></i>
+                                <h3>الموعد</h3>
+                            </div>
+                            <div class="summary-content">
+                                <div class="summary-item">
+                                    <span class="label">التاريخ:</span>
+                                    <span class="value" id="summaryDate">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">الوقت:</span>
+                                    <span class="value" id="summaryTime">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div class="summary-header">
+                                <i class="fas fa-store"></i>
+                                <h3>الصالون</h3>
+                            </div>
+                            <div class="summary-content">
+                                <div class="summary-item">
+                                    <span class="label">الاسم:</span>
+                                    <span class="value" id="summarySalon">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">الموقع:</span>
+                                    <span class="value" id="summaryLocation">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div class="summary-header">
+                                <i class="fas fa-user"></i>
+                                <h3>معلوماتك</h3>
+                            </div>
+                            <div class="summary-content">
+                                <div class="summary-item">
+                                    <span class="label">الاسم:</span>
+                                    <span class="value" id="summaryCustomerName">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">الهاتف:</span>
+                                    <span class="value" id="summaryCustomerPhone">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="notes-section">
+                            <label for="bookingNotes">
+                                <i class="fas fa-comment"></i>
+                                ملاحظات إضافية (اختياري)
+                            </label>
+                            <textarea 
+                                id="bookingNotes" 
+                                placeholder="أي ملاحظات خاصة بالحجز..."
+                                rows="3"
+                                maxlength="500"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- شاشة النجاح -->
+                <div class="booking-step success-step" data-step="5">
+                    <div class="success-content">
+                        <div class="success-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h2>تم الحجز بنجاح! 🎉</h2>
+                        <p>تم تأكيد حجزك وسيتم إرسال تفاصيل الحجز إلى هاتفك</p>
+                        
+                        <div class="booking-reference">
+                            <span class="ref-label">رقم الحجز:</span>
+                            <span class="ref-value" id="bookingRef">-</span>
+                        </div>
+                        
+                        <div class="success-actions">
+                            <button type="button" class="btn-primary" id="viewBookingBtn">
+                                <i class="fas fa-calendar-check"></i>
+                                <span>عرض حجوزاتي</span>
+                            </button>
+                            <button type="button" class="btn-secondary" id="backToHomeBtn">
+                                <i class="fas fa-home"></i>
+                                <span>العودة للرئيسية</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- أزرار التنقل -->
+                <div class="booking-actions" id="bookingActions">
+                    <button type="button" class="nav-btn prev-btn" id="prevBtn" style="display: none;">
+                        <i class="fas fa-arrow-right"></i>
+                        <span>السابق</span>
+                    </button>
+                    
+                    <button type="button" class="nav-btn next-btn" id="nextBtn" disabled>
+                        <span>التالي</span>
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+
+                    <button type="submit" class="nav-btn confirm-btn" id="confirmBtn" style="display: none;">
+                        <i class="fas fa-check"></i>
+                        <span>تأكيد الحجز</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="shared/js/paths.js"></script>
+    <script type="module" src="shared/js/notifications.js"></script>
+    <script type="module" src="shared/js/global-navbar.js"></script>
+    <script type="module" src="booking.js"></script>
 </body>
-
 </html>
+

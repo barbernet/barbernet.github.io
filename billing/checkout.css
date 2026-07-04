@@ -1,0 +1,538 @@
+/* ==========================================================================
+BarberFlow Pro - صفحة الدفع
+المسار: billing/checkout.css
+========================================================================== */
+
+/* ============================================
+الصفحة العامة
+============================================ */
+.checkout-page {
+    min-height: 100vh;
+    padding: 20px;
+    background: var(--bg-primary);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.checkout-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px 0;
+}
+
+/* ============================================
+رأس الصفحة
+============================================ */
+.checkout-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.back-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.back-btn:hover {
+    background: var(--brand-accent);
+    color: #000;
+    border-color: var(--brand-accent);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--brand-success);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.header-content i {
+    font-size: 1.1rem;
+}
+
+/* ============================================
+ملخص الطلب
+============================================ */
+.order-summary {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.order-summary h2 {
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.order-summary h2 i {
+    color: var(--brand-accent);
+}
+
+.plan-details {
+    margin-bottom: 20px;
+}
+
+.plan-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.plan-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: #000;
+}
+
+.plan-info h3 {
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    margin: 0 0 5px 0;
+}
+
+.plan-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--brand-accent);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.plan-price-display {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+}
+
+.price {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--brand-accent);
+}
+
+.currency {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.period {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.plan-features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.plan-features-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.plan-features-list li:last-child {
+    border-bottom: none;
+}
+
+.plan-features-list li i {
+    color: var(--brand-success);
+    font-size: 0.9rem;
+}
+
+/* معلومات الفواتير */
+.billing-info {
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.info-row.total {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.total-amount {
+    color: var(--brand-accent);
+    font-size: 1.3rem;
+}
+
+.info-row.savings {
+    color: var(--brand-success);
+}
+
+.savings-amount {
+    color: var(--brand-success);
+}
+
+/* ============================================
+قسم الدفع
+============================================ */
+.payment-section {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 25px;
+    border: 1px solid var(--border-color);
+}
+
+.payment-section h2 {
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.payment-section h2 i {
+    color: var(--brand-accent);
+}
+
+/* حقول الإدخال */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.form-group label i {
+    color: var(--brand-accent);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-family: 'Cairo', sans-serif;
+    outline: none;
+    transition: all var(--transition-fast);
+}
+
+.form-group input:focus {
+    border-color: var(--brand-accent);
+    background: var(--bg-secondary);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+.form-group input::placeholder {
+    color: var(--text-muted);
+}
+
+.card-input-wrapper {
+    position: relative;
+}
+
+.card-icons {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* خيارات إضافية */
+.additional-options {
+    margin: 25px 0;
+}
+
+.checkbox-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.checkbox-option input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--brand-accent);
+    margin-top: 3px;
+}
+
+.checkbox-label {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-label i {
+    color: var(--brand-accent);
+}
+
+.terms-link {
+    color: var(--brand-accent);
+    text-decoration: none;
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+}
+
+/* زر الدفع */
+.pay-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all var(--transition-fast);
+    font-family: 'Cairo', sans-serif;
+    margin-bottom: 20px;
+}
+
+.pay-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+}
+
+.pay-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.pay-amount {
+    margin-right: auto;
+    font-size: 1.2rem;
+}
+
+/* شارات الأمان */
+.security-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.security-badges span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.security-badges i {
+    color: var(--brand-success);
+}
+
+/* ============================================
+نافذة التأكيد
+============================================ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--brand-accent);
+}
+
+.modal-content h3 {
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    margin: 0 0 15px 0;
+}
+
+.modal-content p {
+    color: var(--text-secondary);
+    margin: 0 0 25px 0;
+    line-height: 1.6;
+}
+
+.modal-content strong {
+    color: var(--brand-accent);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-cancel,
+.btn-confirm {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    transition: all var(--transition-fast);
+    border: none;
+    font-size: 0.95rem;
+}
+
+.btn-cancel {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-cancel:hover {
+    background: var(--border-color);
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+}
+
+.btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 480px) {
+    .checkout-page {
+        padding: 10px;
+    }
+    
+    .order-summary,
+    .payment-section {
+        padding: 20px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .plan-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .price {
+        font-size: 2rem;
+    }
+    
+    .security-badges {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+

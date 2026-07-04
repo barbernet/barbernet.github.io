@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الاشتراك | BarberFlow Pro</title>
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    <link rel="stylesheet" href="subscription.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-theme="dark">
+    <div class="subscription-page">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-crown"></i> إدارة الاشتراك</h1>
+                <p>تابع حالة اشتراكك وقم بتجديده أو ترقيته في أي وقت</p>
+            </div>
+
+            <!-- حالة التحميل -->
+            <div class="loading-state" id="loadingState">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>جاري تحميل بيانات الاشتراك...</p>
+            </div>
+
+            <!-- محتوى الاشتراك -->
+            <div class="subscription-content hidden" id="subscriptionContent">
+                
+                <!-- البطاقة الرئيسية -->
+                <div class="current-plan-card" id="currentPlanCard">
+                    <div class="plan-header">
+                        <div class="plan-icon">
+                            <i class="fas fa-star" id="planIcon"></i>
+                        </div>
+                        <div class="plan-info">
+                            <h2 id="planName">جاري التحميل...</h2>
+                            <span class="plan-status" id="planStatus">نشط</span>
+                        </div>
+                    </div>
+                    
+                    <div class="plan-details-grid">
+                        <div class="detail-item">
+                            <span class="label">تاريخ البدء</span>
+                            <span class="value" id="startDate">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">تاريخ الانتهاء</span>
+                            <span class="value" id="endDate">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">المبلغ المدفوع</span>
+                            <span class="value" id="amountPaid">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">التجديد التلقائي</span>
+                            <span class="value" id="autoRenewStatus">-</span>
+                        </div>
+                    </div>
+
+                    <div class="plan-actions">
+                        <button class="btn-primary" id="renewBtn">
+                            <i class="fas fa-sync-alt"></i> تجديد الاشتراك
+                        </button>
+                        <button class="btn-secondary" id="upgradeBtn">
+                            <i class="fas fa-arrow-up"></i> ترقية الباقة
+                        </button>
+                        <button class="btn-danger" id="cancelBtn">
+                            <i class="fas fa-times"></i> إلغاء الاشتراك
+                        </button>
+                    </div>
+                </div>
+
+                <!-- المميزات المفعلة -->
+                <div class="features-section">
+                    <h3><i class="fas fa-check-circle"></i> المميزات المفعلة حالياً</h3>
+                    <ul class="features-list" id="activeFeaturesList">
+                        <!-- تضاف ديناميكياً -->
+                    </ul>
+                </div>
+
+                <!-- سجل المدفوعات -->
+                <div class="payments-history">
+                    <h3><i class="fas fa-history"></i> سجل المدفوعات</h3>
+                    <div class="payments-list" id="paymentsList">
+                        <p class="empty-state">لا توجد مدفوعات سابقة مسجلة.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- حالة عدم وجود اشتراك -->
+            <div class="no-subscription hidden" id="noSubscription">
+                <div class="empty-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <h2>لا يوجد اشتراك نشط</h2>
+                <p>أنت حالياً تستخدم الباقة المجانية (Starter). اشترك في باقة Pro للحصول على مميزات حصرية.</p>
+                <a href="checkout.html?plan=professional" class="btn-primary large">
+                    <i class="fas fa-rocket"></i> ابدأ الاشتراك الآن
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-container"></div>
+    <script type="module" src="../shared/js/paths.js"></script>
+    <script type="module" src="../shared/js/notifications.js"></script>
+    <script type="module" src="subscription.js"></script>
+</body>
+</html>
+

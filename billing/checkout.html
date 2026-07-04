@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إتمام الاشتراك | BarberFlow Pro</title>
+    <meta name="description" content="أكمل عملية الدفع لاشتراكك في BarberFlow Pro">
+    
+    <!-- CSS المركزي -->
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    
+    <!-- CSS الخاص بالصفحة -->
+    <link rel="stylesheet" href="checkout.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
+</head>
+<body data-theme="dark">
+    <div class="checkout-page">
+        <div class="checkout-container">
+            <!-- رأس الصفحة -->
+            <div class="checkout-header">
+                <button class="back-btn" id="backBtn" aria-label="العودة">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <div class="header-content">
+                    <i class="fas fa-lock"></i>
+                    <span>دفع آمن 100%</span>
+                </div>
+            </div>
+
+            <!-- ملخص الطلب -->
+            <div class="order-summary">
+                <h2><i class="fas fa-receipt"></i> ملخص الاشتراك</h2>
+                
+                <div class="plan-details">
+                    <div class="plan-header">
+                        <div class="plan-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="plan-info">
+                            <h3 id="planName">Professional</h3>
+                            <span class="plan-badge" id="planBadge">الأكثر شعبية</span>
+                        </div>
+                    </div>
+                    
+                    <div class="plan-price-display">
+                        <span class="price" id="planPrice">199</span>
+                        <span class="currency">DH</span>
+                        <span class="period" id="billingPeriod">/شهر</span>
+                    </div>
+                    
+                    <ul class="plan-features-list" id="planFeaturesList">
+                        <li><i class="fas fa-check"></i> حجوزات غير محدودة</li>
+                        <li><i class="fas fa-check"></i> ترويج مميز</li>
+                        <li><i class="fas fa-check"></i> تحليلات متقدمة</li>
+                        <li><i class="fas fa-check"></i> دعم فني 24/7</li>
+                    </ul>
+                </div>
+                
+                <div class="billing-info">
+                    <div class="info-row">
+                        <span>المدة:</span>
+                        <strong id="billingDuration">شهري</strong>
+                    </div>
+                    <div class="info-row total">
+                        <span>المجموع:</span>
+                        <strong class="total-amount" id="totalAmount">199 DH</strong>
+                    </div>
+                    <div class="info-row savings" id="savingsRow" style="display: none;">
+                        <span>وفرت:</span>
+                        <strong class="savings-amount" id="savingsAmount">0 DH</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- نموذج الدفع -->
+            <div class="payment-section">
+                <h2><i class="fas fa-credit-card"></i> معلومات الدفع</h2>
+                
+                <form id="paymentForm">
+                    <div class="form-group">
+                        <label for="cardholderName">
+                            <i class="fas fa-user"></i>
+                            الاسم على البطاقة
+                        </label>
+                        <input 
+                            type="text" 
+                            id="cardholderName" 
+                            placeholder="محمد أحمد"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cardNumber">
+                            <i class="fas fa-credit-card"></i>
+                            رقم البطاقة
+                        </label>
+                        <div class="card-input-wrapper">
+                            <input 
+                                type="text" 
+                                id="cardNumber" 
+                                placeholder="1234 5678 9012 3456" 
+                                maxlength="19"
+                                required
+                            >
+                            <div class="card-icons">
+                                <i class="fab fa-cc-visa"></i>
+                                <i class="fab fa-cc-mastercard"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cardExpiry">
+                                <i class="fas fa-calendar"></i>
+                                تاريخ الانتهاء
+                            </label>
+                            <input 
+                                type="text" 
+                                id="cardExpiry" 
+                                placeholder="MM/YY" 
+                                maxlength="5"
+                                required
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="cardCvv">
+                                <i class="fas fa-lock"></i>
+                                CVV
+                            </label>
+                            <input 
+                                type="text" 
+                                id="cardCvv" 
+                                placeholder="123" 
+                                maxlength="4"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paymentEmail">
+                            <i class="fas fa-envelope"></i>
+                            البريد الإلكتروني
+                        </label>
+                        <input 
+                            type="email" 
+                            id="paymentEmail" 
+                            placeholder="email@example.com"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paymentPhone">
+                            <i class="fas fa-phone"></i>
+                            رقم الهاتف
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="paymentPhone" 
+                            placeholder="0612345678"
+                            required
+                        >
+                    </div>
+
+                    <!-- خيارات إضافية -->
+                    <div class="additional-options">
+                        <label class="checkbox-option">
+                            <input type="checkbox" id="autoRenew" checked>
+                            <span class="checkbox-label">
+                                <i class="fas fa-sync-alt"></i>
+                                تجديد تلقائي للاشتراك
+                            </span>
+                        </label>
+                        
+                        <label class="checkbox-option">
+                            <input type="checkbox" id="acceptTerms" required>
+                            <span class="checkbox-label">
+                                أوافق على <a href="#" class="terms-link">الشروط والأحكام</a>
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="pay-btn" id="payBtn">
+                        <i class="fas fa-lock"></i>
+                        <span>ادفع الآن بأمان</span>
+                        <span class="pay-amount" id="payAmount">199 DH</span>
+                    </button>
+                    
+                    <div class="security-badges">
+                        <span><i class="fas fa-shield-alt"></i> تشفير SSL 256-bit</span>
+                        <span><i class="fas fa-undo"></i> ضمان استرجاع 30 يوم</span>
+                        <span><i class="fas fa-check-circle"></i> PCI DSS معتمد</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة التأكيد -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-question-circle"></i>
+            </div>
+            <h3>تأكيد عملية الدفع</h3>
+            <p>هل أنت متأكد من إتمام عملية الدفع بمبلغ <strong id="confirmAmount">199 DH</strong>؟</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancelPayment">إلغاء</button>
+                <button class="btn-confirm" id="confirmPayment">تأكيد الدفع</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="../shared/js/paths.js"></script>
+    <script type="module" src="../shared/js/notifications.js"></script>
+    <script type="module" src="checkout.js"></script>
+</body>
+</html>
+

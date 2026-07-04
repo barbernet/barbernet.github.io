@@ -1,14 +1,294 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarberFlow Pro - الباقات المميزة</title>
+    <meta name="description" content="اختر الباقة المناسبة لصالونك أو متجرك واحصل على مميزات حصرية">
+    
+    <!-- CSS المركزي -->
+    <link rel="stylesheet" href="shared/css/global.css">
+    <link rel="stylesheet" href="shared/css/global-navbar.css">
+    <link rel="stylesheet" href="shared/css/notifications.css">
+    
+    <!-- CSS الخاص بالصفحة -->
+    <link rel="stylesheet" href="pro.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
 </head>
+<body data-theme="dark">
+    <!-- حاوية الشريط العلوي -->
+    <div id="global-navbar-container"></div>
 
-<body>
-  
+    <!-- ============================================
+    قسم البطل (Hero) - ذكي
+    ============================================ -->
+    <section class="pro-hero">
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-glow"></div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-crown"></i>
+                    <span>الباقة المميزة</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    ارتقِ بـ
+                    <span class="gradient-text" id="heroTarget">أعمالك</span>
+                    إلى المستوى التالي
+                </h1>
+                
+                <p class="hero-subtitle" id="heroSubtitle">
+                    انضم إلى آلاف أصحاب الصالونات والمتاجر الذين يحققون نجاحاً استثنائياً مع BarberFlow Pro
+                </p>
+
+                <!-- مبدل الدور (للزوار غير المسجلين) -->
+                <div class="role-toggle" id="roleToggle" style="display: none;">
+                    <button class="role-btn active" data-role="salon">
+                        <i class="fas fa-cut"></i>
+                        <span>أنا صاحب صالون</span>
+                    </button>
+                    <button class="role-btn" data-role="store">
+                        <i class="fas fa-store"></i>
+                        <span>أنا صاحب متجر</span>
+                    </button>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="5000">0</div>
+                        <div class="stat-label" id="statLabel1">صالون نشط</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="98">0</div>
+                        <div class="stat-label">% رضا العملاء</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="150">0</div>
+                        <div class="stat-label" id="statLabel2">% زيادة في المبيعات</div>
+                    </div>
+                </div>
+                
+                <div class="hero-cta">
+                    <a href="#pricing" class="cta-btn primary">
+                        <i class="fas fa-rocket"></i>
+                        <span>ابدأ الآن</span>
+                    </a>
+                    <a href="#features" class="cta-btn secondary">
+                        <i class="fas fa-play-circle"></i>
+                        <span>شاهد العرض</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-wave">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,179.21,34.77,239-16.08V120H0V95.8C59.71,118.11,130.83,141.14,321.39,56.44Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم المميزات الرئيسية - ذكي
+    ============================================ -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">لماذا Pro؟</span>
+                <h2 class="section-title">مميزات حصرية لن تجدها في مكان آخر</h2>
+                <p class="section-subtitle" id="featuresSubtitle">أدوات احترافية مصممة خصيصاً لنمو أعمالك</p>
+            </div>
+            
+            <div class="features-grid" id="featuresGrid">
+                <!-- المميزات تضاف ديناميكياً حسب الدور -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم التسعير - ذكي
+    ============================================ -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">الباقات</span>
+                <h2 class="section-title">اختر الباقة المناسبة لأعمالك</h2>
+                <p class="section-subtitle">أسعار شفافة بدون رسوم مخفية</p>
+                
+                <!-- مفتاح التبديل بين الشهري والسنوي -->
+                <div class="billing-toggle">
+                    <span class="toggle-label">شهري</span>
+                    <label class="switch">
+                        <input type="checkbox" id="billingToggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="toggle-label">سنوي <span class="save-badge">وفر 20%</span></span>
+                </div>
+            </div>
+            
+            <div class="pricing-grid" id="pricingGrid">
+                <!-- الباقات تضاف ديناميكياً حسب الدور -->
+            </div>
+            
+            <!-- ضمان استرجاع المال -->
+            <div class="guarantee-box">
+                <div class="guarantee-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="guarantee-content">
+                    <h4>ضمان استرجاع المال خلال 30 يوم</h4>
+                    <p>جرب الباقة المميزة لمدة 30 يوم كاملة. إذا لم تكن راضياً، استرجع أموالك بالكامل بدون أي أسئلة</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم المقارنة التفصيلية - ذكي
+    ============================================ -->
+    <section class="comparison-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">مقارنة تفصيلية</span>
+                <h2 class="section-title">قارن بين الباقات</h2>
+            </div>
+            
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table" id="comparisonTable">
+                    <!-- الجدول يبنى ديناميكياً -->
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم الشهادات - ذكي
+    ============================================ -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">آراء عملائنا</span>
+                <h2 class="section-title" id="testimonialsTitle">ماذا يقول عملاؤنا عنا؟</h2>
+            </div>
+            
+            <div class="testimonials-grid" id="testimonialsGrid">
+                <!-- الشهادات تضاف ديناميكياً -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم الأسئلة الشائعة
+    ============================================ -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">أسئلة شائعة</span>
+                <h2 class="section-title">هل لديك أسئلة؟</h2>
+                <p class="section-subtitle">إجابات لأكثر الأسئلة شيوعاً</p>
+            </div>
+            
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>هل يمكنني تغيير الباقة لاحقاً؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>نعم، يمكنك الترقية أو التخفيض من باقتك في أي وقت. التغييرات ستطبق فوراً وسيتم احتساب الفرق بشكل تناسبي.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>هل هناك فترة تجريبية مجانية؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>نعم، نقدم فترة تجريبية مجانية لمدة 14 يوم للباقة Professional يمكنك خلالها تجربة جميع المميزات بدون أي التزام.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>ما هي طرق الدفع المتاحة؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>نقبل جميع البطاقات البنكية (Visa, Mastercard)، التحويل البنكي، وأيضاً الدفع عبر PayPal.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>هل يمكنني إلغاء الاشتراك في أي وقت؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>بالتأكيد، يمكنك إلغاء اشتراكك في أي وقت بدون أي رسوم إلغاء. ستستمر في الاستفادة من المميزات حتى نهاية الفترة المدفوعة.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>هل بياناتي آمنة؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>نعم، نستخدم تشفير SSL 256-bit ونلتزم بمعايير الأمان العالمية. بياناتك محمية ومشفرة ولا نشاركها مع أي طرف ثالث.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    قسم CTA النهائي - ذكي
+    ============================================ -->
+    <section class="final-cta-section">
+        <div class="cta-glow"></div>
+        <div class="container">
+            <div class="final-cta-content">
+                <h2 id="finalCtaTitle">جاهز لنقل أعمالك إلى المستوى التالي؟</h2>
+                <p id="finalCtaSubtitle">انضم إلى آلاف أصحاب الأعمال الناجحين وابدأ رحلتك مع BarberFlow Pro اليوم</p>
+                
+                <div class="cta-buttons">
+                    <a href="#pricing" class="cta-btn primary large">
+                        <i class="fas fa-rocket"></i>
+                        <span>ابدأ تجربتك المجانية</span>
+                    </a>
+                    <a href="contact.html" class="cta-btn secondary large">
+                        <i class="fas fa-phone"></i>
+                        <span>تحدث مع مستشار</span>
+                    </a>
+                </div>
+                
+                <div class="cta-trust">
+                    <span><i class="fas fa-check-circle"></i> 14 يوم تجربة مجانية</span>
+                    <span><i class="fas fa-check-circle"></i> بدون بطاقة ائتمان</span>
+                    <span><i class="fas fa-check-circle"></i> إلغاء في أي وقت</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="shared/js/paths.js"></script>
+    <script type="module" src="shared/js/notifications.js"></script>
+    <script type="module" src="shared/js/global-navbar.js"></script>
+    <script type="module" src="pro.js"></script>
 </body>
-
 </html>
+

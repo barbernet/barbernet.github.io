@@ -54,3 +54,17 @@ export {
     validateAndProcessImage
 } from './validation/images-sanitizer.js';
 
+/**
+ * middleware/index.js
+ * نقطة التصدير المركزية لجميع دوال الـ Middleware
+ */
+
+
+// ✅ إضافة تصدير دوال الاشتراكات
+export {
+    checkSubscription,
+    hasFeature,
+    requireSubscription,
+    showLockedContent
+} from './subscription/subscription-guard.js';
+

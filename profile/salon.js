@@ -574,3 +574,22 @@ function showElement(id) {
     if (el) el.style.display = 'flex';
 }
 
+// داخل profile-salon.js
+import { hasFeature, showLockedContent } from "../middleware/subscription/index.js";
+
+async function initAnalyticsSection() {
+    const analyticsContainer = document.getElementById('analyticsSection');
+    if (!analyticsContainer) return;
+
+    // التحقق من صلاحية المستخدم
+    const hasAccess = await hasFeature(currentUser.uid, 'advancedAnalytics');
+
+    if (!hasAccess) {
+        // عرض محتوى مقفل مع زر للترقية
+        showLockedContent('analyticsSection', 'التحليلات المتقدمة');
+    } else {
+        // تحميل البيانات الحقيقية
+        await loadRealAnalyticsData();
+    }
+}
+

@@ -1,0 +1,218 @@
+/* ==========================================================================
+BarberFlow Pro - صفحة إلغاء الدفع
+المسار: billing/payment-cancel.css
+========================================================================== */
+
+/* ============================================
+الصفحة العامة
+============================================ */
+.cancel-page {
+    min-height: 100vh;
+    padding: 20px;
+    background: var(--bg-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cancel-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px 0;
+}
+
+/* ============================================
+أيقونة الإلغاء
+============================================ */
+.cancel-icon-wrapper {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+}
+
+.cancel-icon {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--brand-danger), #a02020);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    color: #fff;
+    animation: cancelShake 0.5s ease-in-out;
+}
+
+@keyframes cancelShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* ============================================
+محتوى الإلغاء
+============================================ */
+.cancel-content {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-xl);
+}
+
+.cancel-title {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin: 0 0 15px 0;
+    text-align: center;
+}
+
+.cancel-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin: 0 0 30px 0;
+    text-align: center;
+}
+
+/* ============================================
+الأسباب الشائعة
+============================================ */
+.common-reasons {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.common-reasons h3 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 0 0 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.common-reasons h3 i {
+    color: var(--brand-warning);
+}
+
+.reasons-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.reasons-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.reasons-list li i {
+    color: var(--brand-warning);
+    font-size: 0.9rem;
+}
+
+/* ============================================
+أزرار الإجراءات
+============================================ */
+.cancel-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.btn-primary,
+.btn-secondary {
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all var(--transition-fast);
+    font-family: 'Cairo', sans-serif;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+}
+
+.btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--border-color);
+}
+
+/* ============================================
+مساعدة
+============================================ */
+.help-notice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.help-notice i {
+    color: var(--brand-accent);
+    font-size: 1.1rem;
+}
+
+.help-notice a {
+    color: var(--brand-accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.help-notice a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+Responsive
+============================================ */
+@media (max-width: 480px) {
+    .cancel-content {
+        padding: 25px;
+    }
+    
+    .cancel-title {
+        font-size: 1.6rem;
+    }
+    
+    .cancel-icon-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .cancel-icon {
+        font-size: 2.8rem;
+    }
+}
+
