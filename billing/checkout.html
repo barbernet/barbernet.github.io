@@ -39,12 +39,17 @@
                 
                 <div class="plan-details">
                     <div class="plan-header">
-                        <div class="plan-icon">
+                        <div class="plan-icon" id="planIcon">
                             <i class="fas fa-crown"></i>
                         </div>
                         <div class="plan-info">
                             <h3 id="planName">Professional</h3>
                             <span class="plan-badge" id="planBadge">الأكثر شعبية</span>
+                            <!-- ✅ جديد: عرض نوع الحساب -->
+                            <span class="role-badge" id="roleBadge">
+                                <i class="fas fa-cut"></i>
+                                <span>حساب صالون</span>
+                            </span>
                         </div>
                     </div>
                     
@@ -55,10 +60,7 @@
                     </div>
                     
                     <ul class="plan-features-list" id="planFeaturesList">
-                        <li><i class="fas fa-check"></i> حجوزات غير محدودة</li>
-                        <li><i class="fas fa-check"></i> ترويج مميز</li>
-                        <li><i class="fas fa-check"></i> تحليلات متقدمة</li>
-                        <li><i class="fas fa-check"></i> دعم فني 24/7</li>
+                        <!-- تضاف ديناميكياً حسب الدور -->
                     </ul>
                 </div>
                 
@@ -226,7 +228,7 @@
     <!-- السكريبتات -->
     <script type="module" src="../shared/js/paths.js"></script>
     <script type="module" src="../shared/js/notifications.js"></script>
-    <script type="module" src="checkout.js"></script>
+    <script type="module" src="checkout.jمs"></script>
 </body>
 </html>
 

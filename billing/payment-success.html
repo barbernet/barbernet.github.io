@@ -6,23 +6,15 @@
     <title>تم الاشتراك بنجاح | BarberFlow Pro</title>
     <meta name="description" content="تم تفعيل اشتراكك في BarberFlow Pro بنجاح">
     
-    <!-- CSS المركزي -->
     <link rel="stylesheet" href="../shared/css/global.css">
     <link rel="stylesheet" href="../shared/css/notifications.css">
-    
-    <!-- CSS الخاص بالصفحة -->
     <link rel="stylesheet" href="payment-success.css">
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
 </head>
 <body data-theme="dark">
     <div class="success-page">
         <div class="success-container">
-            <!-- أيقونة النجاح المتحركة -->
             <div class="success-icon-wrapper">
                 <div class="success-icon">
                     <i class="fas fa-check"></i>
@@ -31,14 +23,12 @@
                 <div class="success-ring ring-2"></div>
             </div>
 
-            <!-- رسالة النجاح -->
             <div class="success-content">
                 <h1 class="success-title">تم الاشتراك بنجاح! 🎉</h1>
                 <p class="success-subtitle">
                     مرحباً بك في عائلة BarberFlow Pro. تم تفعيل باقتك ويمكنك الآن الاستمتاع بجميع المميزات الحصرية.
                 </p>
 
-                <!-- تفاصيل الاشتراك -->
                 <div class="subscription-details" id="subscriptionDetails">
                     <div class="detail-row">
                         <span class="detail-label">الباقة:</span>
@@ -58,15 +48,12 @@
                     </div>
                 </div>
 
-                <!-- المميزات المفعلة -->
                 <div class="features-unlocked">
                     <h3><i class="fas fa-unlock"></i> المميزات المفعلة الآن</h3>
                     <ul class="features-list" id="featuresList">
-                        <!-- تضاف ديناميكياً -->
                     </ul>
                 </div>
 
-                <!-- أزرار الإجراءات -->
                 <div class="success-actions">
                     <button class="btn-primary" id="goToDashboardBtn">
                         <i class="fas fa-tachometer-alt"></i>
@@ -78,7 +65,6 @@
                     </button>
                 </div>
 
-                <!-- رسالة بريد إلكتروني -->
                 <div class="email-notice">
                     <i class="fas fa-envelope"></i>
                     <span>تم إرسال تفاصيل الاشتراك إلى بريدك الإلكتروني</span>
@@ -86,14 +72,10 @@
             </div>
         </div>
 
-        <!-- تأثيرات الخلفية -->
         <div class="confetti-container" id="confettiContainer"></div>
     </div>
 
-    <!-- حاوية التنبيهات -->
     <div id="notification-container"></div>
-
-    <!-- السكريبتات -->
     <script type="module" src="../shared/js/paths.js"></script>
     <script type="module" src="../shared/js/notifications.js"></script>
     <script type="module" src="payment-success.js"></script>

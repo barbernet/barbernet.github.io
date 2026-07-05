@@ -935,3 +935,59 @@ Responsive
     }
 }
 
+/* ============================================
+مبدل الدور (Role Toggle)
+============================================ */
+.role-toggle {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.8s ease 0.5s both;
+}
+
+.role-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 50px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.role-btn:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--pro-gradient-1);
+    transform: translateY(-2px);
+}
+
+.role-btn.active {
+    background: linear-gradient(135deg, var(--pro-gradient-1), var(--pro-gradient-3));
+    border-color: var(--pro-gradient-1);
+    color: #000;
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
+}
+
+.role-btn i {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .role-toggle {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .role-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+

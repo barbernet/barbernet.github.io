@@ -18,23 +18,6 @@ export const PATHS = {
     REGISTER: '/auth/register.html',
 
     // ============================================
-    // دليل الصالونات والحجز
-    // ============================================
-    SALONS: '/salons.html',
-    BOOKING: '/booking.html',
-
-    // ============================================
-    // المتجر
-    // ============================================
-    SHOP: '/shop.html',
-    PRODUCT: '/product.html',
-
-    // ============================================
-    // الباقات المميزة
-    // ============================================
-    PRO: '/pro.html',
-
-    // ============================================
     // الترحيب والإعداد (Onboarding)
     // ============================================
     WELCOME: '/onboarding/welcome.html',
@@ -48,24 +31,54 @@ export const PATHS = {
     // ============================================
     // البروفايلات (Profiles)
     // ============================================
-    PROFILE_CUSTOMER: '/profile/customer.html',
     PROFILE_SALON: '/profile/salon.html',
     PROFILE_STORE: '/profile/store.html',
+    PROFILE_CUSTOMER: '/profile/customer.html',
+
+    // ============================================
+    // الاستكشاف والتفاصيل (Home)
+    // ============================================
+    EXPLORE_SALON: '/salons.html',
+    EXPLORE_STORE: '/shop.html',
+    DETAILS_SALON: '/details-salon.html',
+    DETAILS_STORE: '/details-store.html',
+
+    // ============================================
+    // الحجز والمتجر
+    // ============================================
+    BOOKING: '/booking.html',
+    SHOP: '/shop.html',
+    PRODUCT: '/product.html',
+
+    // ============================================
+    // الباقات المميزة
+    // ============================================
+    PRO: '/pro.html',
 
     // ============================================
     // لوحة التحكم (Dashboard)
     // ============================================
     DASHBOARD: '/dashboard/index.html',
-    DASHBOARD_APPOINTMENTS: '/dashboard/appointments.html',
-    DASHBOARD_ANALYTICS: '/dashboard/analytics.html',
-    DASHBOARD_SETTINGS: '/dashboard/settings.html',
+    APPOINTMENTS: '/dashboard/appointments.html',
+    ANALYTICS: '/dashboard/analytics.html',
+    SETTINGS_GENERAL: '/dashboard/settings-general.html',
+    SETTINGS_SALON: '/dashboard/settings-salon.html',
+    SETTINGS_STORE: '/dashboard/settings-store.html',
 
     // ============================================
     // الدعم والمعلومات (Support)
     // ============================================
     ABOUT: '/about.html',
     CONTACT: '/contact.html',
-    SURVEY: '/survey.html'
+    SURVEY: '/survey.html',
+
+    // ============================================
+    // الدفع والاشتراكات (Billing)
+    // ============================================
+    CHECKOUT: '/billing/checkout.html',
+    PAYMENT_SUCCESS: '/billing/payment-success.html',
+    PAYMENT_CANCEL: '/billing/payment-cancel.html',
+    SUBSCRIPTION: '/billing/subscription.html'
 };
 
 /**

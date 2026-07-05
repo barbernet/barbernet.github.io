@@ -6,37 +6,27 @@
     <title>تم إلغاء الدفع | BarberFlow Pro</title>
     <meta name="description" content="تم إلغاء عملية الدفع">
     
-    <!-- CSS المركزي -->
     <link rel="stylesheet" href="../shared/css/global.css">
     <link rel="stylesheet" href="../shared/css/notifications.css">
-    
-    <!-- CSS الخاص بالصفحة -->
     <link rel="stylesheet" href="payment-cancel.css">
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
 </head>
 <body data-theme="dark">
     <div class="cancel-page">
         <div class="cancel-container">
-            <!-- أيقونة الإلغاء -->
             <div class="cancel-icon-wrapper">
                 <div class="cancel-icon">
                     <i class="fas fa-times"></i>
                 </div>
             </div>
 
-            <!-- رسالة الإلغاء -->
             <div class="cancel-content">
                 <h1 class="cancel-title">تم إلغاء عملية الدفع</h1>
                 <p class="cancel-subtitle">
                     لم يتم خصم أي مبلغ من حسابك. يمكنك المحاولة مرة أخرى في أي وقت.
                 </p>
 
-                <!-- أسباب شائعة -->
                 <div class="common-reasons">
                     <h3><i class="fas fa-question-circle"></i> أسباب شائعة للإلغاء</h3>
                     <ul class="reasons-list">
@@ -47,7 +37,6 @@
                     </ul>
                 </div>
 
-                <!-- أزرار الإجراءات -->
                 <div class="cancel-actions">
                     <button class="btn-primary" id="retryPaymentBtn">
                         <i class="fas fa-redo"></i>
@@ -59,7 +48,6 @@
                     </button>
                 </div>
 
-                <!-- مساعدة -->
                 <div class="help-notice">
                     <i class="fas fa-headset"></i>
                     <span>هل تحتاج مساعدة؟ <a href="#" id="contactSupport">تواصل مع الدعم الفني</a></span>
@@ -68,10 +56,7 @@
         </div>
     </div>
 
-    <!-- حاوية التنبيهات -->
     <div id="notification-container"></div>
-
-    <!-- السكريبتات -->
     <script type="module" src="../shared/js/paths.js"></script>
     <script type="module" src="../shared/js/notifications.js"></script>
     <script type="module" src="payment-cancel.js"></script>

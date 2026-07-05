@@ -8,11 +8,6 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-
 import { showNotification } from "../../shared/js/notifications.js";
 import { PATHS, resolvePath } from "../../shared/js/paths.js";
 
-/**
- * التحقق من وجود اشتراك نشط
- * @param {string} userId - معرف المستخدم
- * @returns {Promise<Object>} { active: boolean, plan: string, features: Object }
- */
 export async function checkSubscription(userId) {
     try {
         const subDoc = await getDoc(doc(db, "users", userId, "subscription", "current"));
@@ -25,7 +20,6 @@ export async function checkSubscription(userId) {
         const now = new Date();
         const endDate = sub.endDate.toDate ? sub.endDate.toDate() : new Date(sub.endDate);
         
-        // التحقق من انتهاء الصلاحية
         if (now > endDate) {
             return { active: false, plan: sub.plan, expired: true, features: {} };
         }
@@ -42,22 +36,11 @@ export async function checkSubscription(userId) {
     }
 }
 
-/**
- * التحقق من ميزة معينة
- * @param {string} userId
- * @param {string} feature - اسم الميزة
- * @returns {Promise<boolean>}
- */
 export async function hasFeature(userId, feature) {
     const sub = await checkSubscription(userId);
     return sub.active && sub.features[feature] === true;
 }
 
-/**
- * Middleware لحماية الصفحات
- * @param {string} requiredPlan - الباقة المطلوبة (starter, professional, enterprise)
- * @param {string} redirectPath - مسار التوجيه في حال عدم الصلاحية
- */
 export function requireSubscription(requiredPlan, redirectPath) {
     return async (userId) => {
         const sub = await checkSubscription(userId);
@@ -82,11 +65,6 @@ export function requireSubscription(requiredPlan, redirectPath) {
     };
 }
 
-/**
- * عرض محتوى مقفل للمستخدمين بدون اشتراك
- * @param {string} containerId - معرف الحاوية
- * @param {string} featureName - اسم الميزة
- */
 export function showLockedContent(containerId, featureName) {
     const container = document.getElementById(containerId);
     if (!container) return;

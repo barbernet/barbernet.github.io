@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إدارة الاشتراك | BarberFlow Pro</title>
+    <meta name="description" content="تابع حالة اشتراكك وقم بتجديده أو ترقيته">
+    
     <link rel="stylesheet" href="../shared/css/global.css">
     <link rel="stylesheet" href="../shared/css/notifications.css">
     <link rel="stylesheet" href="subscription.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
 </head>
 <body data-theme="dark">
     <div class="subscription-page">
@@ -17,16 +20,12 @@
                 <p>تابع حالة اشتراكك وقم بتجديده أو ترقيته في أي وقت</p>
             </div>
 
-            <!-- حالة التحميل -->
             <div class="loading-state" id="loadingState">
                 <i class="fas fa-spinner fa-spin"></i>
                 <p>جاري تحميل بيانات الاشتراك...</p>
             </div>
 
-            <!-- محتوى الاشتراك -->
             <div class="subscription-content hidden" id="subscriptionContent">
-                
-                <!-- البطاقة الرئيسية -->
                 <div class="current-plan-card" id="currentPlanCard">
                     <div class="plan-header">
                         <div class="plan-icon">
@@ -70,15 +69,12 @@
                     </div>
                 </div>
 
-                <!-- المميزات المفعلة -->
                 <div class="features-section">
                     <h3><i class="fas fa-check-circle"></i> المميزات المفعلة حالياً</h3>
                     <ul class="features-list" id="activeFeaturesList">
-                        <!-- تضاف ديناميكياً -->
                     </ul>
                 </div>
 
-                <!-- سجل المدفوعات -->
                 <div class="payments-history">
                     <h3><i class="fas fa-history"></i> سجل المدفوعات</h3>
                     <div class="payments-list" id="paymentsList">
@@ -87,7 +83,6 @@
                 </div>
             </div>
 
-            <!-- حالة عدم وجود اشتراك -->
             <div class="no-subscription hidden" id="noSubscription">
                 <div class="empty-icon">
                     <i class="fas fa-box-open"></i>

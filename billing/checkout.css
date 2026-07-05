@@ -111,6 +111,10 @@ BarberFlow Pro - صفحة الدفع
     color: #000;
 }
 
+.plan-info {
+    flex: 1;
+}
+
 .plan-info h3 {
     font-size: 1.3rem;
     color: var(--text-primary);
@@ -125,6 +129,24 @@ BarberFlow Pro - صفحة الدفع
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 600;
+}
+
+/* ✅ جديد: شارة الدور */
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: rgba(43, 138, 62, 0.1);
+    color: var(--brand-success);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.role-badge i {
+    font-size: 0.9rem;
 }
 
 .plan-price-display {

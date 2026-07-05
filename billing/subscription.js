@@ -9,15 +9,9 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/fi
 import { showNotification } from "../shared/js/notifications.js";
 import { PATHS, resolvePath } from "../shared/js/paths.js";
 
-// ============================================
-// المتغيرات العامة
-// ============================================
 let currentUser = null;
 let subscriptionData = null;
 
-// ============================================
-// التحقق من الجلسة
-// ============================================
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
         showNotification("يرجى تسجيل الدخول أولاً", "warning");
@@ -29,9 +23,6 @@ onAuthStateChanged(auth, async (user) => {
     await loadSubscriptionData();
 });
 
-// ============================================
-// تحميل بيانات الاشتراك
-// ============================================
 async function loadSubscriptionData() {
     try {
         const subDoc = await getDoc(doc(db, "users", currentUser.uid, "subscription", "current"));
@@ -45,7 +36,6 @@ async function loadSubscriptionData() {
 
         subscriptionData = subDoc.data();
         
-        // التحقق من انتهاء الصلاحية
         const endDate = subscriptionData.endDate.toDate ? subscriptionData.endDate.toDate() : new Date(subscriptionData.endDate);
         if (new Date() > endDate && subscriptionData.status === 'active') {
             subscriptionData.status = 'expired';
@@ -60,29 +50,28 @@ async function loadSubscriptionData() {
     }
 }
 
-// ============================================
-// عرض واجهة الاشتراك
-// ============================================
 function renderSubscriptionUI() {
     if (!subscriptionData) return;
 
-    // معلومات الباقة
-    const planNames = { starter: 'Starter', professional: 'Professional', enterprise: 'Enterprise' };
+    const planNames = {
+        starter: 'Starter',
+        professional: 'Professional',
+        enterprise: 'Enterprise'
+    };
+    
     document.getElementById('planName').textContent = planNames[subscriptionData.plan] || subscriptionData.plan;
     
-    // الحالة
     const statusEl = document.getElementById('planStatus');
     statusEl.textContent = subscriptionData.status === 'active' ? 'نشط' : 'منتهي';
     statusEl.className = `plan-status ${subscriptionData.status}`;
 
-    // التواريخ
     const formatDate = (date) => date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+    
     document.getElementById('startDate').textContent = formatDate(subscriptionData.startDate.toDate ? subscriptionData.startDate.toDate() : new Date(subscriptionData.startDate));
-    document.getElementById('endDate').textContent = formatDate(endDate);
+    document.getElementById('endDate').textContent = formatDate(subscriptionData.endDate.toDate ? subscriptionData.endDate.toDate() : new Date(subscriptionData.endDate));
     document.getElementById('amountPaid').textContent = `${subscriptionData.amount || 0} DH`;
     document.getElementById('autoRenewStatus').textContent = subscriptionData.autoRenew ? 'مفعل' : 'غير مفعل';
 
-    // المميزات
     const featuresList = document.getElementById('activeFeaturesList');
     if (subscriptionData.features) {
         const featureNames = {
@@ -99,16 +88,12 @@ function renderSubscriptionUI() {
             .join('');
     }
 
-    // إخفاء زر التجديد إذا كان Starter
     if (subscriptionData.plan === 'starter') {
         document.getElementById('renewBtn').style.display = 'none';
         document.getElementById('cancelBtn').style.display = 'none';
     }
 }
 
-// ============================================
-// أحداث الأزرار
-// ============================================
 document.getElementById('renewBtn')?.addEventListener('click', () => {
     const plan = subscriptionData.plan;
     window.location.href = `checkout.html?plan=${plan}&billing=monthly&renew=true`;
@@ -127,7 +112,7 @@ document.getElementById('cancelBtn')?.addEventListener('click', async () => {
             updatedAt: new Date()
         });
         showNotification("تم إلغاء التجديد التلقائي بنجاح", "success");
-        await loadSubscriptionData(); // إعادة تحميل
+        await loadSubscriptionData();
     } catch (error) {
         showNotification("حدث خطأ أثناء الإلغاء", "error");
     }
