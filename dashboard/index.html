@@ -1,14 +1,77 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | BarberFlow Pro</title>
+    <!-- التنسيقات العامة والمشتركة -->
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="index.css">
 </head>
-
 <body>
-  
-</body>
+    <div class="dashboard-container">
+        <!-- الشريط الجانبي (Sidebar) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>BarberFlow</h2>
+                <button class="close-sidebar-btn" id="closeSidebar">&times;</button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" data-path="DASHBOARD" class="active">📊 النظرة العامة</a></li>
+                    <li><a href="#" data-path="APPOINTMENTS">📅 المواعيد</a></li>
+                    <li><a href="#" data-path="ANALYTICS">📈 التحليلات</a></li>
+                    <li class="nav-divider">الإعدادات</li>
+                    <li><a href="#" data-path="SETTINGS_GENERAL">⚙️ إعدادات عامة</a></li>
+                    <li><a href="#" data-path="SETTINGS_SALON">✂️ إعدادات الصالون</a></li>
+                    <li><a href="#" data-path="SETTINGS_STORE">🛍️ إعدادات المتجر</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn" class="logout-link">🚪 تسجيل الخروج</a>
+            </div>
+        </aside>
 
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- الشريط العلوي (Topbar) -->
+            <header class="topbar">
+                <button class="menu-toggle-btn" id="menuToggle">☰</button>
+                <h1>النظرة العامة</h1>
+                <div class="user-info">
+                    <span id="userName">جاري التحميل...</span>
+                    <div class="avatar">👤</div>
+                </div>
+            </header>
+
+            <!-- منطقة المحتوى المتغير -->
+            <div class="content-area">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>إجمالي المواعيد</h3>
+                        <p class="stat-value">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>الإيرادات هذا الشهر</h3>
+                        <p class="stat-value">0 ر.س</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>العملاء الجدد</h3>
+                        <p class="stat-value">0</p>
+                    </div>
+                </div>
+                
+                <div class="welcome-banner">
+                    <h2>مرحباً بك في لوحة تحكم BarberFlow Pro</h2>
+                    <p>اختر من القائمة الجانبية لإدارة صالونك أو متجرك بكفاءة.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- النصوص البرمجية -->
+    <!-- ملاحظة: يتم تحميل Firebase و Middleware حسب احتياج المشروع -->
+    <script type="module" src="index.js"></script>
+</body>
 </html>
+

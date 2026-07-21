@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المواعيد | BarberFlow Pro</title>
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="appointments.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>BarberFlow</h2>
+                <button class="close-sidebar-btn" id="closeSidebar">&times;</button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" data-path="DASHBOARD">📊 النظرة العامة</a></li>
+                    <li><a href="#" data-path="APPOINTMENTS" class="active">📅 المواعيد</a></li>
+                    <li><a href="#" data-path="ANALYTICS">📈 التحليلات</a></li>
+                    <li class="nav-divider">الإعدادات</li>
+                    <li><a href="#" data-path="SETTINGS_GENERAL">⚙️ إعدادات عامة</a></li>
+                    <li><a href="#" data-path="SETTINGS_SALON">✂️ إعدادات الصالون</a></li>
+                    <li><a href="#" data-path="SETTINGS_STORE">🛍️ إعدادات المتجر</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn" class="logout-link">🚪 تسجيل الخروج</a>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- الشريط العلوي الكامل -->
+            <header class="topbar">
+                <button class="menu-toggle-btn" id="menuToggle">☰</button>
+                <h1>إدارة المواعيد</h1>
+                
+                <div class="topbar-search">
+                    <input type="text" id="searchAppointments" placeholder="ابحث عن موعد أو عميل...">
+                </div>
+                
+                <div class="topbar-actions">
+                    <button class="topbar-icon-btn" id="notificationsBtn">
+                        🔔
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+                
+                <div class="user-info">
+                    <span id="userName">جاري التحميل...</span>
+                    <div class="avatar">👤</div>
+                </div>
+            </header>
+
+            <!-- منطقة المحتوى -->
+            <div class="content-area">
+                <!-- فلاتر المواعيد -->
+                <div class="appointments-filters">
+                    <div class="filter-group">
+                        <label for="filterDate">التاريخ</label>
+                        <input type="date" id="filterDate">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterStatus">الحالة</label>
+                        <select id="filterStatus">
+                            <option value="all">جميع الحالات</option>
+                            <option value="pending">قيد الانتظار</option>
+                            <option value="confirmed">مؤكد</option>
+                            <option value="completed">مكتمل</option>
+                            <option value="cancelled">ملغي</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" id="addAppointmentBtn">+ إضافة موعد جديد</button>
+                </div>
+
+                <!-- جدول المواعيد -->
+                <div class="appointments-table-container">
+                    <table class="appointments-table">
+                        <thead>
+                            <tr>
+                                <th>العميل</th>
+                                <th>الخدمة</th>
+                                <th>التاريخ</th>
+                                <th>الوقت</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsTableBody">
+                            <!-- سيتم ملؤها ديناميكياً بواسطة JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- رسالة عند عدم وجود مواعيد -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">📅</div>
+                    <h3>لا توجد مواعيد</h3>
+                    <p>لم يتم العثور على مواعيد تطابق معايير البحث</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal لإضافة/تعديل موعد -->
+    <div class="modal" id="appointmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">إضافة موعد جديد</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <form id="appointmentForm">
+                <div class="form-group">
+                    <label for="clientName">اسم العميل</label>
+                    <input type="text" id="clientName" required>
+                </div>
+                <div class="form-group">
+                    <label for="clientPhone">رقم الهاتف</label>
+                    <input type="tel" id="clientPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="serviceType">نوع الخدمة</label>
+                    <select id="serviceType" required>
+                        <option value="">اختر الخدمة</option>
+                        <option value="haircut">قص شعر</option>
+                        <option value="shave">حلاقة ذقن</option>
+                        <option value="facial">تنظيف بشرة</option>
+                        <option value="package">باقة كاملة</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="appointmentDate">التاريخ</label>
+                        <input type="date" id="appointmentDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentTime">الوقت</label>
+                        <input type="time" id="appointmentTime" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="notes">ملاحظات</label>
+                    <textarea id="notes" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelBtn">إلغاء</button>
+                    <button type="submit" class="btn-primary">حفظ الموعد</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="appointments.js"></script>
+</body>
+</html>
+

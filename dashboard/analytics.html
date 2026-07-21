@@ -1,14 +1,213 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التحليلات والإحصائيات | BarberFlow Pro</title>
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="analytics.css">
 </head>
-
 <body>
-  
-</body>
+    <div class="dashboard-container">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>BarberFlow</h2>
+                <button class="close-sidebar-btn" id="closeSidebar">&times;</button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" data-path="DASHBOARD">📊 النظرة العامة</a></li>
+                    <li><a href="#" data-path="APPOINTMENTS">📅 المواعيد</a></li>
+                    <li><a href="#" data-path="ANALYTICS" class="active">📈 التحليلات</a></li>
+                    <li class="nav-divider">الإعدادات</li>
+                    <li><a href="#" data-path="SETTINGS_GENERAL">⚙️ إعدادات عامة</a></li>
+                    <li><a href="#" data-path="SETTINGS_SALON">✂️ إعدادات الصالون</a></li>
+                    <li><a href="#" data-path="SETTINGS_STORE">🛍️ إعدادات المتجر</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn" class="logout-link">🚪 تسجيل الخروج</a>
+            </div>
+        </aside>
 
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- الشريط العلوي -->
+            <header class="topbar">
+                <button class="menu-toggle-btn" id="menuToggle">☰</button>
+                <h1>التحليلات والإحصائيات</h1>
+                
+                <div class="topbar-search">
+                    <input type="text" placeholder="ابحث في التقارير...">
+                </div>
+                
+                <div class="topbar-actions">
+                    <button class="topbar-icon-btn" id="exportBtn" title="تصدير البيانات">
+                        📥
+                    </button>
+                    <button class="topbar-icon-btn" id="notificationsBtn">
+                        🔔
+                        <span class="notification-badge">2</span>
+                    </button>
+                </div>
+                
+                <div class="user-info">
+                    <span id="userName">جاري التحميل...</span>
+                    <div class="avatar">👤</div>
+                </div>
+            </header>
+
+            <!-- منطقة المحتوى -->
+            <div class="content-area">
+                <!-- فلاتر الوقت -->
+                <div class="analytics-filters">
+                    <div class="time-filter-tabs">
+                        <button class="time-tab active" data-period="week">أسبوع</button>
+                        <button class="time-tab" data-period="month">شهر</button>
+                        <button class="time-tab" data-period="quarter">ربع</button>
+                        <button class="time-tab" data-period="year">سنة</button>
+                    </div>
+                    <div class="date-range">
+                        <input type="date" id="startDate">
+                        <span>إلى</span>
+                        <input type="date" id="endDate">
+                        <button class="btn-primary" id="applyDateRange">تطبيق</button>
+                    </div>
+                </div>
+
+                <!-- بطاقات الإحصائيات الرئيسية -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-content">
+                            <h3>إجمالي المواعيد</h3>
+                            <p class="stat-value" id="totalAppointments">0</p>
+                            <div class="stat-change positive">
+                                <span>↑ 12%</span>
+                                <small>مقارنة بالأسبوع الماضي</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <h3>الإيرادات</h3>
+                            <p class="stat-value" id="totalRevenue">0 ر.س</p>
+                            <div class="stat-change positive">
+                                <span>↑ 8%</span>
+                                <small>مقارنة بالأسبوع الماضي</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <h3>العملاء الجدد</h3>
+                            <p class="stat-value" id="newCustomers">0</p>
+                            <div class="stat-change negative">
+                                <span>↓ 3%</span>
+                                <small>مقارنة بالأسبوع الماضي</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-content">
+                            <h3>متوسط التقييم</h3>
+                            <p class="stat-value" id="avgRating">0.0</p>
+                            <div class="stat-change positive">
+                                <span>↑ 0.2</span>
+                                <small>مقارنة بالأسبوع الماضي</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- الرسوم البيانية -->
+                <div class="charts-grid">
+                    <!-- رسم بياني للإيرادات -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h2>الإيرادات خلال الفترة</h2>
+                            <select class="chart-filter" id="revenueChartFilter">
+                                <option value="daily">يومي</option>
+                                <option value="weekly">أسبوعي</option>
+                                <option value="monthly">شهري</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- رسم بياني للخدمات الأكثر طلباً -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h2>الخدمات الأكثر طلباً</h2>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="servicesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- جدول أفضل العملاء -->
+                <div class="analytics-table-container">
+                    <div class="table-header">
+                        <h2>أفضل العملاء</h2>
+                        <button class="btn-secondary" id="viewAllCustomers">عرض الكل</button>
+                    </div>
+                    <table class="analytics-table">
+                        <thead>
+                            <tr>
+                                <th>العميل</th>
+                                <th>عدد الزيارات</th>
+                                <th>إجمالي الإنفاق</th>
+                                <th>آخر زيارة</th>
+                                <th>التقييم</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topCustomersTable">
+                            <!-- سيتم ملؤها ديناميكياً -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ملخص الأداء -->
+                <div class="performance-summary">
+                    <div class="summary-card">
+                        <h3>📊 ملخص الأداء</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <span class="label">معدل الإشغال</span>
+                                <span class="value" id="occupancyRate">0%</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">متوسط قيمة الحجز</span>
+                                <span class="value" id="avgBookingValue">0 ر.س</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">معدل الإلغاء</span>
+                                <span class="value" id="cancellationRate">0%</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">معدل العودة</span>
+                                <span class="value" id="returnRate">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script type="module" src="analytics.js"></script>
+</body>
 </html>
+

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإعدادات العامة | BarberFlow Pro</title>
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="settings-general.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- الشريط الجانبي (نفس القالب الأساسي) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>BarberFlow</h2>
+                <button class="close-sidebar-btn" id="closeSidebar">&times;</button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" data-path="DASHBOARD">📊 النظرة العامة</a></li>
+                    <li><a href="#" data-path="APPOINTMENTS">📅 المواعيد</a></li>
+                    <li><a href="#" data-path="ANALYTICS">📈 التحليلات</a></li>
+                    <li class="nav-divider">الإعدادات</li>
+                    <li><a href="#" data-path="SETTINGS_GENERAL" class="active">⚙️ إعدادات عامة</a></li>
+                    <li><a href="#" data-path="SETTINGS_SALON">✂️ إعدادات الصالون</a></li>
+                    <li><a href="settings-salon.html" data-path="SETTINGS_STORE">🛍️ إعدادات المتجر</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn" class="logout-link">🚪 تسجيل الخروج</a>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <header class="topbar">
+                <button class="menu-toggle-btn" id="menuToggle">☰</button>
+                <h1>الإعدادات العامة</h1>
+                <div class="user-info">
+                    <span id="userName">جاري التحميل...</span>
+                    <div class="avatar">👤</div>
+                </div>
+            </header>
+
+            <!-- منطقة المحتوى: الإعدادات العامة -->
+            <div class="content-area">
+                <div class="settings-card">
+                    <h2>المعلومات الشخصية</h2>
+                    <form id="generalSettingsForm">
+                        <div class="form-group">
+                            <label for="fullName">الاسم الكامل</label>
+                            <input type="text" id="fullName" name="fullName" placeholder="أدخل اسمك الكامل">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">البريد الإلكتروني</label>
+                            <input type="email" id="email" name="email" placeholder="example@domain.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">رقم الهاتف</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+966xxxxxxxxx">
+                        </div>
+                        <button type="submit" class="btn-primary">حفظ التغييرات</button>
+                    </form>
+                </div>
+
+                <div class="settings-card">
+                    <h2>الأمان</h2>
+                    <form id="securityForm">
+                        <div class="form-group">
+                            <label for="currentPassword">كلمة المرور الحالية</label>
+                            <input type="password" id="currentPassword" name="currentPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">كلمة المرور الجديدة</label>
+                            <input type="password" id="newPassword" name="newPassword">
+                        </div>
+                        <button type="submit" class="btn-primary">تحديث كلمة المرور</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="settings-general.js"></script>
+</body>
+</html>
+
