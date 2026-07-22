@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الخدمات | BarberFlow Pro</title>
+    <link rel="stylesheet" href="../../shared/css/global.css">
+    <link rel="stylesheet" href="../../shared/css/notifications.css">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <div class="dashboard-container">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>BarberFlow</h2>
+                <button class="close-sidebar-btn" id="closeSidebar">&times;</button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" data-path="DASHBOARD">📊 النظرة العامة</a></li>
+                    <li><a href="#" data-path="APPOINTMENTS">📅 المواعيد</a></li>
+                    <li><a href="#" data-path="ANALYTICS">📈 التحليلات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_CUSTOMERS">👥 العملاء</a></li>
+                    <li><a href="#" data-path="DASHBOARD_ORDERS">🛒 الطلبات</a></li>
+                    <li class="nav-divider">إدارة المحتوى</li>
+                    <li><a href="#" data-path="DASHBOARD_SERVICES" class="active">✂️ الخدمات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_PRODUCTS">🛍️ المنتجات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_STAFF">👨‍💼 الموظفون</a></li>
+                    <li class="nav-divider">الإعدادات</li>
+                    <li><a href="#" data-path="SETTINGS_GENERAL">️ إعدادات عامة</a></li>
+                    <li><a href="#" data-path="SETTINGS_SALON">✂️ إعدادات الصالون</a></li>
+                    <li><a href="#" data-path="SETTINGS_STORE">🛍️ إعدادات المتجر</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn" class="logout-link">🚪 تسجيل الخروج</a>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- الشريط العلوي -->
+            <header class="topbar">
+                <button class="menu-toggle-btn" id="menuToggle"></button>
+                <h1>إدارة الخدمات</h1>
+                
+                <div class="topbar-search">
+                    <input type="text" id="searchServices" placeholder="ابحث عن خدمة...">
+                </div>
+                
+                <div class="topbar-actions">
+                    <button class="topbar-icon-btn" id="notificationsBtn"><span class="notification-badge">3</span></button>
+                </div>
+                
+                <div class="user-info">
+                    <span id="userName">جاري التحميل...</span>
+                    <div class="avatar"></div>
+                </div>
+            </header>
+
+            <!-- منطقة المحتوى -->
+            <div class="content-area">
+                <!-- إحصائيات سريعة -->
+                <div class="quick-stats">
+                    <div class="stat-box">
+                        <span class="stat-icon">✂️</span>
+                        <div class="stat-info">
+                            <span class="stat-label">إجمالي الخدمات</span>
+                            <span class="stat-value" id="totalServices">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-icon">🔥</span>
+                        <div class="stat-info">
+                            <span class="stat-label">الأكثر طلباً</span>
+                            <span class="stat-value" id="topService">-</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-icon">💰</span>
+                        <div class="stat-info">
+                            <span class="stat-label">متوسط السعر</span>
+                            <span class="stat-value" id="avgPrice">0 ر.س</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-icon">⏱️</span>
+                        <div class="stat-info">
+                            <span class="stat-label">متوسط المدة</span>
+                            <span class="stat-value" id="avgDuration">0 دقيقة</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- أدوات التحكم -->
+                <div class="controls-bar">
+                    <div class="filters-group">
+                        <select id="filterCategory" class="form-input">
+                            <option value="all">جميع الفئات</option>
+                            <option value="haircut">قص الشعر</option>
+                            <option value="shave">الحلاقة</option>
+                            <option value="facial">العناية بالبشرة</option>
+                            <option value="package">باقات</option>
+                        </select>
+                        <select id="filterStatus" class="form-input">
+                            <option value="all">جميع الحالات</option>
+                            <option value="active">نشط</option>
+                            <option value="inactive">غير نشط</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-accent" id="addServiceBtn">
+                        <i class="fas fa-plus"></i> إضافة خدمة
+                    </button>
+                </div>
+
+                <!-- عرض الخدمات (Grid) -->
+                <div class="services-grid" id="servicesGrid"></div>
+
+                <!-- حالة فارغة -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <i class="fas fa-cut"></i>
+                    <h3>لا توجد خدمات</h3>
+                    <p>لم يتم العثور على خدمات تطابق معايير البحث</p>
+                    <button class="btn btn-accent" id="addFirstServiceBtn">إضافة أول خدمة</button>
+                </div>
+
+                <!-- الترقيم -->
+                <div class="pagination" id="pagination">
+                    <button class="page-btn" id="prevPage">السابق</button>
+                    <div class="page-numbers" id="pageNumbers"></div>
+                    <button class="page-btn" id="nextPage">التالي</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal إضافة/تعديل خدمة -->
+    <div class="modal" id="serviceModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="modalTitle">إضافة خدمة جديدة</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <form id="serviceForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="serviceName">اسم الخدمة *</label>
+                        <input type="text" id="serviceName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceCategory">الفئة *</label>
+                        <select id="serviceCategory" class="form-input" required>
+                            <option value="">اختر الفئة</option>
+                            <option value="haircut">قص الشعر</option>
+                            <option value="shave">الحلاقة</option>
+                            <option value="facial">العناية بالبشرة</option>
+                            <option value="package">باقات</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="servicePrice">السعر (ر.س) *</label>
+                        <input type="number" id="servicePrice" class="form-input" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceDuration">المدة (دقيقة) *</label>
+                        <input type="number" id="serviceDuration" class="form-input" min="5" step="5" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="serviceDescription">الوصف</label>
+                    <textarea id="serviceDescription" class="form-input" rows="3" placeholder="وصف مختصر للخدمة..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="serviceStatus">الحالة</label>
+                        <select id="serviceStatus" class="form-input">
+                            <option value="active">نشط</option>
+                            <option value="inactive">غير نشط</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceImage">صورة الخدمة</label>
+                        <input type="file" id="serviceImage" class="form-input" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelBtn">إلغاء</button>
+                    <button type="submit" class="btn btn-accent">حفظ الخدمة</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="index.js"></script>
+</body>
+</html>
+

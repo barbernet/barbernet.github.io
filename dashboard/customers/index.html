@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة العملاء | BarberFlow Pro</title>
+    <link rel="stylesheet" href="../../shared/css/global.css">
+    <link rel="stylesheet" href="../../shared/css/notifications.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <div class="dashboard-container">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>BarberFlow</h2>
+                <button class="close-sidebar-btn" id="closeSidebar">&times;</button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" data-path="DASHBOARD">📊 النظرة العامة</a></li>
+                    <li><a href="#" data-path="APPOINTMENTS">📅 المواعيد</a></li>
+                    <li><a href="#" data-path="ANALYTICS">📈 التحليلات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_CUSTOMERS" class="active">👥 العملاء</a></li>
+                    <li><a href="#" data-path="DASHBOARD_ORDERS">🛒 الطلبات</a></li>
+                    <li class="nav-divider">إدارة المحتوى</li>
+                    <li><a href="#" data-path="DASHBOARD_SERVICES">✂️ الخدمات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_PRODUCTS">🛍️ المنتجات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_STAFF">👨‍💼 الموظفون</a></li>
+                    <li class="nav-divider">الإعدادات</li>
+                    <li><a href="#" data-path="SETTINGS_GENERAL">⚙️ إعدادات عامة</a></li>
+                    <li><a href="#" data-path="SETTINGS_SALON">✂️ إعدادات الصالون</a></li>
+                    <li><a href="#" data-path="SETTINGS_STORE">🛍️ إعدادات المتجر</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn" class="logout-link">🚪 تسجيل الخروج</a>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- الشريط العلوي -->
+            <header class="topbar">
+                <button class="menu-toggle-btn" id="menuToggle">☰</button>
+                <h1>إدارة العملاء</h1>
+                
+                <div class="topbar-search">
+                    <input type="text" id="searchCustomers" placeholder="ابحث عن عميل...">
+                </div>
+                
+                <div class="topbar-actions">
+                    <button class="topbar-icon-btn" id="exportCustomersBtn" title="تصدير">📥</button>
+                    <button class="topbar-icon-btn" id="notificationsBtn">🔔<span class="notification-badge">3</span></button>
+                </div>
+                
+                <div class="user-info">
+                    <span id="userName">جاري التحميل...</span>
+                    <div class="avatar"></div>
+                </div>
+            </header>
+
+            <!-- منطقة المحتوى -->
+            <div class="content-area">
+                <!-- إحصائيات سريعة -->
+                <div class="quick-stats">
+                    <div class="stat-box">
+                        <span class="stat-icon"></span>
+                        <div class="stat-info">
+                            <span class="stat-label">إجمالي العملاء</span>
+                            <span class="stat-value" id="totalCustomers">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-icon">🆕</span>
+                        <div class="stat-info">
+                            <span class="stat-label">عملاء جدد</span>
+                            <span class="stat-value" id="newCustomers">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-icon">⭐</span>
+                        <div class="stat-info">
+                            <span class="stat-label">عملاء VIP</span>
+                            <span class="stat-value" id="vipCustomers">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-icon">⏸️</span>
+                        <div class="stat-info">
+                            <span class="stat-label">غير نشطين</span>
+                            <span class="stat-value" id="inactiveCustomers">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- أدوات التحكم -->
+                <div class="controls-bar">
+                    <div class="filters-group">
+                        <select id="filterStatus">
+                            <option value="all">جميع الحالات</option>
+                            <option value="active">نشط</option>
+                            <option value="vip">VIP</option>
+                            <option value="inactive">غير نشط</option>
+                        </select>
+                        <select id="filterGender">
+                            <option value="all">الجنس</option>
+                            <option value="male">ذكر</option>
+                            <option value="female">أنثى</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-accent" id="addCustomerBtn">
+                        <span>➕</span> إضافة عميل
+                    </button>
+                </div>
+
+                <!-- جدول العملاء -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
+                                <th>العميل</th>
+                                <th>الهاتف</th>
+                                <th>الزيارات</th>
+                                <th>الإنفاق</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTableBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- حالة فارغة -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <i class="fas fa-users"></i>
+                    <h3>لا يوجد عملاء</h3>
+                    <p>لم يتم العثور على عملاء يطابقون معايير البحث</p>
+                    <button class="btn btn-accent" id="addFirstCustomerBtn">إضافة أول عميل</button>
+                </div>
+
+                <!-- الترقيم -->
+                <div class="pagination" id="pagination">
+                    <button class="page-btn" id="prevPage">السابق</button>
+                    <div class="page-numbers" id="pageNumbers"></div>
+                    <button class="page-btn" id="nextPage">التالي</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal إضافة/تعديل عميل -->
+    <div class="modal" id="customerModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="modalTitle">إضافة عميل جديد</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <form id="customerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerName">الاسم الكامل *</label>
+                        <input type="text" id="customerName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerPhone">رقم الهاتف *</label>
+                        <input type="tel" id="customerPhone" class="form-input" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerEmail">البريد الإلكتروني</label>
+                        <input type="email" id="customerEmail" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerGender">الجنس</label>
+                        <select id="customerGender" class="form-input">
+                            <option value="male">ذكر</option>
+                            <option value="female">أنثى</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="customerNotes">ملاحظات</label>
+                    <textarea id="customerNotes" class="form-input" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerStatus">الحالة</label>
+                        <select id="customerStatus" class="form-input">
+                            <option value="active">نشط</option>
+                            <option value="vip">VIP</option>
+                            <option value="inactive">غير نشط</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerBirthdate">تاريخ الميلاد</label>
+                        <input type="date" id="customerBirthdate" class="form-input">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelBtn">إلغاء</button>
+                    <button type="submit" class="btn btn-accent">حفظ العميل</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal تفاصيل العميل -->
+    <div class="modal" id="customerDetailsModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>تفاصيل العميل</h2>
+                <button class="modal-close" id="closeDetailsModal">&times;</button>
+            </div>
+            <div class="customer-details-content" id="customerDetailsContent"></div>
+        </div>
+    </div>
+
+    <script type="module" src="index.js"></script>
+</body>
+</html>
+
