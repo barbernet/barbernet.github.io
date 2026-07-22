@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز الإشعارات | BarberFlow Pro</title>
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    <link rel="stylesheet" href="notifications.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <div class="dashboard-container">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>BarberFlow</h2>
+                <button class="close-sidebar-btn" id="closeSidebar">&times;</button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" data-path="DASHBOARD"> النظرة العامة</a></li>
+                    <li><a href="#" data-path="APPOINTMENTS">📅 المواعيد</a></li>
+                    <li><a href="#" data-path="ANALYTICS">📈 التحليلات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_CUSTOMERS">👥 العملاء</a></li>
+                    <li><a href="#" data-path="DASHBOARD_ORDERS">🛒 الطلبات</a></li>
+                    <li class="nav-divider">إدارة المحتوى</li>
+                    <li><a href="#" data-path="DASHBOARD_SERVICES">✂️ الخدمات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_PRODUCTS">🛍️ المنتجات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_STAFF">👨‍💼 الموظفون</a></li>
+                    <li class="nav-divider">الإعدادات</li>
+                    <li><a href="#" data-path="SETTINGS_GENERAL">️ إعدادات عامة</a></li>
+                    <li><a href="#" data-path="SETTINGS_SALON">✂️ إعدادات الصالون</a></li>
+                    <li><a href="#" data-path="SETTINGS_STORE">🛍️ إعدادات المتجر</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn" class="logout-link">🚪 تسجيل الخروج</a>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- الشريط العلوي -->
+            <header class="topbar">
+                <button class="menu-toggle-btn" id="menuToggle">☰</button>
+                <h1>مركز الإشعارات</h1>
+                
+                <div class="topbar-actions">
+                    <button class="topbar-icon-btn" id="markAllReadBtn" title="تحديد الكل كمقروء">
+                        <i class="fas fa-check-double"></i>
+                    </button>
+                </div>
+                
+                <div class="user-info">
+                    <span id="userName">جاري التحميل...</span>
+                    <div class="avatar"></div>
+                </div>
+            </header>
+
+            <!-- منطقة المحتوى -->
+            <div class="content-area">
+                <!-- فلاتر الإشعارات -->
+                <div class="notifications-filters">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-inbox"></i>
+                        الكل
+                    </button>
+                    <button class="filter-btn" data-filter="unread">
+                        <i class="fas fa-envelope"></i>
+                        غير مقروءة
+                    </button>
+                    <button class="filter-btn" data-filter="appointments">
+                        <i class="fas fa-calendar"></i>
+                        المواعيد
+                    </button>
+                    <button class="filter-btn" data-filter="orders">
+                        <i class="fas fa-shopping-cart"></i>
+                        الطلبات
+                    </button>
+                    <button class="filter-btn" data-filter="system">
+                        <i class="fas fa-bell"></i>
+                        النظام
+                    </button>
+                </div>
+
+                <!-- قائمة الإشعارات -->
+                <div class="notifications-list" id="notificationsList">
+                    <!-- سيتم ملؤها ديناميكياً -->
+                </div>
+
+                <!-- حالة فارغة -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <i class="fas fa-bell-slash"></i>
+                    <h3>لا توجد إشعارات</h3>
+                    <p>لا توجد إشعارات تطابق معايير الفلترة</p>
+                </div>
+
+                <!-- زر تحميل المزيد -->
+                <div class="load-more-container" id="loadMoreContainer">
+                    <button class="btn btn-outline" id="loadMoreBtn">
+                        <i class="fas fa-chevron-down"></i>
+                        تحميل المزيد
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="notifications.js"></script>
+</body>
+</html>
+

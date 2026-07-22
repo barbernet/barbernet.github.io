@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد البريد الإلكتروني | BarberFlow Pro</title>
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    <link rel="stylesheet" href="verify-email.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <div class="auth-container">
+        <!-- الشعار -->
+        <div class="auth-header">
+            <a href="../index.html" class="logo">
+                <i class="fas fa-cut"></i>
+                <span>BarberFlow Pro</span>
+            </a>
+        </div>
+
+        <!-- بطاقة تأكيد البريد -->
+        <div class="auth-card">
+            <div class="auth-icon">
+                <i class="fas fa-envelope-open-text"></i>
+            </div>
+            
+            <h1>تأكيد بريدك الإلكتروني</h1>
+            <p class="auth-subtitle">
+                لقد أرسلنا رابط تأكيد إلى بريدك الإلكتروني. 
+                <br>يرجى التحقق من صندوق الوارد والنقر على الرابط لتفعيل حسابك.
+            </p>
+
+            <!-- حالة التحقق -->
+            <div class="verification-status" id="verificationStatus">
+                <div class="status-icon">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <p class="status-text">جاري التحقق من الرابط...</p>
+            </div>
+
+            <!-- رسائل مساعدة -->
+            <div class="help-messages">
+                <div class="help-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span>لم تتلقَ البريد؟ تحقق من مجلد البريد العشوائي (Spam)</span>
+                </div>
+            </div>
+
+            <!-- الأزرار -->
+            <div class="auth-actions">
+                <button class="btn btn-accent" id="resendEmailBtn">
+                    <i class="fas fa-redo"></i>
+                    إعادة إرسال البريد
+                </button>
+                
+                <button class="btn btn-outline" id="changeEmailBtn">
+                    <i class="fas fa-edit"></i>
+                    تغيير البريد الإلكتروني
+                </button>
+            </div>
+
+            <div class="auth-footer">
+                <a href="login.html" class="auth-link">
+                    <i class="fas fa-arrow-right"></i>
+                    العودة إلى تسجيل الدخول
+                </a>
+            </div>
+        </div>
+
+        <!-- معلومات إضافية -->
+        <div class="auth-info">
+            <p>
+                <i class="fas fa-shield-alt"></i>
+                رابط التأكيد صالح لمدة 24 ساعة فقط
+            </p>
+        </div>
+    </div>
+
+    <script type="module" src="verify-email.js"></script>
+</body>
+</html>
+

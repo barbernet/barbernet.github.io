@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة التقييمات | BarberFlow Pro</title>
+    <link rel="stylesheet" href="../shared/css/global.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    <link rel="stylesheet" href="reviews.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="notification-container"></div>
+
+    <div class="dashboard-container">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>BarberFlow</h2>
+                <button class="close-sidebar-btn" id="closeSidebar">&times;</button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" data-path="DASHBOARD">📊 النظرة العامة</a></li>
+                    <li><a href="#" data-path="APPOINTMENTS">📅 المواعيد</a></li>
+                    <li><a href="#" data-path="ANALYTICS"> التحليلات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_CUSTOMERS">👥 العملاء</a></li>
+                    <li><a href="#" data-path="DASHBOARD_ORDERS">🛒 الطلبات</a></li>
+                    <li class="nav-divider">إدارة المحتوى</li>
+                    <li><a href="#" data-path="DASHBOARD_SERVICES">✂️ الخدمات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_PRODUCTS">🛍️ المنتجات</a></li>
+                    <li><a href="#" data-path="DASHBOARD_STAFF">👨‍💼 الموظفون</a></li>
+                    <li class="nav-divider">الإعدادات</li>
+                    <li><a href="#" data-path="SETTINGS_GENERAL">⚙️ إعدادات عامة</a></li>
+                    <li><a href="#" data-path="SETTINGS_SALON">✂️ إعدادات الصالون</a></li>
+                    <li><a href="#" data-path="SETTINGS_STORE">🛍️ إعدادات المتجر</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn" class="logout-link">🚪 تسجيل الخروج</a>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <header class="topbar">
+                <button class="menu-toggle-btn" id="menuToggle">☰</button>
+                <h1>إدارة التقييمات</h1>
+                <div class="user-info">
+                    <span id="userName">جاري التحميل...</span>
+                    <div class="avatar"></div>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- إحصائيات التقييمات -->
+                <div class="reviews-stats">
+                    <div class="stat-box">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-info">
+                            <span class="stat-label">متوسط التقييم</span>
+                            <span class="stat-value" id="avgRating">0.0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-info">
+                            <span class="stat-label">إجمالي التقييمات</span>
+                            <span class="stat-value" id="totalReviews">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <span class="stat-label">تم الرد عليها</span>
+                            <span class="stat-value" id="repliedReviews">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-info">
+                            <span class="stat-label">بانتظار الرد</span>
+                            <span class="stat-value" id="pendingReviews">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ملخص التوزيع -->
+                <div class="rating-distribution">
+                    <h3><i class="fas fa-chart-bar"></i> توزيع التقييمات</h3>
+                    <div class="distribution-bars" id="distributionBars"></div>
+                </div>
+
+                <!-- الفلاتر -->
+                <div class="controls-bar">
+                    <div class="filters-group">
+                        <select id="filterRating" class="form-input">
+                            <option value="all">جميع التقييمات</option>
+                            <option value="5">5 نجوم</option>
+                            <option value="4">4 نجوم</option>
+                            <option value="3">3 نجوم</option>
+                            <option value="2">نجمتان</option>
+                            <option value="1">نجمة واحدة</option>
+                        </select>
+                        <select id="filterStatus" class="form-input">
+                            <option value="all">جميع الحالات</option>
+                            <option value="replied">تم الرد</option>
+                            <option value="pending">بانتظار الرد</option>
+                        </select>
+                        <input type="text" id="searchReviews" class="form-input" placeholder="ابحث عن تقييم...">
+                    </div>
+                </div>
+
+                <!-- قائمة التقييمات -->
+                <div class="reviews-list" id="reviewsList"></div>
+
+                <!-- حالة فارغة -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <i class="fas fa-star-half-alt"></i>
+                    <h3>لا توجد تقييمات</h3>
+                    <p>لم يتم العثور على تقييمات تطابق معايير البحث</p>
+                </div>
+
+                <!-- الترقيم -->
+                <div class="pagination" id="pagination">
+                    <button class="page-btn" id="prevPage">السابق</button>
+                    <div class="page-numbers" id="pageNumbers"></div>
+                    <button class="page-btn" id="nextPage">التالي</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal الرد على التقييم -->
+    <div class="modal" id="replyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="replyModalTitle">الرد على التقييم</h2>
+                <button class="modal-close" id="closeReplyModal">&times;</button>
+            </div>
+            <form id="replyForm">
+                <div class="review-summary" id="reviewSummary"></div>
+                <div class="form-group">
+                    <label for="replyText">نص الرد</label>
+                    <textarea id="replyText" class="form-input" rows="4" placeholder="اكتب ردك هنا..." required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelReplyBtn">إلغاء</button>
+                    <button type="submit" class="btn btn-accent">إرسال الرد</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="reviews.js"></script>
+</body>
+</html>
+
