@@ -1,5 +1,5 @@
-import { PATHS, resolvePath } from 'shared/js/paths.js';
-import { showNotification } from 'shared/js/notifications.js';
+import { PATHS, resolvePath } from 'shared/utils/paths.js';
+import { showNotification } from 'shared/layout/notifications.js';
 
 // ============================================
 // 1. تهيئة الصفحة

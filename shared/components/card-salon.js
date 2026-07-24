@@ -1,77 +1,127 @@
 /**
- * BarberFlow Pro - مكون بطاقة الصالون
- * المسار: shared/components/js/card-salon.js
- * الدور: إنشاء وعرض بطاقات الصالونات بشكل احترافي
- */
-
-import { db } from "../../../core/firebase-init.js";
-import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { PATHS, resolvePath } from "../../../shared/js/paths.js";
+BarberFlow Pro - مكون بطاقة الصالون
+المسار: shared/components/card-salon.js
+الدور: إنشاء وعرض بطاقات الصالونات بشكل احترافي
+*/
+import { auth, db } from "../../config/firebase-init.js";
+import { 
+    doc, 
+    setDoc, 
+    deleteDoc, 
+    getDoc 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { PATHS, resolvePath } from "../utils/paths.js";
 
 /**
- * HTML Template لبطاقة الصالون
- */
+HTML Template لبطاقة الصالون
+*/
 const SALON_CARD_TEMPLATE = `
-    <article class="salon-card">
-        <div class="salon-card__image-wrapper">
-            <div class="salon-card__placeholder">
-                <i class="fas fa-cut"></i>
-            </div>
-            <img class="salon-card__image" alt="صورة الصالون" style="display:none;" />
-            
-            <div class="salon-card__badges">
-                <span class="salon-card__status" data-status="open">مفتوح الآن</span>
-                <span class="salon-card__featured" style="display:none;">
-                    <i class="fas fa-crown"></i> مميز
-                </span>
-            </div>
-            
-            <button class="salon-card__favorite" aria-label="إضافة للمفضلة">
-                <i class="far fa-heart"></i>
-            </button>
+<article class="salon-card">
+    <div class="salon-card__image-wrapper">
+        <div class="salon-card__placeholder">
+            <i class="fas fa-cut"></i>
         </div>
-        
-        <div class="salon-card__content">
-            <div class="salon-card__header">
-                <h3 class="salon-card__name">اسم الصالون</h3>
-                <div class="salon-card__rating">
-                    <i class="fas fa-star"></i>
-                    <span class="salon-card__rating-value">5.0</span>
-                    <span class="salon-card__rating-count">(0)</span>
-                </div>
-            </div>
-            
-            <div class="salon-card__info">
-                <div class="salon-card__location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>الموقع</span>
-                </div>
-                <div class="salon-card__services">
-                    <i class="fas fa-list"></i>
-                    <span>0 خدمة</span>
-                </div>
-            </div>
-            
-            <div class="salon-card__footer">
-                <div class="salon-card__price">
-                    <span class="salon-card__price-label">يبدأ من</span>
-                    <span class="salon-card__price-value">0 DH</span>
-                </div>
-                <a class="salon-card__cta" href="#">
-                    <span>التفاصيل</span>
-                    <i class="fas fa-arrow-left"></i>
-                </a>
+        <img class="salon-card__image" alt="صورة الصالون" style="display:none;" />
+        <div class="salon-card__badges">
+            <span class="salon-card__status" data-status="open">مفتوح الآن</span>
+            <span class="salon-card__featured" style="display:none;">
+                <i class="fas fa-crown"></i> مميز
+            </span>
+        </div>
+        <button class="salon-card__favorite" aria-label="إضافة للمفضلة">
+            <i class="far fa-heart"></i>
+        </button>
+    </div>
+    <div class="salon-card__content">
+        <div class="salon-card__header">
+            <h3 class="salon-card__name">اسم الصالون</h3>
+            <div class="salon-card__rating">
+                <i class="fas fa-star"></i>
+                <span class="salon-card__rating-value">5.0</span>
+                <span class="salon-card__rating-count">(0)</span>
             </div>
         </div>
-    </article>
+        <div class="salon-card__info">
+            <div class="salon-card__location">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>الموقع</span>
+            </div>
+            <div class="salon-card__services">
+                <i class="fas fa-list"></i>
+                <span>0 خدمة</span>
+            </div>
+        </div>
+        <div class="salon-card__footer">
+            <div class="salon-card__price">
+                <span class="salon-card__price-label">يبدأ من</span>
+                <span class="salon-card__price-value">0 DH</span>
+            </div>
+            <a class="salon-card__cta" href="#">
+                <span>التفاصيل</span>
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+    </div>
+</article>
 `;
 
 /**
- * إنشاء بطاقة صالون
- * @param {Object} salon - بيانات الصالون
- * @param {string} id - معرف الصالون
- * @returns {HTMLElement|null}
- */
+التحقق من حالة المفضلة للصالون بالنسبة للمستخدم الحالي
+@param {string} salonId - معرف الصالون
+@returns {Promise<boolean>}
+*/
+async function checkSalonFavorite(salonId) {
+    const userId = auth.currentUser?.uid;
+    if (!userId) return false;
+    
+    try {
+        const favoriteRef = doc(db, "users", userId, "favorites", `salon_${salonId}`);
+        const favoriteDoc = await getDoc(favoriteRef);
+        return favoriteDoc.exists();
+    } catch (error) {
+        console.error("Error checking salon favorite:", error);
+        return false;
+    }
+}
+
+/**
+تبديل حالة المفضلة للصالون (إضافة/حذف)
+@param {string} salonId - معرف الصالون
+@param {boolean} isLiked - الحالة الجديدة
+@returns {Promise<boolean>} نجاح العملية
+*/
+async function toggleSalonFavorite(salonId, isLiked) {
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+        console.warn("User must be logged in to add favorites");
+        return false;
+    }
+    
+    try {
+        const favoriteRef = doc(db, "users", userId, "favorites", `salon_${salonId}`);
+        
+        if (isLiked) {
+            await setDoc(favoriteRef, {
+                salonId: salonId,
+                itemType: "salon",
+                addedAt: new Date().toISOString()
+            });
+        } else {
+            await deleteDoc(favoriteRef);
+        }
+        return true;
+    } catch (error) {
+        console.error("Error toggling salon favorite:", error);
+        return false;
+    }
+}
+
+/**
+إنشاء بطاقة صالون
+@param {Object} salon - بيانات الصالون
+@param {string} id - معرف الصالون
+@returns {HTMLElement|null}
+*/
 export async function createSalonCard(salon, id) {
     const salonId = id || salon?.id;
     if (!salonId) {
@@ -79,7 +129,6 @@ export async function createSalonCard(salon, id) {
         return null;
     }
 
-    // إنشاء العنصر من الـ template
     const parser = new DOMParser();
     const doc = parser.parseFromString(SALON_CARD_TEMPLATE, 'text/html');
     const card = doc.querySelector('.salon-card');
@@ -88,7 +137,6 @@ export async function createSalonCard(salon, id) {
         // ===== صورة الغلاف =====
         const img = card.querySelector('.salon-card__image');
         const placeholder = card.querySelector('.salon-card__placeholder');
-        
         if (img && placeholder) {
             if (salon.coverImage) {
                 img.src = salon.coverImage;
@@ -105,16 +153,16 @@ export async function createSalonCard(salon, id) {
             }
         }
 
-        // ===== اسم الصالون =====
+        // ===== اسم الصالون (تم التوحيد: name فقط) =====
         const nameElement = card.querySelector('.salon-card__name');
         if (nameElement) {
-            nameElement.textContent = salon.salonName || salon.name || "صالون غير مسمى";
+            nameElement.textContent = salon.name || "صالون غير مسمى";
         }
 
-        // ===== الموقع =====
+        // ===== الموقع (تم التوحيد: city فقط) =====
         const locationElement = card.querySelector('.salon-card__location span');
         if (locationElement) {
-            locationElement.textContent = salon.location || salon.city || "الموقع غير محدد";
+            locationElement.textContent = salon.city || "الموقع غير محدد";
         }
 
         // ===== التقييم =====
@@ -161,10 +209,12 @@ export async function createSalonCard(salon, id) {
             featuredBadge.style.display = 'flex';
         }
 
-        // ===== زر الإعجاب =====
+        // ===== زر الإعجاب (تم إصلاح المنطق) =====
         const favoriteBtn = card.querySelector('.salon-card__favorite');
         const favoriteIcon = favoriteBtn?.querySelector('i');
-        let isLiked = Boolean(salon.isLiked);
+        
+        // التحقق من حالة المفضلة من قاعدة البيانات (خاصة بالمستخدم)
+        let isLiked = await checkSalonFavorite(salonId);
         
         const updateFavoriteUI = (liked) => {
             if (favoriteIcon) {
@@ -182,14 +232,23 @@ export async function createSalonCard(salon, id) {
             favoriteBtn.onclick = async (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                isLiked = !isLiked;
-                updateFavoriteUI(isLiked);
-                try {
-                    await updateDoc(doc(db, "salons", salonId), { isLiked: isLiked });
-                    salon.isLiked = isLiked;
-                } catch (err) {
-                    console.error("Error updating favorite:", err);
-                    isLiked = !isLiked;
+                
+                // التحقق من تسجيل الدخول
+                if (!auth.currentUser) {
+                    window.location.href = resolvePath('LOGIN');
+                    return;
+                }
+                
+                const newLikedState = !isLiked;
+                updateFavoriteUI(newLikedState);
+                
+                const success = await toggleSalonFavorite(salonId, newLikedState);
+                
+                if (success) {
+                    isLiked = newLikedState;
+                } else {
+                    // التراجع عن التغيير في حالة الفشل
+                    isLiked = !newLikedState;
                     updateFavoriteUI(isLiked);
                 }
             };
@@ -198,7 +257,7 @@ export async function createSalonCard(salon, id) {
         // ===== زر عرض التفاصيل =====
         const ctaBtn = card.querySelector('.salon-card__cta');
         if (ctaBtn) {
-            ctaBtn.href = `${resolvePath('SALONS')}?id=${salonId}`;
+            ctaBtn.href = `${resolvePath('DETAILS_SALON')}?id=${salonId}`;
             ctaBtn.onclick = (e) => {
                 e.stopPropagation();
             };
@@ -206,7 +265,6 @@ export async function createSalonCard(salon, id) {
 
         // ===== إضافة تأثيرات التفاعل =====
         addInteractionEffects(card);
-
         return card;
     } catch (error) {
         console.error("[SalonCard] Critical Processing Error:", error);
@@ -215,8 +273,8 @@ export async function createSalonCard(salon, id) {
 }
 
 /**
- * التحقق من حالة الصالون (مفتوح/مغلق)
- */
+التحقق من حالة الصالون (مفتوح/مغلق)
+*/
 function isSalonOpen(hours) {
     if (!hours?.open || !hours?.close) return true;
     const now = new Date();
@@ -229,20 +287,17 @@ function isSalonOpen(hours) {
 }
 
 /**
- * إضافة تأثيرات التفاعل (Animations)
- */
+إضافة تأثيرات التفاعل (Animations)
+*/
 function addInteractionEffects(card) {
-    // تأثير ظهور تدريجي
     card.style.opacity = '0';
     card.style.transform = 'translateY(20px)';
-    
     requestAnimationFrame(() => {
         card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         card.style.opacity = '1';
         card.style.transform = 'translateY(0)';
     });
 
-    // تأثير tilt عند hover (اختياري - للأجهزة التي تدعم الماوس)
     if (window.matchMedia('(hover: hover)').matches) {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
@@ -252,10 +307,8 @@ function addInteractionEffects(card) {
             const centerY = rect.height / 2;
             const rotateX = (y - centerY) / 20;
             const rotateY = (centerX - x) / 20;
-            
             card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
         });
-        
         card.addEventListener('mouseleave', () => {
             card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
         });
@@ -263,10 +316,8 @@ function addInteractionEffects(card) {
 }
 
 /**
- * إنشاء عدة بطاقات صالون
- * @param {Array} salons - مصفوفة الصالونات
- * @returns {Promise<HTMLElement[]>}
- */
+إنشاء عدة بطاقات صالون
+*/
 export async function createSalonCards(salons) {
     const cards = [];
     for (const salon of salons) {

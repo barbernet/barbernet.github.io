@@ -8,14 +8,14 @@
  * - أزرار تواصل متعددة
  */
 
-import { db, auth } from "./core/firebase-init.js";
+import { db, auth } from "./config/firebase-init.js";
 import {
     doc, getDoc, updateDoc, collection, addDoc, getDocs,
     query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { showNotification } from "./shared/js/notifications.js";
-import { PATHS, resolvePath } from "./shared/js/paths.js";
+import { PATHS, resolvePath } from "./shared/utils/paths.js";
 
 // ============================================
 // المتغيرات العامة

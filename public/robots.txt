@@ -11,7 +11,7 @@ Disallow: /dashboard/
 Disallow: /profile/
 Disallow: /shared/
 Disallow: /middleware/
-Disallow: /core/
+Disallow: /config/
 # منع فهرسة الملفات الحساسة
 Disallow: /.git/
 Disallow: /.htaccess

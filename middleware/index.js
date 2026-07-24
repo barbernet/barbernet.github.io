@@ -1,7 +1,6 @@
 /**
- * middleware/index.js
- * نقطة التصدير المركزية لجميع دوال الـ Middleware
- */
+نقطة التصدير المركزية لجميع دوال الـ Middleware
+*/
 
 // Auth Middleware
 export { getCurrentUser, isUserLoggedIn, getCurrentUserId } from './auth/auth-state.js';
@@ -34,6 +33,10 @@ export {
     showPageContent
 } from './routing/page-router.js';
 
+export {
+    initPageGuard
+} from './routing/page-guard.js';
+
 // Validation Middleware
 export {
     sanitizeText,
@@ -54,8 +57,7 @@ export {
     validateAndProcessImage
 } from './validation/images-sanitizer.js';
 
-
-// ✅ إضافة تصدير دوال الاشتراكات
+// Subscription Middleware
 export {
     checkSubscription,
     hasFeature,

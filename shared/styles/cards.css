@@ -1,6 +1,6 @@
 /* ==========================================================================
 BarberFlow Pro - مكونات البطاقات
-المسار: shared/components/css/cards.css
+المسار: shared/styles/cards.css
 ========================================================================== */
 
 /* ============================================
@@ -13,6 +13,23 @@ BarberFlow Pro - مكونات البطاقات
     border: 1px solid var(--border-color);
     transition: all 0.3s ease;
     cursor: pointer;
+    position: relative;
+}
+
+.salon-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--brand-accent), var(--brand-accent-dark));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.salon-card:hover::before {
+    transform: scaleX(1);
 }
 
 .salon-card:hover {
@@ -42,6 +59,11 @@ BarberFlow Pro - مكونات البطاقات
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.salon-card:hover .salon-card__image {
+    transform: scale(1.05);
 }
 
 .salon-card__badges {
@@ -232,6 +254,11 @@ BarberFlow Pro - مكونات البطاقات
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.store-card:hover .store-card__image {
+    transform: scale(1.05);
 }
 
 .store-card__badges {
@@ -707,5 +734,82 @@ Responsive
     .concierge-card__cta {
         justify-content: center;
     }
+}
+
+/* ============================================
+تحسينات للشاشات الكبيرة (جديد)
+============================================ */
+@media (min-width: 1200px) {
+    .salon-card__image-wrapper,
+    .store-card__image-wrapper {
+        height: 240px;
+    }
+    
+    .salon-card__name,
+    .store-card__name {
+        font-size: 1.2rem;
+    }
+    
+    .offer-card,
+    .concierge-card {
+        padding: 40px;
+    }
+}
+/* ============================================
+زر المفضلة في بطاقة المنتج (جديد)
+============================================ */
+.store-card__favorite {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.store-card__favorite:hover {
+    transform: scale(1.1);
+}
+
+.store-card__favorite.active i {
+    color: var(--brand-danger);
+}
+
+.store-card__favorite i {
+    color: #666;
+    font-size: 1rem;
+}
+
+/* تعديل موضع quick-view ليتناسب مع وجود favorite */
+.store-card__quick-view {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.store-card:hover .store-card__quick-view {
+    opacity: 1;
+    transform: translateY(0);
 }
 

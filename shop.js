@@ -4,7 +4,7 @@
  * الدور: عرض المتاجر والمنتجات مع فلاتر متقدمة
  */
 
-import { db } from "./core/firebase-init.js";
+import { db } from "./config/firebase-init.js";
 import {
     collection,
     getDocs,
@@ -12,7 +12,7 @@ import {
     where,
     orderBy
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { PATHS, resolvePath } from "./shared/js/paths.js";
+import { PATHS, resolvePath } from "./shared/utils/paths.js";
 import { createStoreCard } from "./shared/components/card-store.js";
 import { showNotification } from "./shared/js/notifications.js";
 

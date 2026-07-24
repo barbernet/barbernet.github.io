@@ -1,11 +1,12 @@
 /**
- * شريط التنقل العام
- * المسار: shared/js/global-navbar.js
- */
-import { auth, db } from "../../core/firebase-init.js";
+شريط التنقل العام
+المسار: shared/layout/global-navbar.js
+*/
+import { auth, db } from "../../config/firebase-init.js"; // ✅ تم تصحيح المسار
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { PATHS, resolvePath } from "./paths.js";
+import { PATHS, resolvePath } from "../utils/paths.js"; // ✅ تم تصحيح المسار
+import { showNotification } from "../utils/notifications.js"; // ✅ استيراد التنبيهات الموحدة
 
 // ============================================
 // التحميل الأولي
@@ -13,16 +14,15 @@ import { PATHS, resolvePath } from "./paths.js";
 document.addEventListener("DOMContentLoaded", async () => {
     const container = document.getElementById("global-navbar-container");
     if (!container) return;
-
+    
     try {
         const currentScriptUrl = new URL(import.meta.url);
-        const navbarPath = new URL('../global-navbar.html', currentScriptUrl).href;
-
+        const navbarPath = new URL('./global-navbar.html', currentScriptUrl).href;
         const response = await fetch(navbarPath);
         if (!response.ok) throw new Error("Navbar HTML not found");
-
+        
         container.innerHTML = await response.text();
-
+        
         updateAllPaths();
         setupNavigationLogic();
         setupSettingsDropdown();
@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupUserState();
         setupCartBadge();
         highlightActivePage();
-
     } catch (error) {
         console.error("❌ خطأ في تحميل الشريط:", error);
     }
@@ -46,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 function updateAllPaths() {
     const container = document.getElementById('global-navbar-container');
     if (!container) return;
-
+    
     const links = container.querySelectorAll('[data-path]');
     links.forEach(link => {
         const key = link.getAttribute('data-path');
@@ -63,7 +62,7 @@ function setupNavigationLogic() {
     const closeBtn = document.getElementById("closeMenuBtn");
     const drawer = document.getElementById("sideDrawer");
     const overlay = document.getElementById("drawerOverlay");
-
+    
     if (!menuBtn || !drawer || !overlay) return;
 
     const open = () => {
@@ -71,7 +70,7 @@ function setupNavigationLogic() {
         overlay.classList.add("active");
         document.body.style.overflow = 'hidden';
     };
-
+    
     const close = () => {
         drawer.classList.remove("open");
         overlay.classList.remove("active");
@@ -81,11 +80,11 @@ function setupNavigationLogic() {
     menuBtn.onclick = open;
     closeBtn.onclick = close;
     overlay.onclick = close;
-
+    
     drawer.querySelectorAll('.drawer-link').forEach(link => {
         link.onclick = close;
     });
-
+    
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && drawer.classList.contains('open')) close();
     });
@@ -97,17 +96,15 @@ function setupNavigationLogic() {
 function setupSettingsDropdown() {
     const settingsBtn = document.getElementById('settingsBtn');
     const dropdown = document.getElementById('settingsDropdown');
-
+    
     if (!settingsBtn || !dropdown) return;
 
     settingsBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         const isOpen = dropdown.classList.contains('show');
-        
         document.querySelectorAll('.dropdown-menu.show').forEach(d => {
             d.classList.remove('show');
         });
-
         if (!isOpen) {
             dropdown.classList.add('show');
         }
@@ -135,7 +132,7 @@ function setupThemeToggle() {
     const themeText = document.getElementById('themeText');
     const drawerThemeBtn = document.getElementById('drawerThemeToggle');
     const drawerThemeText = document.getElementById('drawerThemeText');
-
+    
     const savedTheme = localStorage.getItem('bf-theme') || 'dark';
     applyTheme(savedTheme);
 
@@ -145,7 +142,7 @@ function setupThemeToggle() {
             document.getElementById('settingsDropdown').classList.remove('show');
         });
     }
-
+    
     if (drawerThemeBtn) {
         drawerThemeBtn.addEventListener('click', toggleTheme);
     }
@@ -160,11 +157,9 @@ function setupThemeToggle() {
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         document.body.setAttribute('data-theme', theme);
-
         if (themeIcon) themeIcon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
         if (themeText) themeText.textContent = theme === 'dark' ? 'الوضع الداكن' : 'الوضع الفاتح';
         if (drawerThemeText) drawerThemeText.textContent = theme === 'dark' ? 'الوضع الداكن' : 'الوضع الفاتح';
-        
         const drawerIcon = drawerThemeBtn?.querySelector('i');
         if (drawerIcon) drawerIcon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
     }
@@ -183,10 +178,8 @@ function setupLanguageSelector() {
             const lang = item.getAttribute('data-lang');
             localStorage.setItem('bf-language', lang);
             updateLanguageUI(lang);
-            
             const langNames = { 'ar': 'العربية', 'fr': 'Français', 'en': 'English' };
-            alert(`تم تغيير اللغة إلى ${langNames[lang]}`);
-            
+            showNotification(`تم تغيير اللغة إلى ${langNames[lang]}`, "info"); // ✅ تم استبدال alert
             document.getElementById('settingsDropdown').classList.remove('show');
         };
     });
@@ -196,7 +189,6 @@ function setupLanguageSelector() {
             item.classList.remove('active');
             const checkIcon = item.querySelector('.fa-check');
             if (checkIcon) checkIcon.remove();
-            
             if (item.getAttribute('data-lang') === lang) {
                 item.classList.add('active');
                 const icon = document.createElement('i');
@@ -214,7 +206,7 @@ function setupNotificationsToggle() {
     const notifToggleBtn = document.getElementById('notificationsToggleBtn');
     const notifIcon = document.getElementById('notifIcon');
     const notifText = document.getElementById('notifText');
-
+    
     const notificationsEnabled = localStorage.getItem('bf-notifications') !== 'false';
     updateNotificationsUI(notificationsEnabled);
 
@@ -223,7 +215,6 @@ function setupNotificationsToggle() {
             const newState = !notificationsEnabled;
             localStorage.setItem('bf-notifications', newState);
             updateNotificationsUI(newState);
-            
             document.getElementById('settingsDropdown').classList.remove('show');
         };
     }
@@ -241,7 +232,7 @@ function setupPrivacyButton() {
     const privacyBtn = document.getElementById('privacyBtn');
     if (privacyBtn) {
         privacyBtn.onclick = () => {
-            alert('صفحة إعدادات الخصوصية قيد التطوير');
+            showNotification('صفحة إعدادات الخصوصية قيد التطوير', "info"); // ✅ تم استبدال alert
             document.getElementById('settingsDropdown').classList.remove('show');
         };
     }
@@ -254,7 +245,7 @@ function setupHelpButton() {
     const helpBtn = document.getElementById('helpBtn');
     if (helpBtn) {
         helpBtn.onclick = () => {
-            alert('صفحة المساعدة والدعم قيد التطوير');
+            showNotification('صفحة المساعدة والدعم قيد التطوير', "info"); // ✅ تم استبدال alert
             document.getElementById('settingsDropdown').classList.remove('show');
         };
     }
@@ -279,27 +270,27 @@ function setupUserState() {
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             userBtn.href = resolvePath('PROFILE_CUSTOMER');
-
             try {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     const data = userDoc.data();
-                    const userName = data.fullName || data.displayName || 'مستخدم';
+                    // ✅ توحيد اسم الحقل: fullName
+                    const userName = data.fullName || 'مستخدم'; 
                     const role = data.role || 'customer';
-
+                    
                     if (drawerUserInfo) drawerUserInfo.style.display = 'flex';
                     if (drawerUserName) drawerUserName.textContent = `مرحباً، ${userName}`;
-
+                    
                     const roleNames = { customer: 'زبون', salon: 'صاحب صالون', store: 'صاحب متجر' };
                     if (drawerUserRole) drawerUserRole.textContent = roleNames[role] || 'زبون';
-
+                    
                     const profileMap = {
                         customer: 'PROFILE_CUSTOMER',
                         salon: 'PROFILE_SALON',
                         store: 'PROFILE_STORE'
                     };
                     if (drawerProfileLink) drawerProfileLink.href = resolvePath(profileMap[role] || 'PROFILE_CUSTOMER');
-
+                    
                     if (role === 'salon' || role === 'store') {
                         if (drawerDashboardLink) {
                             drawerDashboardLink.style.display = 'flex';
@@ -307,14 +298,14 @@ function setupUserState() {
                         }
                         if (drawerSettingsLink) {
                             drawerSettingsLink.style.display = 'flex';
-                            drawerSettingsLink.href = resolvePath('DASHBOARD_SETTINGS');
+                            drawerSettingsLink.href = resolvePath('SETTINGS_GENERAL'); // ✅ تم التصحيح
                         }
                     }
                 }
             } catch (error) {
                 console.error('خطأ في جلب بيانات المستخدم:', error);
             }
-
+            
             if (drawerLoginLink) drawerLoginLink.style.display = 'none';
             if (drawerLogoutLink) {
                 drawerLogoutLink.style.display = 'flex';
@@ -324,10 +315,8 @@ function setupUserState() {
                     window.location.href = resolvePath('INDEX');
                 };
             }
-
         } else {
             userBtn.href = resolvePath('LOGIN');
-
             if (drawerUserInfo) drawerUserInfo.style.display = 'none';
             if (drawerDashboardLink) drawerDashboardLink.style.display = 'none';
             if (drawerSettingsLink) drawerSettingsLink.style.display = 'none';
@@ -343,15 +332,16 @@ function setupUserState() {
 function setupCartBadge() {
     const badge = document.getElementById('cartBadge');
     if (!badge) return;
-
+    
     const updateBadge = () => {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        // ✅ تم توحيد متغير السلة ليكون bf-cart
+        const cart = JSON.parse(localStorage.getItem('bf-cart') || '[]');
         badge.textContent = cart.length;
         badge.style.display = cart.length > 0 ? 'flex' : 'none';
     };
-
+    
     updateBadge();
-    window.addEventListener('cartUpdated', updateBadge);
+    window.addEventListener('bf-cart-updated', updateBadge); // ✅ تم توحيد اسم الحدث
 }
 
 // ============================================
@@ -360,7 +350,6 @@ function setupCartBadge() {
 function highlightActivePage() {
     const path = window.location.pathname;
     const navLinks = document.querySelectorAll('.nav-link');
-
     const pageMap = [
         { key: 'salons.html', page: 'salons' },
         { key: 'shop.html', page: 'shop' },
@@ -369,7 +358,7 @@ function highlightActivePage() {
         { key: 'about.html', page: 'about' },
         { key: 'contact.html', page: 'contact' }
     ];
-
+    
     let activePage = 'home';
     for (const item of pageMap) {
         if (path.includes(item.key)) {
@@ -377,7 +366,7 @@ function highlightActivePage() {
             break;
         }
     }
-
+    
     navLinks.forEach(link => {
         link.classList.toggle('active', link.dataset.page === activePage);
     });

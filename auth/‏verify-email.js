@@ -1,8 +1,20 @@
-import { PATHS, resolvePath } from '../shared/js/paths.js';
-import { showNotification } from '../shared/js/notifications.js';
+/**
+BarberFlow Pro - صفحة تأكيد البريد الإلكتروني
+المسار: auth/verify-email.js
+*/
+import { auth } from "../config/firebase-init.js"; // ✅ تم تصحيح المسار
+import { applyActionCode, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { PATHS, resolvePath } from "../shared/utils/paths.js"; // ✅ تم تصحيح المسار
+import { showNotification } from "../shared/utils/notifications.js"; // ✅ تم تصحيح المسار
+import { initPageGuard } from "../middleware/routing/page-guard.js"; // ✅ إضافة الحماية
 
 // ============================================
-// 1. استخراج معلمات URL (oobCode, mode)
+// 1. تهيئة حماية الصفحة
+// ============================================
+initPageGuard(); // ✅ إخفاء الصفحة فوراً
+
+// ============================================
+// 2. استخراج معلمات URL (oobCode, mode)
 // ============================================
 function getUrlParams() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -15,46 +27,46 @@ function getUrlParams() {
 const { oobCode, mode } = getUrlParams();
 
 // ============================================
-// 2. عناصر DOM
+// 3. عناصر DOM
 // ============================================
 const verificationStatus = document.getElementById('verificationStatus');
-const statusIcon = verificationStatus.querySelector('.status-icon');
-const statusText = verificationStatus.querySelector('.status-text');
+const statusIcon = verificationStatus ? verificationStatus.querySelector('.status-icon') : null;
+const statusText = verificationStatus ? verificationStatus.querySelector('.status-text') : null;
 const resendBtn = document.getElementById('resendEmailBtn');
 const changeEmailBtn = document.getElementById('changeEmailBtn');
 
 // ============================================
-// 3. التحقق من صحة الرابط
+// 4. التحقق من صحة الرابط (ربط فعلي بـ Firebase)
 // ============================================
 async function verifyEmail() {
     if (!oobCode) {
         showErrorState('رابط التأكيد غير صالح أو منتهي الصلاحية');
         return;
     }
-
+    
     try {
-        // 🔥 هنا سيتم ربط Firebase Auth لاحقاً
-        // await applyActionCode(auth, oobCode);
-        
-        // محاكاة عملية التحقق
-        await simulateVerification();
-        
+        // ✅ ربط فعلي بـ Firebase
+        await applyActionCode(auth, oobCode);
         showSuccessState();
-        
     } catch (error) {
         console.error('خطأ في التحقق من البريد:', error);
-        showErrorState('حدث خطأ أثناء التحقق. يرجى المحاولة مرة أخرى.');
+        if (error.code === 'auth/expired-action-code') {
+            showErrorState('رابط التأكيد منتهي الصلاحية');
+        } else if (error.code === 'auth/invalid-action-code') {
+            showErrorState('رابط التأكيد غير صالح');
+        } else {
+            showErrorState('حدث خطأ أثناء التحقق. يرجى المحاولة مرة أخرى.');
+        }
     }
 }
 
 // ============================================
-// 4. عرض حالة النجاح
+// 5. عرض حالة النجاح
 // ============================================
 function showSuccessState() {
-    verificationStatus.className = 'verification-status success';
-    statusIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
-    statusText.textContent = 'تم تأكيد بريدك الإلكتروني بنجاح!';
-    
+    if (verificationStatus) verificationStatus.className = 'verification-status success';
+    if (statusIcon) statusIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
+    if (statusText) statusText.textContent = 'تم تأكيد بريدك الإلكتروني بنجاح!';
     showNotification('تم تفعيل حسابك بنجاح! يمكنك الآن تسجيل الدخول.', 'success', 5000);
     
     // إعادة توجيه تلقائي بعد 3 ثوانٍ
@@ -63,40 +75,44 @@ function showSuccessState() {
     }, 3000);
     
     // إخفاء أزرار إعادة الإرسال
-    resendBtn.style.display = 'none';
-    changeEmailBtn.style.display = 'none';
+    if (resendBtn) resendBtn.style.display = 'none';
+    if (changeEmailBtn) changeEmailBtn.style.display = 'none';
 }
 
 // ============================================
-// 5. عرض حالة الخطأ
+// 6. عرض حالة الخطأ
 // ============================================
 function showErrorState(message) {
-    verificationStatus.className = 'verification-status error';
-    statusIcon.innerHTML = '<i class="fas fa-times-circle"></i>';
-    statusText.textContent = message;
-    
+    if (verificationStatus) verificationStatus.className = 'verification-status error';
+    if (statusIcon) statusIcon.innerHTML = '<i class="fas fa-times-circle"></i>';
+    if (statusText) statusText.textContent = message;
     showNotification(message, 'error');
 }
 
 // ============================================
-// 6. إعادة إرسال بريد التأكيد
+// 7. إعادة إرسال بريد التأكيد
 // ============================================
 if (resendBtn) {
     resendBtn.addEventListener('click', async () => {
         setLoadingState(resendBtn, true);
-        
         try {
-            // 🔥 هنا سيتم ربط Firebase Auth لاحقاً
-            // await sendEmailVerification(auth.currentUser);
-            
-            await simulateApiCall();
-            
-            showNotification('تم إرسال بريد التأكيد مرة أخرى. تحقق من بريدك الإلكتروني.', 'success');
-            
+            // ✅ ربط فعلي بـ Firebase (يتطلب أن يكون المستخدم مسجل دخوله)
+            if (auth.currentUser) {
+                await sendEmailVerification(auth.currentUser);
+                showNotification('تم إرسال بريد التأكيد مرة أخرى. تحقق من بريدك الإلكتروني.', 'success');
+            } else {
+                showNotification('يجب تسجيل الدخول أولاً لإعادة إرسال البريد', 'warning');
+                setTimeout(() => {
+                    window.location.href = resolvePath('LOGIN');
+                }, 2000);
+            }
         } catch (error) {
             console.error('خطأ في إعادة الإرسال:', error);
-            showNotification('حدث خطأ. يرجى المحاولة لاحقاً.', 'error');
-            
+            if (error.code === 'auth/too-many-requests') {
+                showNotification('تم إرسال الكثير من الطلبات. يرجى الانتظار قليلاً.', 'error');
+            } else {
+                showNotification('حدث خطأ. يرجى المحاولة لاحقاً.', 'error');
+            }
         } finally {
             setLoadingState(resendBtn, false);
         }
@@ -104,17 +120,16 @@ if (resendBtn) {
 }
 
 // ============================================
-// 7. تغيير البريد الإلكتروني
+// 8. تغيير البريد الإلكتروني
 // ============================================
 if (changeEmailBtn) {
     changeEmailBtn.addEventListener('click', () => {
-        showNotification('سيتم توجيهك إلى صفحة تغيير البريد الإلكتروني', 'info');
-        // window.location.href = resolvePath('PROFILE_CUSTOMER');
+        showNotification('يرجى التواصل مع الدعم الفني لتغيير البريد الإلكتروني', 'info');
     });
 }
 
 // ============================================
-// 8. دوال مساعدة
+// 9. دوال مساعدة
 // ============================================
 function setLoadingState(button, isLoading) {
     if (isLoading) {
@@ -126,29 +141,22 @@ function setLoadingState(button, isLoading) {
     }
 }
 
-function simulateVerification() {
-    return new Promise(resolve => setTimeout(resolve, 2000));
-}
-
-function simulateApiCall() {
-    return new Promise(resolve => setTimeout(resolve, 1500));
-}
-
 // ============================================
-// 9. تهيئة الصفحة
+// 10. تهيئة الصفحة
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
     console.log('✅ صفحة تأكيد البريد الإلكتروني جاهزة');
-    
     // إذا كان هناك oobCode، نبدأ التحقق تلقائياً
     if (oobCode) {
         console.log('✓ تم العثور على oobCode:', oobCode);
         verifyEmail();
     } else {
-        console.warn('⚠️ لم يتم العثور على oobCode في الرابط');
-        verificationStatus.className = 'verification-status error';
-        statusIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-        statusText.textContent = 'رابط التأكيد غير موجود في الرابط';
+        console.warn('️ لم يتم العثور على oobCode في الرابط');
+        if (verificationStatus) {
+            verificationStatus.className = 'verification-status error';
+            if (statusIcon) statusIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            if (statusText) statusText.textContent = 'رابط التأكيد غير موجود في الرابط';
+        }
     }
 });
 

@@ -1,12 +1,12 @@
 /**
- * middleware/routing/page-router.js
- * نظام التوجيه والحماية المركزي
- */
-import { auth, db } from "../../core/firebase-init.js";
+middleware/routing/page-router.js
+نظام التوجيه والحماية المركزي
+*/
+import { auth, db } from "../../config/firebase-init.js"; // ✅ تم التصحيح
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { showNotification } from "../../shared/js/notifications.js";
-import { PATHS } from "../../shared/js/paths.js";
+import { showNotification } from "../../shared/utils/notifications.js"; // ✅ تم التصحيح
+import { PATHS } from "../../shared/utils/paths.js"; // ✅ تم التصحيح
 
 export const initPageRouter = () => {
     onAuthStateChanged(auth, async (user) => {
@@ -72,11 +72,12 @@ export const initPageRouter = () => {
 
 function triggerRecoveryModal(role, currentStep, targetPath) {
     if (document.getElementById('routerRecoveryModal')) return;
-    let title = "تخصيص حسابك التجاري 🪄";
+
+    let title = "تخصيص حسابك التجاري ";
     let text = "لم تقم بتهيئة ملفك العملي بالكامل بعد.";
 
     if (role === "salon") { title = "إعداد صالونك المحترف 💈"; text = "تبقى خطوة واحدة لتفعيل نظام الحجوزات والظهور للزبائن."; } 
-    else if (role === "store") { title = "تجهيز متجرك الموثق 🛍️"; text = "ابدأ في عرض وبيع منتجاتك. أكمل إعداد المتجر لتنشيط سلة الشراء."; } 
+    else if (role === "store") { title = "تجهيز متجرك الموثق ️"; text = "ابدأ في عرض وبيع منتجاتك. أكمل إعداد المتجر لتنشيط سلة الشراء."; } 
     else if (role === "customer") { title = "إكمال ملفك الشخصي 👤"; text = "لنستمتع بتجربة حجز فريدة، يرجى إكمال معلومات ملفك الشخصي."; }
 
     const modal = document.createElement('div');

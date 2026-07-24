@@ -1,62 +1,57 @@
 /**
- * BarberFlow Pro - مكون بطاقة الكونسيرج (الخدمات المنزلية)
- * المسار: shared/components/js/card-Concierge.js
- * الدور: إنشاء وعرض بطاقات الخدمات المنزلية الفاخرة
- */
-
-import { PATHS, resolvePath } from "../../../shared/js/paths.js";
+BarberFlow Pro - مكون بطاقة الكونسيرج (الخدمات المنزلية)
+المسار: shared/components/card-concierge.js
+الدور: إنشاء وعرض بطاقات الخدمات المنزلية الفاخرة
+*/
+import { PATHS, resolvePath } from "../utils/paths.js"; // ✅ تم تصحيح المسار
 
 /**
- * HTML Template لبطاقة الكونسيرج
- */
+HTML Template لبطاقة الكونسيرج
+*/
 const CONCIERGE_CARD_TEMPLATE = `
-    <article class="concierge-card">
-        <div class="concierge-card__badge">
-            <i class="fas fa-crown"></i>
-            <span>VIP</span>
+<article class="concierge-card">
+    <div class="concierge-card__badge">
+        <i class="fas fa-crown"></i>
+        <span>VIP</span>
+    </div>
+    <div class="concierge-card__icon-wrapper">
+        <div class="concierge-card__icon">
+            <i class="fas fa-spa"></i>
         </div>
-        
-        <div class="concierge-card__icon-wrapper">
-            <div class="concierge-card__icon">
-                <i class="fas fa-spa"></i>
+        <div class="concierge-card__icon-glow"></div>
+    </div>
+    <div class="concierge-card__content">
+        <h3 class="concierge-card__title">عنوان الخدمة</h3>
+        <p class="concierge-card__description">وصف الخدمة</p>
+        <div class="concierge-card__features">
+            <div class="concierge-card__feature">
+                <i class="fas fa-check-circle"></i>
+                <span>خدمة احترافية</span>
             </div>
-            <div class="concierge-card__icon-glow"></div>
-        </div>
-        
-        <div class="concierge-card__content">
-            <h3 class="concierge-card__title">عنوان الخدمة</h3>
-            <p class="concierge-card__description">وصف الخدمة</p>
-            
-            <div class="concierge-card__features">
-                <div class="concierge-card__feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>خدمة احترافية</span>
-                </div>
-                <div class="concierge-card__feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>في منزلك</span>
-                </div>
-            </div>
-            
-            <div class="concierge-card__footer">
-                <div class="concierge-card__price">
-                    <span class="concierge-card__price-label">يبدأ من</span>
-                    <span class="concierge-card__price-value">0 DH</span>
-                </div>
-                <a class="concierge-card__cta" href="#">
-                    <span>طلب الخدمة</span>
-                    <i class="fas fa-arrow-left"></i>
-                </a>
+            <div class="concierge-card__feature">
+                <i class="fas fa-check-circle"></i>
+                <span>في منزلك</span>
             </div>
         </div>
-    </article>
+        <div class="concierge-card__footer">
+            <div class="concierge-card__price">
+                <span class="concierge-card__price-label">يبدأ من</span>
+                <span class="concierge-card__price-value">0 DH</span>
+            </div>
+            <a class="concierge-card__cta" href="#">
+                <span>طلب الخدمة</span>
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+    </div>
+</article>
 `;
 
 /**
- * إنشاء بطاقة كونسيرج
- * @param {Object} service - بيانات الخدمة
- * @returns {HTMLElement|null}
- */
+إنشاء بطاقة كونسيرج
+@param {Object} service - بيانات الخدمة
+@returns {HTMLElement|null}
+*/
 export async function createConciergeCard(service) {
     if (!service?.id) {
         console.error('[ConciergeCard] ❌ معرف الخدمة غير مُعرّف!');
@@ -115,7 +110,6 @@ export async function createConciergeCard(service) {
 
         // ===== تأثيرات التفاعل =====
         addInteractionEffects(card);
-
         return card;
     } catch (error) {
         console.error("[ConciergeCard] Critical Processing Error:", error);
@@ -124,12 +118,11 @@ export async function createConciergeCard(service) {
 }
 
 /**
- * إضافة تأثيرات التفاعل
- */
+إضافة تأثيرات التفاعل
+*/
 function addInteractionEffects(card) {
     card.style.opacity = '0';
     card.style.transform = 'translateY(20px)';
-    
     requestAnimationFrame(() => {
         card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         card.style.opacity = '1';
@@ -140,23 +133,18 @@ function addInteractionEffects(card) {
     if (window.matchMedia('(hover: hover)').matches) {
         card.addEventListener('mouseenter', () => {
             const glow = card.querySelector('.concierge-card__icon-glow');
-            if (glow) {
-                glow.style.opacity = '1';
-            }
+            if (glow) glow.style.opacity = '1';
         });
-        
         card.addEventListener('mouseleave', () => {
             const glow = card.querySelector('.concierge-card__icon-glow');
-            if (glow) {
-                glow.style.opacity = '0';
-            }
+            if (glow) glow.style.opacity = '0';
         });
     }
 }
 
 /**
- * إنشاء عدة بطاقات كونسيرج
- */
+إنشاء عدة بطاقات كونسيرج
+*/
 export async function createConciergeCards(services) {
     const cards = [];
     for (const service of services) {

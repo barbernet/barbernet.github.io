@@ -4,13 +4,13 @@
  * الدور: إدارة وعرض تفاصيل المتجر لأصحاب المتاجر
  */
 
-import { auth, db } from "../core/firebase-init.js";
+import { auth, db } from "../config/firebase-init.js";
 import {
     doc, getDoc, collection, query, orderBy, limit, addDoc, updateDoc, deleteDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { showNotification } from "../shared/js/notifications.js";
-import { PATHS, resolvePath } from "../shared/js/paths.js";
+import { PATHS, resolvePath } from "../shared/utils/paths.js";
 import { processImage } from "../shared/js/images-utils.js";
 import { validateImageType, validateImageSize } from "../middleware/validation/index.js";
 

@@ -4,14 +4,14 @@
  * الدور: إدارة حساب الزبون وحجوزاته وطلباته
  */
 
-import { auth, db } from "../core/firebase-init.js";
+import { auth, db } from "../config/firebase-init.js";
 import {
     doc, getDoc, updateDoc, collection, query, where,
     orderBy, limit, addDoc, deleteDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { showNotification } from "../shared/js/notifications.js";
-import { PATHS, resolvePath } from "../shared/js/paths.js";
+import { PATHS, resolvePath } from "../shared/utils/paths.js";
 import { processImage } from "../shared/js/images-utils.js";
 import { validateImageType, validateImageSize } from "../middleware/validation/index.js";
 

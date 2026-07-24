@@ -4,14 +4,14 @@
  * الدور: عرض وتصفية صالونات الحلاقة
  */
 
-import { db } from "./core/firebase-init.js";
+import { db } from "./config/firebase-init.js";
 import {
     collection,
     getDocs,
     query,
     where
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { PATHS, resolvePath } from "./shared/js/paths.js";
+import { PATHS, resolvePath } from "./shared/utils/paths.js";
 import { createSalonCard } from "./shared/components/card-salon.js";
 import { showNotification } from "./shared/js/notifications.js";
 

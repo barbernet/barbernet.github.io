@@ -1,21 +1,18 @@
 /**
- * middleware/subscription/subscription-guard.js
- * للتحقق من صلاحية الاشتراك قبل الوصول للمميزات
- */
-
-import { db } from "../../core/firebase-init.js";
+middleware/subscription/subscription-guard.js
+للتحقق من صلاحية الاشتراك قبل الوصول للمميزات
+*/
+import { db } from "../../config/firebase-init.js"; // ✅ تم التصحيح
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { showNotification } from "../../shared/js/notifications.js";
-import { PATHS, resolvePath } from "../../shared/js/paths.js";
+import { showNotification } from "../../shared/utils/notifications.js"; // ✅ تم التصحيح
+import { PATHS, resolvePath } from "../../shared/utils/paths.js"; // ✅ تم التصحيح
 
 export async function checkSubscription(userId) {
     try {
         const subDoc = await getDoc(doc(db, "users", userId, "subscription", "current"));
-        
         if (!subDoc.exists()) {
             return { active: false, plan: 'none', features: {} };
         }
-        
         const sub = subDoc.data();
         const now = new Date();
         const endDate = sub.endDate.toDate ? sub.endDate.toDate() : new Date(sub.endDate);
@@ -23,7 +20,7 @@ export async function checkSubscription(userId) {
         if (now > endDate) {
             return { active: false, plan: sub.plan, expired: true, features: {} };
         }
-        
+
         return {
             active: true,
             plan: sub.plan,
@@ -44,23 +41,21 @@ export async function hasFeature(userId, feature) {
 export function requireSubscription(requiredPlan, redirectPath) {
     return async (userId) => {
         const sub = await checkSubscription(userId);
-        
         if (!sub.active) {
             showNotification(`هذه الميزة متاحة للباقة ${requiredPlan} فأعلى`, "warning");
             window.location.replace(redirectPath || resolvePath('PRO'));
             return false;
         }
-        
+
         const planHierarchy = ['starter', 'professional', 'enterprise'];
         const userLevel = planHierarchy.indexOf(sub.plan);
         const requiredLevel = planHierarchy.indexOf(requiredPlan);
-        
+
         if (userLevel < requiredLevel) {
             showNotification(`هذه الميزة متاحة لباقة ${requiredPlan} فأعلى`, "warning");
             window.location.replace(redirectPath || resolvePath('PRO'));
             return false;
         }
-        
         return true;
     };
 }
@@ -68,7 +63,7 @@ export function requireSubscription(requiredPlan, redirectPath) {
 export function showLockedContent(containerId, featureName) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    
+
     container.innerHTML = `
         <div class="locked-feature">
             <i class="fas fa-lock"></i>

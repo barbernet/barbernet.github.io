@@ -1,6 +1,6 @@
 /**
 أداة معالجة الصور لـ BarberFlow Pro
-المسار: shared/js/images-utils.js
+المسار: shared/utils/images-utils.js
 ملاحظة: هذا حل مؤقت لتخزين الصور كـ Base64
 حتى يتم تفعيل Firebase Storage (يحتاج خطة مدفوعة)
 */

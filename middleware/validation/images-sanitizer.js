@@ -3,9 +3,8 @@ middleware/validation/images-sanitizer.js
 نظام فلترة وحماية الصور قبل التخزين
 الدور: التحقق من أمان الصور ومحتواها قبل الرفع
 */
-
 // استيراد الدوال التقنية من shared
-import { processImage } from '../../shared/js/images-utils.js';
+import { processImage } from '../../shared/utils/images-utils.js'; // ✅ تم التصحيح من shared/js إلى shared/utils
 
 /**
 التحقق من نوع الصورة
@@ -46,14 +45,12 @@ export const validateImageDimensions = (img) => {
             reason: 'الصورة صغيرة جداً (الحد الأدنى: 100x100 بكسل)' 
         };
     }
-
     if (img.width > maxWidth || img.height > maxHeight) {
         return { 
             valid: false, 
             reason: 'الصورة كبيرة جداً (الحد الأقصى: 4000x4000 بكسل)' 
         };
     }
-
     const aspectRatio = Math.max(img.width, img.height) / Math.min(img.width, img.height);
     if (aspectRatio > maxAspectRatio) {
         return { 
@@ -61,7 +58,6 @@ export const validateImageDimensions = (img) => {
             reason: 'نسبة أبعاد الصورة غير منطقية' 
         };
     }
-
     return { valid: true };
 };
 
@@ -80,7 +76,6 @@ export const detectInappropriateContent = (img) => {
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
-
         let skinTonePixels = 0;
         let totalPixels = data.length / 4;
 
@@ -89,17 +84,15 @@ export const detectInappropriateContent = (img) => {
             const r = data[i];
             const g = data[i + 1];
             const b = data[i + 2];
-
-            if (r > 95 && g > 40 && b > 20 &&
-                r > g && r > b &&
-                Math.abs(r - g) > 15 &&
+            if (r > 95 && g > 40 && b > 20 && 
+                r > g && r > b && 
+                Math.abs(r - g) > 15 && 
                 r - g > 15 && r - b > 15) {
                 skinTonePixels++;
             }
         }
 
         const skinToneRatio = skinTonePixels / (totalPixels / 4);
-
         // رفض إذا كانت نسبة اللون الجلدي عالية جداً (> 65%)
         if (skinToneRatio > 0.65) {
             return {
@@ -107,7 +100,6 @@ export const detectInappropriateContent = (img) => {
                 reason: 'الصورة تحتوي على محتوى غير لائق'
             };
         }
-
         return { safe: true };
     } catch (error) {
         console.error('Error detecting inappropriate content:', error);
@@ -123,9 +115,9 @@ export const detectInappropriateContent = (img) => {
 export const validateAndProcessImage = async (file) => {
     // 1. التحقق من النوع
     if (!validateImageType(file)) {
-        return { 
-            valid: false, 
-            reason: 'نوع الصورة غير مدعوم. استخدم JPEG, PNG, أو WebP' 
+        return {
+            valid: false,
+            reason: 'نوع الصورة غير مدعوم. استخدم JPEG, PNG, أو WebP'
         };
     }
 
@@ -157,20 +149,16 @@ export const validateAndProcessImage = async (file) => {
                 resolve({ valid: false, reason: dimensionsCheck.reason });
                 return;
             }
-
             const contentCheck = detectInappropriateContent(img);
             if (!contentCheck.safe) {
                 resolve({ valid: false, reason: contentCheck.reason });
                 return;
             }
-
             resolve({ valid: true, base64 });
         };
-
         img.onerror = () => {
             resolve({ valid: false, reason: 'فشل تحميل الصورة للتحقق' });
         };
-
         img.src = base64;
     });
 };

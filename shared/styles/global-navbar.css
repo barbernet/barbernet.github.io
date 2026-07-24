@@ -1,6 +1,6 @@
 /* ==========================================================================
 شريط التنقل - Navbar
-المسار: shared/css/global-navbar.css
+المسار: shared/style/global-navbar.css
 ⚠️ لا تستخدم @import - global.css يُستدعى في كل صفحة HTML
 ========================================================================== */
 
@@ -36,7 +36,6 @@
     font-weight: 700;
     flex-shrink: 0;
 }
-
 .navbar-brand i { font-size: 1.5rem; }
 .navbar-brand strong { color: var(--text-primary, #fff); }
 
@@ -65,12 +64,10 @@
     font-size: 0.9rem;
     white-space: nowrap;
 }
-
 .nav-link:hover {
     color: var(--brand-accent, #d4af37);
     background: rgba(212, 175, 55, 0.1);
 }
-
 .nav-link.active {
     color: var(--brand-accent, #d4af37);
     background: rgba(212, 175, 55, 0.15);
@@ -99,7 +96,6 @@
     position: relative;
     text-decoration: none;
 }
-
 .action-btn:hover {
     background: rgba(212, 175, 55, 0.1);
     border-color: var(--brand-accent, #d4af37);
@@ -149,7 +145,6 @@
     overflow: hidden;
     padding: 8px 0;
 }
-
 .dropdown-menu.show {
     opacity: 1;
     visibility: visible;
@@ -189,12 +184,10 @@
     font-size: 0.9rem;
     text-align: right;
 }
-
 .dropdown-item:hover {
     background: rgba(212, 175, 55, 0.1);
     color: var(--brand-accent, #d4af37);
 }
-
 .dropdown-item i {
     width: 20px;
     text-align: center;
@@ -204,13 +197,11 @@
 .has-submenu {
     position: relative;
 }
-
 .submenu-arrow {
     margin-right: auto;
     font-size: 0.8rem;
     transition: transform 0.3s ease;
 }
-
 .has-submenu:hover .submenu-arrow {
     transform: translateX(-5px);
 }
@@ -231,7 +222,6 @@
     z-index: 10002;
     padding: 8px 0;
 }
-
 .has-submenu:hover .submenu {
     opacity: 1;
     visibility: visible;
@@ -253,18 +243,15 @@
     font-size: 0.9rem;
     text-align: right;
 }
-
 .submenu-item:hover {
     background: rgba(212, 175, 55, 0.1);
     color: var(--brand-accent, #d4af37);
 }
-
 .submenu-item.active {
     background: rgba(212, 175, 55, 0.15);
     color: var(--brand-accent, #d4af37);
     font-weight: 600;
 }
-
 .submenu-item i {
     color: var(--brand-accent, #d4af37);
     font-size: 0.9rem;
@@ -283,7 +270,6 @@
     visibility: hidden;
     transition: all 0.3s ease;
 }
-
 .drawer-overlay.active {
     opacity: 1;
     visibility: visible;
@@ -304,7 +290,6 @@
     flex-direction: column;
     overflow-y: auto;
 }
-
 .side-drawer.open { right: 0; }
 
 .drawer-header {
@@ -337,7 +322,6 @@
     justify-content: center;
     transition: all 0.2s ease;
 }
-
 .close-btn:hover {
     background: rgba(255, 77, 77, 0.2);
     color: #ff4d4d;
@@ -410,12 +394,10 @@
     transition: all 0.2s ease;
     margin-bottom: 3px;
 }
-
 .drawer-link:hover {
     background: rgba(212, 175, 55, 0.1);
     color: var(--brand-accent, #d4af37);
 }
-
 .drawer-link i {
     width: 20px;
     text-align: center;
@@ -444,12 +426,10 @@
     font-size: 0.9rem;
     transition: all 0.2s ease;
 }
-
 .theme-toggle-btn:hover {
     background: rgba(212, 175, 55, 0.15);
     border-color: var(--brand-accent, #d4af37);
 }
-
 .theme-toggle-btn i {
     color: var(--brand-accent, #d4af37);
 }

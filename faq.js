@@ -1,4 +1,4 @@
-import { showNotification } from 'shared/js/notifications.js';
+import { showNotification } from 'shared/utils/notifications.js';
 
 // ============================================
 // 1. بيانات الأسئلة الشائعة

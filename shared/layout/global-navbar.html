@@ -8,7 +8,7 @@
             <i class="fas fa-cut"></i>
             <strong>BarberFlow</strong>
         </a>
-
+        
         <!-- روابط التنقل الرئيسية -->
         <ul class="navbar-links">
             <li>
@@ -42,7 +42,7 @@
                 </a>
             </li>
         </ul>
-
+        
         <!-- أزرار الإجراءات -->
         <div class="navbar-actions">
             <!-- زر السلة -->
@@ -50,38 +50,31 @@
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-badge" id="cartBadge">0</span>
             </a>
-
             <!-- زر المستخدم -->
             <a href="#" id="userBtn" class="action-btn" aria-label="تسجيل الدخول" data-path="LOGIN">
                 <i class="fas fa-user"></i>
             </a>
-
             <!-- زر الإعدادات مع القائمة المنسدلة -->
             <div class="settings-dropdown">
                 <button id="settingsBtn" class="action-btn" aria-label="الإعدادات">
                     <i class="fas fa-cog"></i>
                 </button>
-                
                 <div class="dropdown-menu" id="settingsDropdown">
                     <div class="dropdown-header">
                         <i class="fas fa-sliders-h"></i>
                         <span>الإعدادات</span>
                     </div>
-                    
                     <div class="dropdown-divider"></div>
-                    
                     <!-- تغيير الثيم -->
                     <button class="dropdown-item" id="themeToggleBtn">
                         <i class="fas fa-moon" id="themeIcon"></i>
                         <span id="themeText">الوضع الداكن</span>
                     </button>
-                    
                     <!-- اللغة -->
                     <div class="dropdown-item has-submenu">
                         <i class="fas fa-globe"></i>
                         <span>اللغة</span>
                         <i class="fas fa-chevron-left submenu-arrow"></i>
-                        
                         <div class="submenu">
                             <button class="submenu-item active" data-lang="ar">
                                 <span>العربية</span>
@@ -95,21 +88,17 @@
                             </button>
                         </div>
                     </div>
-                    
                     <!-- الإشعارات -->
                     <button class="dropdown-item" id="notificationsToggleBtn">
                         <i class="fas fa-bell" id="notifIcon"></i>
                         <span id="notifText">إيقاف الإشعارات</span>
                     </button>
-                    
                     <!-- الخصوصية -->
                     <button class="dropdown-item" id="privacyBtn">
                         <i class="fas fa-shield-alt"></i>
                         <span>الخصوصية</span>
                     </button>
-                    
                     <div class="dropdown-divider"></div>
-                    
                     <!-- المساعدة -->
                     <button class="dropdown-item" id="helpBtn">
                         <i class="fas fa-question-circle"></i>
@@ -117,7 +106,6 @@
                     </button>
                 </div>
             </div>
-
             <!-- زر القائمة الجانبية -->
             <button id="navMenuBtn" class="action-btn" aria-label="القائمة">
                 <i class="fas fa-bars"></i>
@@ -130,7 +118,6 @@
 القائمة الجانبية (Side Drawer)
 ============================================ -->
 <div class="drawer-overlay" id="drawerOverlay"></div>
-
 <aside class="side-drawer" id="sideDrawer">
     <!-- رأس القائمة -->
     <div class="drawer-header">
@@ -142,7 +129,7 @@
             <i class="fas fa-times"></i>
         </button>
     </div>
-
+    
     <!-- معلومات المستخدم -->
     <div class="drawer-user-info" id="drawerUserInfo" style="display: none;">
         <div class="user-avatar">
@@ -153,7 +140,7 @@
             <span class="user-role" id="drawerUserRole">زبون</span>
         </div>
     </div>
-
+    
     <!-- محتوى القائمة -->
     <div class="drawer-content">
         <!-- التنقل الرئيسي -->
@@ -186,7 +173,7 @@
                 </li>
             </ul>
         </div>
-
+        
         <!-- الدعم والمعلومات -->
         <div class="drawer-section">
             <h3 class="drawer-section-title">الدعم والمعلومات</h3>
@@ -211,7 +198,7 @@
                 </li>
             </ul>
         </div>
-
+        
         <!-- الحساب -->
         <div class="drawer-section">
             <h3 class="drawer-section-title">الحساب</h3>
@@ -229,7 +216,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="drawer-link" id="drawerSettingsLink" style="display: none;" data-path="DASHBOARD_SETTINGS">
+                    <a href="#" class="drawer-link" id="drawerSettingsLink" style="display: none;" data-path="SETTINGS_GENERAL">
                         <i class="fas fa-cog"></i>
                         <span>إعدادات الحساب</span>
                     </a>
@@ -249,7 +236,7 @@
             </ul>
         </div>
     </div>
-
+    
     <!-- تذييل القائمة -->
     <div class="drawer-footer">
         <button id="drawerThemeToggle" class="theme-toggle-btn">

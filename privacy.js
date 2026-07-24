@@ -1,4 +1,4 @@
-import { PATHS, resolvePath } from 'shared/js/paths.js';
+import { PATHS, resolvePath } from 'shared/utils/paths.js';
 import { showNotification } from 'shared/js/notifications.js';
 
 // ============================================

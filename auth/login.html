@@ -3,151 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="تسجيل الدخول إلى منصة BarberFlow Pro">
     <title>تسجيل الدخول | BarberFlow Pro</title>
-    <meta name="description" content="سجل دخولك إلى حسابك في BarberFlow Pro لإدارة حجوزاتك وصالونك.">
     
-    <!-- CSS المركزي -->
-    <link rel="stylesheet" href="../shared/css/global.css">
-    <link rel="stylesheet" href="../shared/css/global-navbar.css">
-    <link rel="stylesheet" href="../shared/css/notifications.css">
-    
-    <!-- CSS الخاص بالصفحة -->
-    <link rel="stylesheet" href="login.css">
+    <!-- الخطوط -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
+    <!-- التنسيقات المشتركة والحماية -->
+    <link rel="stylesheet" href="../shared/styles/global.css">
+    <link rel="stylesheet" href="../shared/styles/page-protection.css">
+    <link rel="stylesheet" href="../shared/styles/notifications.css">
+    
+    <!-- تنسيقات الصفحة -->
+    <link rel="stylesheet" href="./login.css">
 </head>
-<body data-theme="dark">
-    <div class="auth-page">
+<body class="page-protected"> <!-- هذا الكلاس مطلوب -->
+
+    <!-- شاشة التحميل (يجب أن تكون موجودة) -->
+    <div id="pageLoader" class="page-loader-overlay">
+        <div class="loader-logo">
+            <i class="fas fa-cut"></i>
+            <span>BarberFlow Pro</span>
+        </div>
+        <div class="loader-spinner"></div>
+        <div class="loader-text">جاري التحقق من الحساب...</div>
+    </div>
+    
+    <!-- محتوى الصفحة (سيُظهر بعد التحقق) -->
+    <main class="auth-page">
         <div class="auth-container">
-            <!-- الرأس -->
             <div class="auth-header">
-                <div class="auth-logo">
+                <a href="../index.html" class="auth-logo">
                     <i class="fas fa-cut"></i>
                     <span>BarberFlow Pro</span>
-                </div>
-                <h2>مرحباً بعودتك</h2>
-                <p>سجل دخولك لإدارة حسابك في BarberFlow Pro</p>
+                </a>
+                <h2 id="authHeading">مرحباً بعودتك</h2>
+                <p id="authSubheading">سجل دخولك لإدارة حسابك في BarberFlow Pro</p>
             </div>
-
-            <!-- نموذج تسجيل الدخول -->
-            <form id="loginForm">
+            
+            <form id="loginForm" class="auth-form" novalidate>
                 <div class="input-group">
-                    <label for="loginEmail">البريد الإلكتروني أو رقم الهاتف</label>
-                    <input 
-                        type="text" 
-                        id="loginEmail" 
-                        placeholder="example@email.com أو 0612345678"
-                        required
-                    >
+                    <label for="loginEmail"><i class="fas fa-user"></i> البريد الإلكتروني أو رقم الهاتف</label>
+                    <input type="text" id="loginEmail" name="identifier" placeholder="example@email.com أو 0612345678" required autocomplete="username">
                 </div>
-
-                <div class="input-group hidden-step" id="passwordGroup">
-                    <label for="loginPassword">كلمة المرور</label>
-                    <input 
-                        type="password" 
-                        id="loginPassword" 
-                        placeholder="أدخل كلمة المرور"
-                    >
-                    <a href="#" class="forgot-link" id="forgotPassBtn">نسيت كلمة المرور؟</a>
+                
+                <div class="input-group">
+                    <label for="loginPassword"><i class="fas fa-lock"></i> كلمة المرور</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" name="password" placeholder="أدخل كلمة المرور" required autocomplete="current-password">
+                        <button type="button" class="toggle-password" data-target="loginPassword" aria-label="إظهار كلمة المرور">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
-
+                
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span class="checkmark"></span>
+                        <span>تذكرني</span>
+                    </label>
+                    <a href="#" class="forgot-link" id="forgotPassLink">نسيت كلمة المرور؟</a>
+                </div>
+                
                 <button type="submit" class="auth-btn" id="mainSubmitBtn">
-                    <span>متابعة</span>
-                    <i class="fas fa-arrow-left"></i>
+                    <span>تسجيل الدخول</span>
+                    <i class="fas fa-sign-in-alt"></i>
                 </button>
+                <div id="recaptcha-container"></div>
             </form>
-
-            <!-- الفاصل -->
-            <div class="divider">
-                <span>أو الدخول السريع</span>
-            </div>
-
-            <!-- زر Google -->
-            <button class="google-btn" id="googleBtn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+            
+            <div class="divider"><span>أو الدخول السريع عبر</span></div>
+            
+            <button class="google-btn" id="googleBtn" type="button">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
                 <span>Google</span>
             </button>
-
-            <!-- التذييل -->
+            
             <div class="auth-footer">
-                <p>ليس لديك حساب معنا؟ 
-                    <a href="#" id="showRegisterOptions">إنشاء حساب جديد</a>
-                </p>
+                <p>ليس لديك حساب معنا؟ <a href="#" id="showRegisterOptions">إنشاء حساب جديد</a></p>
             </div>
-
-            <!-- زر العودة -->
+            
             <div class="back-home-container">
-                <button class="outline-btn" id="backToHomeBtn">
+                <button class="outline-btn" id="backToHomeBtn" type="button">
                     <i class="fas fa-home"></i>
                     <span>العودة للرئيسية</span>
                 </button>
             </div>
-
-            <!-- حاوية Recaptcha -->
-            <div id="recaptcha-container"></div>
         </div>
-    </div>
-
-    <!-- نافذة اختيار نوع الحساب (مضمنة) -->
-    <div id="registerOptionsModal" class="modal-overlay hidden-step">
-        <div class="auth-container modal-content">
-            <h2>إنشاء حساب جديد</h2>
-            <p class="step-desc">اختر نوع الحساب للانتقال إلى استمارة التسجيل</p>
-            
-            <div class="suggestion-grid">
-                <button type="button" class="suggest-link select-role-action-btn" data-role="customer">
-                    <i class="fas fa-user"></i>
-                    <span>حساب عميل</span>
-                </button>
-                <button type="button" class="suggest-link select-role-action-btn" data-role="salon">
-                    <i class="fas fa-scissors"></i>
-                    <span>صالون تجميل</span>
-                </button>
-                <button type="button" class="suggest-link select-role-action-btn" data-role="store">
-                    <i class="fas fa-store"></i>
-                    <span>متجر تجاري</span>
-                </button>
+        
+        <div class="modal-overlay hidden-step" id="registerOptionsModal">
+            <div class="modal-content">
+                <h2>إنشاء حساب جديد</h2>
+                <p class="step-desc">اختر نوع الحساب للانتقال إلى استمارة التسجيل</p>
+                <div class="suggestion-grid">
+                    <button class="suggest-link select-role-action-btn" data-role="customer" type="button"><i class="fas fa-user"></i><span>حساب عميل</span></button>
+                    <button class="suggest-link select-role-action-btn" data-role="salon" type="button"><i class="fas fa-cut"></i><span>صالون تجميل</span></button>
+                    <button class="suggest-link select-role-action-btn" data-role="store" type="button"><i class="fas fa-store"></i><span>متجر تجاري</span></button>
+                </div>
+                <button class="back-link-btn" id="closeRegisterModal" type="button"><i class="fas fa-times"></i> إلغاء والعودة</button>
             </div>
-            
-            <button type="button" id="closeRegisterModal" class="back-link-btn">
-                إلغاء والعودة
-            </button>
         </div>
-    </div>
-
-    <!-- نافذة نسيت كلمة المرور -->
-    <div id="forgotModal" class="modal-overlay hidden-step">
-        <div class="modal-content">
-            <h2>استعادة الحساب</h2>
-            <p class="step-desc">أدخل بريدك الإلكتروني لإرسال رابط التعيين</p>
-            
-            <div class="input-group">
-                <input 
-                    type="email" 
-                    id="resetIdentifier" 
-                    placeholder="example@email.com"
-                >
-            </div>
-
-            <button class="auth-btn" id="sendResetBtn">
-                <span>إرسال رابط التعيين</span>
-            </button>
-
-            <button class="back-link-btn" id="closeModal">
-                إلغاء والعودة
-            </button>
-        </div>
-    </div>
-
-    <!-- حاوية التنبيهات -->
-    <div id="notification-container"></div>
-
-    <!-- السكريبت الرئيسي -->
-    <script type="module" src="login.js"></script>
+    </main>
+    
+    <script type="module" src="./login.js"></script>
 </body>
 </html>
 

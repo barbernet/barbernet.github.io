@@ -1,8 +1,20 @@
-import { PATHS, resolvePath } from '../shared/js/paths.js';
-import { showNotification } from '../shared/js/notifications.js';
+/**
+BarberFlow Pro - صفحة إعادة تعيين كلمة المرور
+المسار: auth/reset-password.js
+*/
+import { auth } from "../config/firebase-init.js"; // ✅ تم تصحيح المسار
+import { confirmPasswordReset, verifyPasswordResetCode } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { PATHS, resolvePath } from "../shared/utils/paths.js"; // ✅ تم تصحيح المسار
+import { showNotification } from "../shared/utils/notifications.js"; // ✅ تم تصحيح المسار
+import { initPageGuard } from "../middleware/routing/page-guard.js"; // ✅ إضافة الحماية
 
 // ============================================
-// 1. استخراج رمز oobCode من URL (لربط Firebase لاحقاً)
+// 1. تهيئة حماية الصفحة
+// ============================================
+initPageGuard(); // ✅ إخفاء الصفحة فوراً
+
+// ============================================
+// 2. استخراج رمز oobCode من URL
 // ============================================
 function getOobCodeFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -10,17 +22,29 @@ function getOobCodeFromUrl() {
 }
 
 const oobCode = getOobCodeFromUrl();
-
 if (!oobCode) {
     console.warn('⚠️ لم يتم العثور على رمز oobCode في الرابط');
     showNotification('رابط إعادة التعيين غير صالح أو منتهي الصلاحية', 'error');
     setTimeout(() => {
         window.location.href = resolvePath('LOGIN');
     }, 3000);
+} else {
+    // التحقق من صحة الرمز
+    verifyPasswordResetCode(auth, oobCode)
+        .then((email) => {
+            console.log('✓ رمز صالح للبريد:', email);
+        })
+        .catch((error) => {
+            console.error('❌ رمز غير صالح:', error);
+            showNotification('رابط إعادة التعيين غير صالح أو منتهي الصلاحية', 'error');
+            setTimeout(() => {
+                window.location.href = resolvePath('LOGIN');
+            }, 3000);
+        });
 }
 
 // ============================================
-// 2. إدارة النموذج
+// 3. إدارة النموذج
 // ============================================
 const form = document.getElementById('resetPasswordForm');
 const newPasswordInput = document.getElementById('newPassword');
@@ -30,7 +54,7 @@ const passwordStrength = document.getElementById('passwordStrength');
 const matchIndicator = document.getElementById('matchIndicator');
 
 // ============================================
-// 3. إظهار/إخفاء كلمة المرور
+// 4. إظهار/إخفاء كلمة المرور
 // ============================================
 document.querySelectorAll('.toggle-password').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -51,11 +75,10 @@ document.querySelectorAll('.toggle-password').forEach(btn => {
 });
 
 // ============================================
-// 4. التحقق من قوة كلمة المرور
+// 5. التحقق من قوة كلمة المرور
 // ============================================
 function checkPasswordStrength(password) {
     let strength = 0;
-    
     if (password.length >= 8) strength++;
     if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
     if (password.match(/\d/)) strength++;
@@ -63,7 +86,6 @@ function checkPasswordStrength(password) {
     
     const strengthBar = passwordStrength.querySelector('.strength-bar');
     const strengthText = passwordStrength.querySelector('.strength-text');
-    
     strengthBar.className = 'strength-bar';
     
     if (strength <= 1) {
@@ -76,7 +98,6 @@ function checkPasswordStrength(password) {
         strengthBar.classList.add('strength-strong');
         strengthText.textContent = 'قوية';
     }
-    
     return strength;
 }
 
@@ -86,7 +107,7 @@ newPasswordInput.addEventListener('input', () => {
 });
 
 // ============================================
-// 5. التحقق من تطابق كلمتي المرور
+// 6. التحقق من تطابق كلمتي المرور
 // ============================================
 function checkPasswordMatch() {
     const newPassword = newPasswordInput.value;
@@ -110,7 +131,7 @@ function checkPasswordMatch() {
 confirmPasswordInput.addEventListener('input', checkPasswordMatch);
 
 // ============================================
-// 6. معالجة النموذج
+// 7. معالجة النموذج (ربط فعلي بـ Firebase)
 // ============================================
 if (form) {
     form.addEventListener('submit', async (e) => {
@@ -120,16 +141,14 @@ if (form) {
         const confirmPassword = confirmPasswordInput.value.trim();
         
         // التحقق من صحة المدخلات
-        if (newPassword.length < 8) {
-            showNotification('كلمة المرور يجب أن تكون 8 أحرف على الأقل', 'error');
+        if (newPassword.length < 6) {
+            showNotification('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
             return;
         }
-        
         if (newPassword !== confirmPassword) {
             showNotification('كلمتا المرور غير متطابقتين', 'error');
             return;
         }
-        
         if (!oobCode) {
             showNotification('رابط إعادة التعيين غير صالح', 'error');
             return;
@@ -139,25 +158,25 @@ if (form) {
         setLoadingState(true);
         
         try {
-            // 🔥 هنا سيتم ربط Firebase Auth لاحقاً
-            // await confirmPasswordReset(auth, oobCode, newPassword);
-            
-            // محاكاة نجاح العملية
-            await simulateApiCall();
-            
+            // ✅ ربط فعلي بـ Firebase
+            await confirmPasswordReset(auth, oobCode, newPassword);
             showNotification(
                 'تم إعادة تعيين كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول.',
                 'success'
             );
-            
             // إعادة توجيه إلى تسجيل الدخول بعد 2 ثانية
             setTimeout(() => {
                 window.location.href = resolvePath('LOGIN');
             }, 2000);
-            
         } catch (error) {
             console.error('خطأ في إعادة تعيين كلمة المرور:', error);
-            showNotification('حدث خطأ. يرجى المحاولة مرة أخرى.', 'error');
+            if (error.code === 'auth/expired-action-code') {
+                showNotification('رابط إعادة التعيين منتهي الصلاحية', 'error');
+            } else if (error.code === 'auth/invalid-action-code') {
+                showNotification('رابط إعادة التعيين غير صالح', 'error');
+            } else {
+                showNotification('حدث خطأ. يرجى المحاولة مرة أخرى.', 'error');
+            }
         } finally {
             setLoadingState(false);
         }
@@ -165,7 +184,7 @@ if (form) {
 }
 
 // ============================================
-// 7. دوال مساعدة
+// 8. دوال مساعدة
 // ============================================
 function setLoadingState(isLoading) {
     if (isLoading) {
@@ -177,18 +196,14 @@ function setLoadingState(isLoading) {
     }
 }
 
-function simulateApiCall() {
-    return new Promise(resolve => setTimeout(resolve, 1500));
-}
-
 // ============================================
-// 8. تهيئة الصفحة
+// 9. تهيئة الصفحة
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
     console.log('✅ صفحة إعادة تعيين كلمة المرور جاهزة');
     if (oobCode) {
         console.log('✓ تم العثور على رمز oobCode:', oobCode);
     }
-    newPasswordInput.focus();
+    if (newPasswordInput) newPasswordInput.focus();
 });
 

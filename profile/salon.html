@@ -3,245 +3,510 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بروفايل الصالون | BarberFlow Pro</title>
-    <meta name="description" content="إدارة صالونك وتفاصيله من هنا">
+    <meta name="description" content="الملف الشخصي لصالونك - BarberFlow Pro">
+    <title>ملف الصالون | BarberFlow Pro</title>
     
-    <!-- CSS المركزي -->
-    <link rel="stylesheet" href="../shared/css/global.css">
-    <link rel="stylesheet" href="../shared/css/global-navbar.css">
-    <link rel="stylesheet" href="../shared/css/notifications.css">
-    
-    <!-- CSS الخاص بالصفحة -->
-    <link rel="stylesheet" href="salon.css">
+    <!-- الخطوط -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
+    <!-- التنسيقات المشتركة والحماية -->
+
+    <link rel="stylesheet" href="../shared/styles/global.css">
+    <link rel="stylesheet" href="../shared/styles/page-protection.css"> <!-- جديد -->
+    <link rel="stylesheet" href="../shared/styles/notifications.css">
+    <link rel="stylesheet" href="../shared/layout/global-navbar.css">
+    
+    <!-- تنسيقات الصفحة -->
+    <link rel="stylesheet" href="salon.css">
 </head>
-<body data-theme="dark">
-    <!-- حاوية الشريط العلوي -->
-    <div id="global-navbar-container"></div>
+<body class="page-protected"> <!-- هذا الكلاس مطلوب -->
 
-    <!-- قسم البطل (Hero) -->
-    <section class="profile-hero">
-        <div class="hero-image-container">
-            <div class="hero-placeholder" id="heroPlaceholder">
-                <i class="fas fa-cut"></i>
-            </div>
-            <img id="heroImage" class="hero-image" style="display: none;" alt="صورة الصالون">
-            
-            <div class="hero-overlay"></div>
-            
-            <div class="hero-badges">
-                <span class="badge verified" id="verifiedBadge" style="display: none;">
-                    <i class="fas fa-check-circle"></i>
-                    موثق
-                </span>
-                <span class="badge featured" id="featuredBadge" style="display: none;">
-                    <i class="fas fa-crown"></i>
-                    مميز
-                </span>
-                <span class="badge status" id="statusBadge">
-                    <i class="fas fa-clock"></i>
-                    جاري التحميل...
-                </span>
-            </div>
-            
-            <div class="hero-actions">
-                <button class="hero-action-btn" id="editCoverBtn" title="تغيير صورة الغلاف">
-                    <i class="fas fa-camera"></i>
-                </button>
-                <button class="hero-action-btn" id="shareProfileBtn" title="مشاركة البروفايل">
-                    <i class="fas fa-share-alt"></i>
-                </button>
-            </div>
+    <!-- شاشة التحميل (يجب أن تكون موجودة) -->
+    <div id="pageLoader" class="page-loader-overlay">
+        <div class="loader-logo">
+            <i class="fas fa-cut"></i>
+            <span>BarberFlow Pro</span>
         </div>
-        
-        <div class="hero-content">
-            <div class="container">
-                <div class="salon-header-info">
-                    <div>
-                        <h1 class="salon-name" id="salonName">جاري التحميل...</h1>
-                        <div class="salon-meta">
-                            <div class="meta-item">
-                                <i class="fas fa-star"></i>
-                                <span id="ratingValue">5.0</span>
-                                <span class="meta-label" id="reviewsCount">(0 تقييم)</span>
-                            </div>
-                            <div class="meta-divider"></div>
-                            <div class="meta-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span id="locationValue">الموقع</span>
-                            </div>
-                            <div class="meta-divider"></div>
-                            <div class="meta-item">
-                                <i class="fas fa-tag"></i>
-                                <span id="salonType">نوع الصالون</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="salon-status-indicator" id="salonStatus">
-                        <span class="status-dot"></span>
-                        <span class="status-text">غير نشط</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- أزرار الإدارة السريعة -->
-    <section class="admin-actions">
-        <div class="container">
-            <div class="admin-grid">
-                <button class="admin-btn primary" id="dashboardBtn">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>لوحة التحكم</span>
-                </button>
-                <button class="admin-btn" id="editSalonBtn">
-                    <i class="fas fa-edit"></i>
-                    <span>تعديل البيانات</span>
-                </button>
-                <button class="admin-btn" id="addServiceBtn">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>إضافة خدمة</span>
-                </button>
-                <button class="admin-btn" id="viewBookingsBtn">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>الحجوزات</span>
-                </button>
-                <button class="admin-btn" id="analyticsBtn">
-                    <i class="fas fa-chart-line"></i>
-                    <span>الإحصائيات</span>
-                </button>
-                <button class="admin-btn" id="settingsBtn">
-                    <i class="fas fa-cog"></i>
-                    <span>الإعدادات</span>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- المحتوى الرئيسي -->
-    <main class="profile-content">
-        <div class="container">
-            <!-- عن الصالون -->
-            <section class="info-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-info-circle"></i>
-                        عن الصالون
-                    </h2>
-                    <button class="edit-section-btn" id="editAboutBtn">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                </div>
-                <p class="about-text" id="aboutText">مرحباً بكم في صالوننا المميز.</p>
-            </section>
-
-            <!-- أوقات العمل -->
-            <section class="info-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-clock"></i>
-                        أوقات العمل
-                    </h2>
-                    <button class="edit-section-btn" id="editHoursBtn">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                </div>
-                <div class="working-hours-card">
-                    <div class="hours-row">
-                        <i class="fas fa-calendar-day"></i>
-                        <span id="workingDays">أيامنا: -</span>
-                    </div>
-                    <div class="hours-row">
-                        <i class="fas fa-business-time"></i>
-                        <span id="workingHours">ساعاتنا: -</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- الخدمات والأسعار -->
-            <section class="info-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-list"></i>
-                        الخدمات والأسعار
-                    </h2>
-                    <button class="edit-section-btn" id="editServicesBtn">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-                <div class="services-list" id="servicesList">
-                    <!-- سيتم ملؤها ديناميكياً -->
-                </div>
-            </section>
-
-            <!-- معرض الأعمال -->
-            <section class="info-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-images"></i>
-                        معرض الأعمال
-                    </h2>
-                    <button class="edit-section-btn" id="editGalleryBtn">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-                <div class="gallery-wrapper">
-                    <div class="gallery-slider" id="gallerySlider">
-                        <!-- سيتم ملؤها ديناميكياً -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- الشهادات -->
-            <section class="info-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-certificate"></i>
-                        الشهادات والاعتمادات
-                    </h2>
-                    <button class="edit-section-btn" id="editCertsBtn">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-                <div class="certificates-container" id="certificatesContainer">
-                    <!-- سيتم ملؤها ديناميكياً -->
-                </div>
-            </section>
-
-            <!-- التقييمات -->
-            <section class="info-section">
-                <h2 class="section-title">
-                    <i class="fas fa-star"></i>
-                    تقييمات الزبائن
-                </h2>
-                <div class="reviews-summary" id="reviewsSummary">
-                    <div class="summary-rating">
-                        <div class="big-rating" id="bigRating">5.0</div>
-                        <div class="stars-display" id="starsDisplay"></div>
-                        <div class="total-reviews" id="totalReviews">0 تقييم</div>
-                    </div>
-                    <div class="rating-bars" id="ratingBars"></div>
-                </div>
-                <div class="reviews-list" id="reviewsList">
-                    <!-- سيتم ملؤها ديناميكياً -->
-                </div>
-            </section>
-        </div>
-    </main>
+        <div class="loader-spinner"></div>
+        <div class="loader-text">جاري التحقق من الحساب...</div>
+    </div>
 
     <!-- حاوية التنبيهات -->
     <div id="notification-container"></div>
+    
+    <!-- حاوية شريط التنقل -->
+    <div id="global-navbar-container"></div>
+    
+    <!-- محتوى الصفحة -->
+    <main class="profile-page">
+        <div class="container">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <div class="profile-info">
+                    <h1 id="salonName">جارٍ تحميل اسم الصالون...</h1>
+                    <p id="salonLocation">جارٍ تحميل الموقع...</p>
+                    <div class="profile-stats">
+                        <span><i class="fas fa-star"></i> <span id="salonRating">0.0</span> (<span id="reviewCount">0</span> تقييم)</span>
+                        <span><i class="fas fa-users"></i> <span id="staffCount">0</span> موظف</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-sidebar">
+                    <nav class="profile-nav">
+                        <a href="#" class="nav-link active" data-tab="overview">
+                            <i class="fas fa-home"></i>
+                            <span>نظرة عامة</span>
+                        </a>
+                        <a href="#" class="nav-link" data-tab="services">
+                            <i class="fas fa-concierge-bell"></i>
+                            <span>الخدمات</span>
+                        </a>
+                        <a href="#" class="nav-link" data-tab="gallery">
+                            <i class="fas fa-images"></i>
+                            <span>المعرض</span>
+                        </a>
+                        <a href="#" class="nav-link" data-tab="appointments">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>الحجوزات</span>
+                        </a>
+                        <a href="#" class="nav-link" data-tab="staff">
+                            <i class="fas fa-users"></i>
+                            <span>الموظفون</span>
+                        </a>
+                        <a href="#" class="nav-link" data-tab="reviews">
+                            <i class="fas fa-comments"></i>
+                            <span>التقييمات</span>
+                        </a>
+                        <a href="#" class="nav-link" data-tab="settings">
+                            <i class="fas fa-cog"></i>
+                            <span>الإعدادات</span>
+                        </a>
+                    </nav>
+                </div>
+                
+                <div class="profile-main">
+                    <div class="tab-content">
+                        <!-- تبويب نظرة عامة -->
+                        <div class="tab-pane active" id="overviewTab">
+                            <section class="profile-section">
+                                <h2>معلومات الصالون</h2>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label>الاسم:</label>
+                                        <span id="infoName">جارٍ التحميل...</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>المدينة:</label>
+                                        <span id="infoCity">جارٍ التحميل...</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>الهاتف:</label>
+                                        <span id="infoPhone">جارٍ التحميل...</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>البريد الإلكتروني:</label>
+                                        <span id="infoEmail">جارٍ التحميل...</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>أوقات العمل:</label>
+                                        <span id="infoHours">جارٍ التحميل...</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>الخدمات:</label>
+                                        <span id="infoServicesCount">0</span>
+                                    </div>
+                                </div>
+                            </section>
+                            
+                            <section class="profile-section">
+                                <h2>الوصف</h2>
+                                <p id="salonDescription">جارٍ تحميل الوصف...</p>
+                            </section>
+                        </div>
+                        
+                        <!-- تبويب الخدمات -->
+                        <div class="tab-pane" id="servicesTab">
+                            <div class="section-header">
+                                <h2>الخدمات المقدمة</h2>
+                                <button class="btn btn-accent" id="addServiceBtn">
+                                    <i class="fas fa-plus"></i>
+                                    <span>إضافة خدمة</span>
+                                </button>
+                            </div>
+                            <div class="services-list" id="servicesList">
+                                <!-- يتم تعبئتها ديناميكياً -->
+                            </div>
+                        </div>
+                        
+                        <!-- تبويب المعرض -->
+                        <div class="tab-pane" id="galleryTab">
+                            <div class="section-header">
+                                <h2>معرض الصور</h2>
+                                <button class="btn btn-accent" id="addImageBtn">
+                                    <i class="fas fa-plus"></i>
+                                    <span>إضافة صورة</span>
+                                </button>
+                            </div>
+                            <div class="gallery-grid" id="galleryGrid">
+                                <!-- يتم تعبئتها ديناميكياً -->
+                            </div>
+                        </div>
+                        
+                        <!-- تبويب الحجوزات -->
+                        <div class="tab-pane" id="appointmentsTab">
+                            <h2>الحجوزات</h2>
+                            <div class="appointments-list" id="appointmentsList">
+                                <!-- يتم تعبئتها ديناميكياً -->
+                            </div>
+                        </div>
+                        
+                        <!-- تبويب الموظفين -->
+                        <div class="tab-pane" id="staffTab">
+                            <div class="section-header">
+                                <h2>موظفو الصالون</h2>
+                                <button class="btn btn-accent" id="addStaffBtn">
+                                    <i class="fas fa-plus"></i>
+                                    <span>إضافة موظف</span>
+                                </button>
+                            </div>
+                            <div class="staff-list" id="staffList">
+                                <!-- يتم تعبئتها ديناميكياً -->
+                            </div>
+                        </div>
+                        
+                        <!-- تبويب التقييمات -->
+                        <div class="tab-pane" id="reviewsTab">
+                            <h2>التقييمات</h2>
+                            <div class="reviews-list" id="reviewsList">
+                                <!-- يتم تعبئتها ديناميكياً -->
+                            </div>
+                        </div>
+                        
+                        <!-- تبويب الإعدادات -->
+                        <div class="tab-pane" id="settingsTab">
+                            <h2>إعدادات الصالون</h2>
+                            <form id="salonSettingsForm">
+                                <!-- حقول الإعدادات -->
+                                <div class="form-group">
+                                    <label for="settingName">الاسم:</label>
+                                    <input type="text" id="settingName" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="settingCity">المدينة:</label>
+                                    <input type="text" id="settingCity" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="settingPhone">الهاتف:</label>
+                                    <input type="tel" id="settingPhone" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="settingEmail">البريد الإلكتروني:</label>
+                                    <input type="email" id="settingEmail" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>أوقات العمل:</label>
+                                    <div class="hours-editor">
+                                        <!-- يتم تعبئتها ديناميكياً -->
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="settingDescription">الوصف:</label>
+                                    <textarea id="settingDescription" class="form-input" rows="4" disabled></textarea>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-outline" id="editSettingsBtn">تعديل</button>
+                                    <button type="submit" class="btn btn-accent" id="saveSettingsBtn" style="display: none;">حفظ</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- النسخ الاحتياطي لبطاقات الخدمات -->
+    <template id="serviceCardTemplate">
+        <div class="service-card">
+            <div class="service-info">
+                <h3 class="service-name">اسم الخدمة</h3>
+                <p class="service-description">وصف الخدمة</p>
+            </div>
+            <div class="service-price">
+                <span class="price-value">0.00</span>
+                <span class="price-currency">DH</span>
+            </div>
+            <div class="service-actions">
+                <button class="btn btn-sm btn-outline edit-service-btn">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline delete-service-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+    
+    <!-- النسخ الاحتياطي لبطاقات الصور -->
+    <template id="imageCardTemplate">
+        <div class="image-card">
+            <img src="" alt="صورة من المعرض" class="gallery-image">
+            <div class="image-actions">
+                <button class="btn btn-sm btn-outline delete-image-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+    
+    <!-- النسخ الاحتياطي لبطاقات الموظفين -->
+    <template id="staffCardTemplate">
+        <div class="staff-card">
+            <div class="staff-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="staff-info">
+                <h3 class="staff-name">اسم الموظف</h3>
+                <p class="staff-role">الوظيفة</p>
+            </div>
+            <div class="staff-actions">
+                <button class="btn btn-sm btn-outline edit-staff-btn">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline delete-staff-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+    
+    <!-- النسخ الاحتياطي لبطاقات الحجوزات -->
+    <template id="appointmentCardTemplate">
+        <div class="appointment-card">
+            <div class="appointment-customer">
+                <div class="customer-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="customer-info">
+                    <h4 class="customer-name">اسم العميل</h4>
+                    <p class="customer-phone">رقم الهاتف</p>
+                </div>
+            </div>
+            <div class="appointment-details">
+                <div class="detail-item">
+                    <i class="fas fa-concierge-bell"></i>
+                    <span class="service-name">الخدمة</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-calendar"></i>
+                    <span class="appointment-date">التاريخ</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-clock"></i>
+                    <span class="appointment-time">الوقت</span>
+                </div>
+            </div>
+            <div class="appointment-status">
+                <span class="status pending">قيد الانتظار</span>
+            </div>
+        </div>
+    </template>
+    
+    <!-- النسخ الاحتياطي لبطاقات التقييمات -->
+    <template id="reviewCardTemplate">
+        <div class="review-card">
+            <div class="review-header">
+                <div class="reviewer-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="reviewer-info">
+                    <h4 class="reviewer-name">اسم العميل</h4>
+                    <div class="review-rating">
+                        <i class="fas fa-star"></i>
+                        <span class="rating-value">5</span>
+                    </div>
+                </div>
+                <span class="review-date">التاريخ</span>
+            </div>
+            <div class="review-content">
+                <p class="review-text">نص التقييم...</p>
+            </div>
+        </div>
+    </template>
+    
+    <!-- النسخ الاحتياطي لنموذج إضافة خدمة -->
+    <template id="addServiceModalTemplate">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>إضافة خدمة جديدة</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="modal-form" id="addServiceForm">
+                        <div class="form-group">
+                            <label for="serviceName">اسم الخدمة:</label>
+                            <input type="text" id="serviceName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceDescription">الوصف:</label>
+                            <textarea id="serviceDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="servicePrice">السعر (DH):</label>
+                            <input type="number" id="servicePrice" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline cancel-service-btn">إلغاء</button>
+                            <button type="submit" class="btn btn-accent">إضافة</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- النسخ الاحتياطي لنموذج تعديل خدمة -->
+    <template id="editServiceModalTemplate">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>تعديل الخدمة</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="modal-form" id="editServiceForm">
+                        <input type="hidden" id="editServiceId">
+                        <div class="form-group">
+                            <label for="editServiceName">اسم الخدمة:</label>
+                            <input type="text" id="editServiceName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editServiceDescription">الوصف:</label>
+                            <textarea id="editServiceDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editServicePrice">السعر (DH):</label>
+                            <input type="number" id="editServicePrice" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline cancel-service-btn">إلغاء</button>
+                            <button type="submit" class="btn btn-accent">تحديث</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
 
-    <!-- السكريبتات -->
-    <script type="module" src="../shared/js/paths.js"></script>
-    <script type="module" src="../shared/js/notifications.js"></script>
-    <script type="module" src="../shared/js/global-navbar.js"></script>
-    <script type="module" src="salon.js"></script>
+    <!-- النسخ الاحتياطي لنموذج إضافة صورة -->
+    <template id="addImageModalTemplate">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>إضافة صورة جديدة</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="modal-form" id="addImageForm">
+                        <div class="form-group">
+                            <label for="imageFile">اختر صورة:</label>
+                            <input type="file" id="imageFile" accept="image/*" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline cancel-image-btn">إلغاء</button>
+                            <button type="submit" class="btn btn-accent">رفع</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- النسخ الاحتياطي لنموذج إضافة موظف -->
+    <template id="addStaffModalTemplate">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>إضافة موظف جديد</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="modal-form" id="addStaffForm">
+                        <div class="form-group">
+                            <label for="staffName">الاسم:</label>
+                            <input type="text" id="staffName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="staffRole">الوظيفة:</label>
+                            <input type="text" id="staffRole" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="staffPhone">الهاتف:</label>
+                            <input type="tel" id="staffPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="staffEmail">البريد الإلكتروني:</label>
+                            <input type="email" id="staffEmail" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline cancel-staff-btn">إلغاء</button>
+                            <button type="submit" class="btn btn-accent">إضافة</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- النسخ الاحتياطي لنموذج تعديل موظف -->
+    <template id="editStaffModalTemplate">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>تعديل بيانات الموظف</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="modal-form" id="editStaffForm">
+                        <input type="hidden" id="editStaffId">
+                        <div class="form-group">
+                            <label for="editStaffName">الاسم:</label>
+                            <input type="text" id="editStaffName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editStaffRole">الوظيفة:</label>
+                            <input type="text" id="editStaffRole" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editStaffPhone">الهاتف:</label>
+                            <input type="tel" id="editStaffPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editStaffEmail">البريد الإلكتروني:</label>
+                            <input type="email" id="editStaffEmail" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline cancel-staff-btn">إلغاء</button>
+                            <button type="submit" class="btn btn-accent">تحديث</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script type="module" src="../../shared/layout/global-navbar.js"></script>
+    <script type="module" src="./salon.js"></script> <!-- تم تحديث المسار -->
 </body>
 </html>
 

@@ -2,7 +2,7 @@
  * middleware/guards/role-guard.js
  * نظام التحقق من الصلاحيات والأدوار
  */
-import { showNotification } from '../../shared/js/notifications.js';
+import { showNotification } from '../../shared/utils/notifications.js';
 
 /**
  * التحقق من تطابق دور المستخدم مع الدور المطلوب

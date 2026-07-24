@@ -1,4 +1,4 @@
-import { PATHS, resolvePath } from 'shared/js/paths.js';
+import { PATHS, resolvePath } from 'shared/utils/paths.js';
 
 // ============================================
 // 1. تهيئة الصفحة

@@ -1,9 +1,8 @@
 /**
- * BarberFlow Pro - صفحة إنشاء حساب جديد
- * المسار: auth/register.js
- */
-
-import { auth, db } from "../core/firebase-init.js";
+BarberFlow Pro - صفحة إنشاء حساب جديد
+المسار: auth/register.js
+*/
+import { auth, db } from "../config/firebase-init.js";
 import {
     RecaptchaVerifier,
     signInWithPhoneNumber,
@@ -19,9 +18,15 @@ import {
     where,
     getDocs
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { showNotification } from "../shared/js/notifications.js";
-import { PATHS, resolvePath } from "../shared/js/paths.js";
+import { showNotification } from "../shared/utils/notifications.js";
+import { PATHS, resolvePath } from "../shared/utils/paths.js";
 import { sanitizeText, sanitizeEmail, sanitizePhone } from "../middleware/validation/index.js";
+import { initPageGuard } from "../middleware/routing/page-guard.js";
+
+// ============================================
+// تهيئة حماية الصفحة (مع التحقق من الدور)
+// ============================================
+initPageGuard();
 
 // ============================================
 // المتغيرات العامة
@@ -82,7 +87,6 @@ const roleLocalization = {
 // ============================================
 // دوال مساعدة
 // ============================================
-
 const resetSubmitButton = () => {
     submitBtn.disabled = false;
     if (selectedRole && roleLocalization[selectedRole]) {
@@ -133,7 +137,6 @@ function startTimer() {
     resendCodeBtn.style.display = 'none';
     document.getElementById('timerContainer').style.display = 'block';
     document.getElementById('timer').textContent = timeLeft;
-    
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
         timeLeft--;
@@ -152,17 +155,14 @@ function setupRegistrationUI(role) {
         window.location.replace(resolvePath('LOGIN'));
         return;
     }
-
     document.title = config.title;
     document.getElementById('registerHeading').textContent = config.heading;
     document.getElementById('registerSubheading').textContent = config.subheading;
     document.getElementById('labelName').textContent = config.labelName;
     document.getElementById('regName').placeholder = config.placeholderName;
     document.getElementById('submitBtnText').textContent = config.btnText;
-
     registerStep.classList.remove('hidden-step');
     registerStep.classList.add('show-step-animation');
-
     regIdentifierInput.value = '';
     regPasswordInput.value = '';
     regPasswordInput.required = false;
@@ -184,7 +184,6 @@ async function saveUserToDB(uid, name, contact, role, type) {
 // ============================================
 // Event Listeners
 // ============================================
-
 regIdentifierInput.addEventListener('input', () => {
     const value = regIdentifierInput.value.trim();
     if (value.includes('@')) {
@@ -224,21 +223,18 @@ unifiedRegisterForm.onsubmit = async (e) => {
             resetSubmitButton();
             return;
         }
-
         const password = regPasswordInput.value;
         if (!password || password.length < 6) {
             showNotification("يرجى إدخال كلمة مرور صالحة لا تقل عن 6 أحرف", "error");
             resetSubmitButton();
             return;
         }
-
         const taken = await isIdentifierTaken(sanitizedEmail);
         if (taken) {
             showNotification("البريد الإلكتروني المدخل مستخدم في حساب آخر!", "error");
             resetSubmitButton();
             return;
         }
-
         try {
             const result = await createUserWithEmailAndPassword(auth, sanitizedEmail, password);
             await saveUserToDB(result.user.uid, name, sanitizedEmail, selectedRole, "email");
@@ -252,34 +248,28 @@ unifiedRegisterForm.onsubmit = async (e) => {
         // رقم هاتف
         const formattedPhone = formatMoroccanPhoneNumber(identifier);
         const sanitizedPhone = sanitizePhone(formattedPhone);
-        
         if (!sanitizedPhone || !sanitizedPhone.startsWith('+212') || sanitizedPhone.length < 13) {
             showNotification("يرجى إدخال بريد إلكتروني صحيح أو رقم هاتف مغربي يبدأ بـ 06 أو 07", "error");
             resetSubmitButton();
             return;
         }
-
         const taken = await isIdentifierTaken(sanitizedPhone);
         if (taken) {
             showNotification("رقم الهاتف هذا مسجل لدينا في حساب سابق!", "error");
             resetSubmitButton();
             return;
         }
-
         const config = roleLocalization[selectedRole];
-        localStorage.setItem(config.storageKey, JSON.stringify({ 
-            name, 
-            phone: sanitizedPhone, 
-            role: selectedRole 
+        localStorage.setItem(config.storageKey, JSON.stringify({
+            name,
+            phone: sanitizedPhone,
+            role: selectedRole
         }));
-
         try {
             initRecaptcha();
             confirmationResult = await signInWithPhoneNumber(auth, sanitizedPhone, window.recaptchaVerifier);
-            
             registerStep.classList.add('hidden-step');
             registerStep.classList.remove('show-step-animation');
-            
             verifyStep.classList.remove('hidden-step');
             verifyStep.classList.add('show-step-animation');
             startTimer();
@@ -296,10 +286,8 @@ confirmOtpBtn.onclick = async () => {
     if (code.length !== 6) {
         return showNotification("يرجى كتابة الرمز المكون من 6 أرقام بالكامل", "error");
     }
-
     confirmOtpBtn.disabled = true;
     confirmOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تأكيد الحساب الحصري...';
-
     const config = roleLocalization[selectedRole];
     const rawData = localStorage.getItem(config.storageKey);
     if (!rawData) {
@@ -307,9 +295,7 @@ confirmOtpBtn.onclick = async () => {
         setTimeout(() => window.location.replace(resolvePath('LOGIN')), 2000);
         return;
     }
-
     const tempData = JSON.parse(rawData);
-
     try {
         const result = await confirmationResult.confirm(code);
         await saveUserToDB(result.user.uid, tempData.name, tempData.phone, tempData.role, "phone");
@@ -331,7 +317,6 @@ resendCodeBtn.onclick = async () => {
     }
     const tempData = JSON.parse(rawData);
     resendCodeBtn.disabled = true;
-
     try {
         initRecaptcha();
         confirmationResult = await signInWithPhoneNumber(auth, tempData.phone, window.recaptchaVerifier);
@@ -357,16 +342,15 @@ document.getElementById('backToRegisterBtn').onclick = () => {
 
 googleBtn.onclick = async () => {
     if (!selectedRole) return window.location.replace(resolvePath('LOGIN'));
-    
     try {
         const result = await signInWithPopup(auth, googleProvider);
         const taken = await isIdentifierTaken(result.user.email);
         if (!taken) {
             await saveUserToDB(
-                result.user.uid, 
-                result.user.displayName || "مستخدم جديد", 
-                result.user.email, 
-                selectedRole, 
+                result.user.uid,
+                result.user.displayName || "مستخدم جديد",
+                result.user.email,
+                selectedRole,
                 "google"
             );
         }
@@ -395,7 +379,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 setupRegistrationUI(selectedRole);
                 registerStep.classList.add('hidden-step');
                 registerStep.classList.remove('show-step-animation');
-                
                 verifyStep.classList.remove('hidden-step');
                 verifyStep.classList.add('show-step-animation');
                 showNotification("تم استرجاع بيانات التسجيل المعلقة، يمكنك النقر على إعادة الإرسال للحصول على رمز جديد.", "info");

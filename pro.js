@@ -9,11 +9,11 @@
  * - FAQ تفاعلي
  */
 
-import { auth, db } from "./core/firebase-init.js";
+import { auth, db } from "./config/firebase-init.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { showNotification } from "./shared/js/notifications.js";
-import { PATHS, resolvePath } from "./shared/js/paths.js";
+import { PATHS, resolvePath } from "./shared/utils/paths.js";
 
 // ============================================
 // المتغيرات العامة
