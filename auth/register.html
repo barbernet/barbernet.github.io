@@ -3,150 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء حساب جديد | BarberFlow Pro</title>
-    <meta name="description" content="انضم إلى BarberFlow اليوم! سجّل كزبون أو صاحب صالون أو تاجر في دقائق.">
+    <meta name="description" content="إنشاء حساب جديد في BarberFlow Pro">
+    <title>إنشاء حساب | BarberFlow Pro</title>
     
-    <!-- CSS المركزي -->
-    <link rel="stylesheet" href="../shared/styles/global.css">
-    <link rel="stylesheet" href="../shared/styles/global-navbar.css">
-    <link rel="stylesheet" href="../shared/styles/notifications.css">
-    
-    <!-- CSS الخاص بالصفحة -->
-    <link rel="stylesheet" href="register.css">
+    <!-- الخطوط -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
+    <!-- التنسيقات المشتركة والحماية -->
+    <link rel="stylesheet" href="../shared/styles/global.css">
+    <link rel="stylesheet" href="../shared/styles/page-protection.css">
+    <link rel="stylesheet" href="../shared/styles/notifications.css">
+    
+    <!-- تنسيقات الصفحة -->
+    <link rel="stylesheet" href="./register.css">
 </head>
-<body data-theme="dark">
-    <div class="auth-page">
-        <div class="auth-container">
-            <!-- الرأس -->
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <i class="fas fa-cut"></i>
-                    <span>BarberFlow Pro</span>
-                </div>
-                <h2 id="registerHeading">إنشاء حساب جديد</h2>
-                <p id="registerSubheading">قم بملء البيانات التالية للمتابعة</p>
-            </div>
-
-            <!-- خطوة التسجيل -->
-            <div id="registerStep" class="hidden-step">
-                <form id="unifiedRegisterForm">
-                    <div class="input-group">
-                        <label for="regName" id="labelName">الاسم الكامل</label>
-                        <input 
-                            type="text" 
-                            id="regName" 
-                            placeholder="أدخل اسمك الكامل"
-                            required
-                        >
-                    </div>
-
-                    <div class="input-group">
-                        <label for="regIdentifier">البريد الإلكتروني أو رقم الهاتف</label>
-                        <input 
-                            type="text" 
-                            id="regIdentifier" 
-                            placeholder="example@email.com أو 0612345678"
-                            required
-                        >
-                    </div>
-
-                    <div class="input-group hidden-step" id="passwordGroup">
-                        <label for="regPassword">كلمة المرور</label>
-                        <input 
-                            type="password" 
-                            id="regPassword" 
-                            placeholder="أدخل كلمة مرور قوية (6 أحرف على الأقل)"
-                            minlength="6"
-                        >
-                    </div>
-
-                    <button type="submit" class="auth-btn" id="mainSubmitBtn">
-                        <span id="submitBtnText">متابعة التسجيل</span>
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                </form>
-
-                <!-- الفاصل -->
-                <div class="divider">
-                    <span>أو التسجيل السريع</span>
-                </div>
-
-                <!-- زر Google -->
-                <button class="google-btn" id="googleBtn">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                    <span>سجل باستخدام Google</span>
-                </button>
-
-                <!-- التذييل -->
-                <div class="auth-footer">
-                    <p>لديك حساب بالفعل؟ 
-                        <a href="login.html">تسجيل الدخول</a>
-                    </p>
-                </div>
-            </div>
-
-            <!-- خطوة التحقق OTP -->
-            <div id="verifyStep" class="hidden-step">
-                <div class="verify-icon">
-                    <i class="fas fa-mobile-alt"></i>
-                </div>
-                <h2>تأكيد الحساب</h2>
-                <p class="step-desc">أدخل كود التحقق المكون من 6 أرقام المرسل إليك</p>
-
-                <div class="input-group">
-                    <input 
-                        type="text" 
-                        id="otpCode" 
-                        placeholder="123456"
-                        maxlength="6"
-                        inputmode="numeric"
-                        pattern="[0-9]*"
-                    >
-                </div>
-
-                <button class="auth-btn" id="confirmOtpBtn">
-                    <span>تأكيد وفتح الحساب</span>
-                </button>
-
-                <div id="timerContainer" style="display: none;">
-                    <p>إعادة الإرسال خلال: <span id="timer">60</span> ثانية</p>
-                </div>
-
-                <button class="outline-btn" id="resendCodeBtn" style="display: none; margin-top: 15px;">
-                    <i class="fas fa-redo"></i>
-                    <span>إعادة إرسال الكود</span>
-                </button>
-
-                <button class="back-link-btn" id="backToRegisterBtn">
-                    <i class="fas fa-arrow-right"></i>
-                    <span>تعديل المعلومات</span>
-                </button>
-            </div>
-
-            <!-- زر العودة -->
-            <div class="back-home-container">
-                <button class="outline-btn" id="backHomeBtn">
-                    <i class="fas fa-home"></i>
-                    <span>العودة للرئيسية</span>
-                </button>
-            </div>
-
-            <!-- حاوية Recaptcha -->
-            <div id="recaptcha-container"></div>
+<body>
+    
+    <!-- شاشة التحميل (Loader) -->
+    <div id="pageLoader" class="page-loader-overlay">
+        <div class="loader-logo">
+            <i class="fas fa-cut"></i>
+            <span>BarberFlow Pro</span>
         </div>
+        <div class="loader-spinner"></div>
+        <div class="loader-text">جاري تهيئة صفحة التسجيل...</div>
     </div>
 
     <!-- حاوية التنبيهات -->
     <div id="notification-container"></div>
+    
+    <!-- محتوى الصفحة -->
+    <main class="auth-page">
+        <div class="auth-container">
+            <div class="auth-header">
+                <a href="../index.html" class="auth-logo">
+                    <i class="fas fa-cut"></i>
+                    <span>BarberFlow Pro</span>
+                </a>
+                <h2 id="registerHeading">إنشاء حساب جديد</h2>
+                <p id="registerSubheading">انضم إلينا لإدارة صالونك أو متجرك باحترافية</p>
+            </div>
+            
+            <form id="registerForm" class="auth-form" novalidate>
+                <!-- اختيار الدور -->
+                <div class="role-selector">
+                    <label class="role-option">
+                        <input type="radio" name="role" value="customer" checked>
+                        <div class="role-card">
+                            <i class="fas fa-user"></i>
+                            <span>زبون</span>
+                        </div>
+                    </label>
+                    <label class="role-option">
+                        <input type="radio" name="role" value="salon">
+                        <div class="role-card">
+                            <i class="fas fa-cut"></i>
+                            <span>صالون</span>
+                        </div>
+                    </label>
+                    <label class="role-option">
+                        <input type="radio" name="role" value="store">
+                        <div class="role-card">
+                            <i class="fas fa-store"></i>
+                            <span>متجر</span>
+                        </div>
+                    </label>
+                </div>
 
-    <!-- السكريبت الرئيسي -->
-    <script type="module" src="register.js"></script>
+                <!-- الاسم الكامل -->
+                <div class="input-group">
+                    <label for="fullName"><i class="fas fa-id-card"></i> الاسم الكامل</label>
+                    <input type="text" id="fullName" placeholder="أدخل اسمك الثلاثي" required autocomplete="name">
+                </div>
+                
+                <!-- البريد الإلكتروني أو الهاتف -->
+                <div class="input-group">
+                    <label for="identifier"><i class="fas fa-envelope"></i> البريد الإلكتروني أو رقم الهاتف</label>
+                    <input type="text" id="identifier" placeholder="example@email.com أو 0612345678" required autocomplete="username">
+                </div>
+                
+                <!-- كلمة المرور -->
+                <div class="input-group">
+                    <label for="password"><i class="fas fa-lock"></i> كلمة المرور</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="6 أحرف على الأقل" required autocomplete="new-password">
+                        <button type="button" class="toggle-password" data-target="password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- تأكيد كلمة المرور -->
+                <div class="input-group">
+                    <label for="confirmPassword"><i class="fas fa-check-double"></i> تأكيد كلمة المرور</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور" required autocomplete="new-password">
+                        <button type="button" class="toggle-password" data-target="confirmPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <small id="matchIndicator" class="match-indicator"></small>
+                </div>
+                
+                <!-- زر التسجيل -->
+                <button type="submit" class="auth-btn" id="submitBtn">
+                    <span>إنشاء الحساب</span>
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </form>
+            
+            <div class="divider"><span>أو التسجيل السريع عبر</span></div>
+            
+            <!-- زر Google (معطل مؤقتاً) -->
+            <button class="google-btn disabled-btn" id="googleBtn" type="button" title="قيد التطوير">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
+                <span>Google (قيد التطوير)</span>
+            </button>
+            
+            <div class="auth-footer">
+                <p>لديك حساب بالفعل؟ <a href="./login.html" id="loginLink">تسجيل الدخول</a></p>
+            </div>
+            
+            <div class="back-home-container">
+                <button class="outline-btn" id="backToHomeBtn" type="button">
+                    <i class="fas fa-home"></i>
+                    <span>العودة للرئيسية</span>
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <script type="module" src="./register.js"></script>
 </body>
 </html>
 

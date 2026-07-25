@@ -2,29 +2,13 @@
 BarberFlow Pro - صفحة تسجيل الدخول
 المسار: auth/login.js
 */
-import { auth, db } from "../config/firebase-init.js";
-import {
-    signInWithEmailAndPassword,
-    GoogleAuthProvider,
-    signInWithPopup,
-    RecaptchaVerifier,
-    signInWithPhoneNumber
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import {
-    doc,
-    getDoc,
-    setDoc,
-    collection,
-    query,
-    where,
-    getDocs
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { showNotification, showOtpModal } from "../shared/utils/notifications.js";
+import { supabase } from "../config/supabase-init.js";
+import { showNotification } from "../shared/utils/notifications.js";
 import { resolvePath } from "../shared/utils/paths.js";
 import { sanitizeEmail, sanitizePhone } from "../middleware/validation/index.js";
 
 // ============================================
-// 1. مهلة أمان: تضمن إزالة loader بعد 5 ثوانٍ كحد أقصى
+// 1. نظام الحماية المدمج (بدون CSS visibility:hidden)
 // ============================================
 const safetyTimer = setTimeout(() => {
     console.warn("⚠️ Safety Timer Triggered: Revealing page to prevent permanent white screen.");
@@ -33,104 +17,67 @@ const safetyTimer = setTimeout(() => {
         loader.classList.add('hidden');
         setTimeout(() => loader.remove(), 400);
     }
-    document.body.classList.remove('page-protected');
-    document.body.classList.add('page-loaded');
-}, 5000); // 5 ثوانٍ
+}, 5000);
 
-// ============================================
-// 2. التحقق من حالة المستخدم
-// ============================================
-const unsubscribe = auth.onAuthStateChanged(async (user) => {
-    // إلغاء المهلة إذا تم التحقق بنجاح
+// التحقق من حالة المستخدم
+const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
     clearTimeout(safetyTimer);
-
-    if (user) {
-        // المستخدم مسجل دخوله، تحقق من الدور وتوجهه
+    
+    if (event === 'SIGNED_IN' && session?.user) {
         try {
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            if (userDoc.exists()) {
-                const role = userDoc.data().role;
+            const { data: userDoc, error } = await supabase
+                .from('users')
+                .select('role')
+                .eq('id', session.user.id)
+                .single();
+
+            if (!error && userDoc) {
                 const routes = {
                     'salon': resolvePath('PROFILE_SALON'),
                     'store': resolvePath('PROFILE_STORE'),
                     'customer': resolvePath('PROFILE_CUSTOMER')
                 };
-                const targetRoute = routes[role] || resolvePath('INDEX');
+                const targetRoute = routes[userDoc.role] || resolvePath('INDEX');
                 
-                // أظهر loader مع رسالة التوجيه
-                const loader = document.getElementById('pageLoader');
-                if (loader) {
-                    loader.innerHTML = `
-                        <div class="loader-logo">
-                            <i class="fas fa-cut"></i>
-                            <span>BarberFlow Pro</span>
-                        </div>
-                        <div class="loader-spinner"></div>
-                        <div class="loader-text">جاري توجيهك...</div>
-                    `;
-                    loader.classList.remove('hidden');
-                }
-
                 showNotification("أنت مسجل دخولك بالفعل، جاري توجيهك...", "info");
                 
-                setTimeout(() => {
-                    window.location.replace(targetRoute);
-                }, 1500);
-                return; // لا تظهر محتوى الصفحة
+                const loader = document.getElementById('pageLoader');
+                if (loader) {
+                    loader.innerHTML = `<div class="loader-logo"><i class="fas fa-cut"></i><span>BarberFlow Pro</span></div><div class="loader-spinner"></div><div class="loader-text">جاري توجيهك...</div>`;
+                    loader.classList.remove('hidden');
+                }
+                
+                setTimeout(() => window.location.replace(targetRoute), 1500);
+                return;
             }
         } catch (error) {
             console.error("Error checking user role:", error);
-            showNotification("حدث خطأ أثناء التحقق من صلاحياتك.", "error");
         }
     }
 
-    // المستخدم غير مسجل، أظهر loader مع رسالة التحقق
+    // إظهار الصفحة للمستخدمين غير المسجلين
     const loader = document.getElementById('pageLoader');
     if (loader) {
-        loader.innerHTML = `
-            <div class="loader-logo">
-                <i class="fas fa-cut"></i>
-                <span>BarberFlow Pro</span>
-            </div>
-            <div class="loader-spinner"></div>
-            <div class="loader-text">جاري التحقق من الحساب...</div>
-        `;
-        loader.classList.remove('hidden');
+        loader.classList.add('hidden');
+        setTimeout(() => loader.remove(), 400);
     }
-
-    // بعد التحقق، أزل loader وأظهر المحتوى
-    setTimeout(() => {
-        if (loader) {
-            loader.classList.add('hidden');
-            setTimeout(() => loader.remove(), 400);
-        }
-        document.body.classList.remove('page-protected');
-        document.body.classList.add('page-loaded');
-    }, 1000); // انتظر ثانية واحدة قبل إظهار المحتوى
-
-    // تهيئة واجهة تسجيل الدخول بعد التحقق (وإذا لم يتم التوجيه)
-    // نقل الكود هنا
+    
     initializeLoginPage();
 });
 
 // ============================================
-// 3. تهيئة واجهة تسجيل الدخول (داخل دالة منفصلة)
+// 2. تهيئة واجهة تسجيل الدخول
 // ============================================
-
 function initializeLoginPage() {
-    // --- تعريف العناصر ---
     const loginForm = document.getElementById('loginForm');
     const googleBtn = document.getElementById('googleBtn');
     const submitBtn = document.getElementById('mainSubmitBtn');
-    const registerOptionsModal = document.getElementById('registerOptionsModal');
     const backToHomeBtn = document.getElementById('backToHomeBtn');
     const loginEmailInput = document.getElementById('loginEmail');
     const loginPasswordInput = document.getElementById('loginPassword');
     const rememberMeCheckbox = document.getElementById('rememberMe');
-    const showRegisterOptions = document.getElementById('showRegisterOptions');
     const forgotPassLink = document.getElementById('forgotPassLink');
 
-    // --- دوال المعالجة ---
     const savedEmail = localStorage.getItem('bf-remember-email');
     if (savedEmail) {
         loginEmailInput.value = savedEmail;
@@ -138,54 +85,33 @@ function initializeLoginPage() {
         loginPasswordInput.focus();
     }
 
-    function formatMoroccanPhoneNumber(phone) {
-        let cleaned = phone.replace(/\s+/g, '');
-        if (cleaned.startsWith('06') || cleaned.startsWith('07')) {
-            return '+212' + cleaned.substring(1);
-        }
-        return cleaned;
-    }
-
-    async function checkUserAccountExists(identifier) {
-        try {
-            const usersRef = collection(db, "users");
-            const q = query(usersRef, where("contactInfo", "==", identifier));
-            const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) {
-                return { exists: true, data: querySnapshot.docs[0].data() };
-            }
-            return { exists: false, data: null };
-        } catch (error) {
-            console.error("Error checking account existence:", error);
-            return { exists: false, data: null };
-        }
-    }
-
-    async function routeUserByRole(uid) {
-        try {
-            const userDoc = await getDoc(doc(db, "users", uid));
-            if (userDoc.exists()) {
-                const role = userDoc.data().role;
-                const routes = {
-                    'salon': resolvePath('PROFILE_SALON'),
-                    'customer': resolvePath('PROFILE_CUSTOMER'),
-                    'store': resolvePath('PROFILE_STORE')
-                };
-                window.location.replace(routes[role] || resolvePath('INDEX'));
-            } else {
-                showNotification("تم تسجيل الدخول بنجاح، ولكن لم نجد دوراً مسجلاً لحسابك.", "warning");
-            }
-        } catch (error) {
-            console.error("Error routing user:", error);
-            showNotification("حدث خطأ في توجيه الحساب", "error");
-        }
-    }
-
     function handleRememberMe(identifier) {
         if (rememberMeCheckbox.checked) {
             localStorage.setItem('bf-remember-email', identifier);
         } else {
             localStorage.removeItem('bf-remember-email');
+        }
+    }
+
+    async function routeUserByRole(uid) {
+        try {
+            const { data: userDoc, error } = await supabase
+                .from('users')
+                .select('role')
+                .eq('id', uid)
+                .single();
+
+            if (!error && userDoc) {
+                const routes = {
+                    'salon': resolvePath('PROFILE_SALON'),
+                    'customer': resolvePath('PROFILE_CUSTOMER'),
+                    'store': resolvePath('PROFILE_STORE')
+                };
+                window.location.replace(routes[userDoc.role] || resolvePath('INDEX'));
+            }
+        } catch (error) {
+            console.error("Error routing user:", error);
+            showNotification("حدث خطأ في توجيه الحساب", "error");
         }
     }
 
@@ -225,40 +151,25 @@ function initializeLoginPage() {
                     const sanitizedEmail = sanitizeEmail(identifier);
                     if (!sanitizedEmail) throw new Error("invalid_email");
                     
-                    const userCred = await signInWithEmailAndPassword(auth, sanitizedEmail, password);
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: sanitizedEmail,
+                        password: password
+                    });
+                    
+                    if (error) throw error;
+                    
                     handleRememberMe(sanitizedEmail);
-                    await routeUserByRole(userCred.user.uid);
+                    await routeUserByRole(data.user.id);
                 } else {
-                    const sanitizedPhone = sanitizePhone(formatMoroccanPhoneNumber(identifier));
-                    if (!sanitizedPhone || !sanitizedPhone.startsWith('+212') || sanitizedPhone.length < 13) {
-                        throw new Error("invalid_phone");
-                    }
-                    
-                    const accountCheck = await checkUserAccountExists(sanitizedPhone);
-                    if (!accountCheck.exists) throw new Error("user_not_found");
-                    
-                    if (!window.recaptchaVerifier) {
-                        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
-                    }
-                    
-                    const confirmationResult = await signInWithPhoneNumber(auth, sanitizedPhone, window.recaptchaVerifier);
-                    const code = await showOtpModal();
-                    
-                    if (code) {
-                        const result = await confirmationResult.confirm(code);
-                        handleRememberMe(sanitizedPhone);
-                        await routeUserByRole(result.user.uid);
-                    } else {
-                        showNotification("تم إلغاء عملية التحقق", "info");
-                    }
+                    showNotification("تسجيل الدخول برقم الهاتف قيد التطوير حالياً", "warning");
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>تسجيل الدخول</span><i class="fas fa-sign-in-alt"></i>';
                 }
             } catch (error) {
                 console.error("Login error:", error);
                 let msg = "خطأ في البيانات، تأكد من صحة الحساب وكلمة المرور";
                 if (error.message === "invalid_email") msg = "صيغة البريد الإلكتروني غير صحيحة";
-                if (error.message === "invalid_phone") msg = "يرجى إدخال رقم هاتف مغربي صحيح يبدأ بـ 06 أو 07";
-                if (error.message === "user_not_found") msg = "هذا الحساب غير مسجل لدينا";
-                if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') msg = "كلمة المرور غير صحيحة";
+                if (error.code === 'invalid_credentials' || error.code === 'invalid_login_credentials') msg = "كلمة المرور غير صحيحة";
                 
                 showNotification(msg, "error");
             } finally {
@@ -268,52 +179,12 @@ function initializeLoginPage() {
         });
     }
 
+    // زر Google معطل مؤقتاً
     if (googleBtn) {
-        googleBtn.onclick = async () => {
-            googleBtn.disabled = true;
-            googleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاتصال...';
-            try {
-                const result = await signInWithPopup(auth, new GoogleAuthProvider());
-                const userDoc = await getDoc(doc(db, "users", result.user.uid));
-                if (userDoc.exists()) {
-                    await routeUserByRole(result.user.uid);
-                } else {
-                    showNotification("أهلاً بك! يرجى تحديد نوع الحساب.", "info");
-                    registerOptionsModal.classList.remove('hidden-step');
-                    registerOptionsModal.classList.add('show-step-animation');
-                }
-            } catch (error) {
-                console.error("Google login error:", error);
-                showNotification("فشل الارتباط الآمن مع Google", "error");
-            } finally {
-                googleBtn.disabled = false;
-                googleBtn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"><span>Google</span>';
-            }
+        googleBtn.onclick = () => {
+            showNotification("التسجيل عبر Google قيد التطوير حالياً، يرجى استخدام البريد الإلكتروني.", "warning");
         };
     }
-
-    if (showRegisterOptions) {
-        showRegisterOptions.onclick = (e) => {
-            e.preventDefault();
-            registerOptionsModal.classList.remove('hidden-step');
-            registerOptionsModal.classList.add('show-step-animation');
-        };
-    }
-
-    if (document.getElementById('closeRegisterModal')) {
-        document.getElementById('closeRegisterModal').onclick = () => {
-            registerOptionsModal.classList.add('hidden-step');
-            registerOptionsModal.classList.remove('show-step-animation');
-        };
-    }
-
-    document.querySelectorAll('.select-role-action-btn').forEach(btn => {
-        btn.onclick = () => {
-            const role = btn.getAttribute('data-role');
-            registerOptionsModal.classList.add('hidden-step');
-            window.location.href = resolvePath('REGISTER') + `?role=${role}`;
-        };
-    });
 
     if (forgotPassLink) {
         forgotPassLink.onclick = (e) => {
@@ -323,9 +194,7 @@ function initializeLoginPage() {
     }
 
     if (backToHomeBtn) {
-        backToHomeBtn.onclick = () => {
-            window.location.href = resolvePath('INDEX');
-        };
+        backToHomeBtn.onclick = () => window.location.href = resolvePath('INDEX');
     }
 }
 

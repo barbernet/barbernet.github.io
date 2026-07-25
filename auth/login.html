@@ -22,9 +22,9 @@
     <!-- تنسيقات الصفحة -->
     <link rel="stylesheet" href="./login.css">
 </head>
-<body class="page-protected"> <!-- هذا الكلاس مطلوب -->
-
-    <!-- شاشة التحميل (يجب أن تكون موجودة) -->
+<body>
+    
+    <!-- شاشة التحميل (Loader) -->
     <div id="pageLoader" class="page-loader-overlay">
         <div class="loader-logo">
             <i class="fas fa-cut"></i>
@@ -33,8 +33,11 @@
         <div class="loader-spinner"></div>
         <div class="loader-text">جاري التحقق من الحساب...</div>
     </div>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
     
-    <!-- محتوى الصفحة (سيُظهر بعد التحقق) -->
+    <!-- محتوى الصفحة -->
     <main class="auth-page">
         <div class="auth-container">
             <div class="auth-header">
@@ -80,13 +83,13 @@
             
             <div class="divider"><span>أو الدخول السريع عبر</span></div>
             
-            <button class="google-btn" id="googleBtn" type="button">
+            <button class="google-btn disabled-btn" id="googleBtn" type="button" title="قيد التطوير">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
-                <span>Google</span>
+                <span>Google (قيد التطوير)</span>
             </button>
             
             <div class="auth-footer">
-                <p>ليس لديك حساب معنا؟ <a href="#" id="showRegisterOptions">إنشاء حساب جديد</a></p>
+                <p>ليس لديك حساب معنا؟ <a href="./register.html" id="showRegisterOptions">إنشاء حساب جديد</a></p>
             </div>
             
             <div class="back-home-container">
@@ -94,19 +97,6 @@
                     <i class="fas fa-home"></i>
                     <span>العودة للرئيسية</span>
                 </button>
-            </div>
-        </div>
-        
-        <div class="modal-overlay hidden-step" id="registerOptionsModal">
-            <div class="modal-content">
-                <h2>إنشاء حساب جديد</h2>
-                <p class="step-desc">اختر نوع الحساب للانتقال إلى استمارة التسجيل</p>
-                <div class="suggestion-grid">
-                    <button class="suggest-link select-role-action-btn" data-role="customer" type="button"><i class="fas fa-user"></i><span>حساب عميل</span></button>
-                    <button class="suggest-link select-role-action-btn" data-role="salon" type="button"><i class="fas fa-cut"></i><span>صالون تجميل</span></button>
-                    <button class="suggest-link select-role-action-btn" data-role="store" type="button"><i class="fas fa-store"></i><span>متجر تجاري</span></button>
-                </div>
-                <button class="back-link-btn" id="closeRegisterModal" type="button"><i class="fas fa-times"></i> إلغاء والعودة</button>
             </div>
         </div>
     </main>

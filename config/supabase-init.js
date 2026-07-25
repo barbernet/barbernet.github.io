@@ -1,7 +1,11 @@
+// config/supabase-init.js
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+import { supabaseConfig } from "./config.js";
 
-const SUPABASE_URL = "https://qvdsdendhlmcyiuvgygu.supabase.co";
+/**
+ * إنشاء عميل Supabase باستخدام الإعدادات المستوردة
+ */
+export const supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey);
 
-const SUPABASE_ANON_KEY = "sb_publishable_wJXxyPa0Lhjlkl5JQVQb3LkXw_szFgNN";
+export default supabase;
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);

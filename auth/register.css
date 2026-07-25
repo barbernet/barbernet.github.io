@@ -1,12 +1,9 @@
 /* ==========================================================================
 BarberFlow Pro - صفحة إنشاء حساب جديد
 المسار: auth/register.css
-ملاحظة: هذا الملف مطابق لـ login.css مع إمكانية إضافة تنسيقات خاصة لاحقاً
 ========================================================================== */
 
-/* ============================================
-صفحة المصادقة
-============================================ */
+/* استخدام نفس أساسيات login.css للحفاظ على التناسق */
 .auth-page {
     min-height: 100vh;
     display: flex;
@@ -60,10 +57,7 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     color: var(--brand-accent);
     margin-bottom: 20px;
     font-weight: 700;
-}
-
-.auth-logo i {
-    font-size: 1.8rem;
+    text-decoration: none;
 }
 
 .auth-header h2 {
@@ -78,6 +72,60 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
 }
 
 /* ============================================
+اختيار الدور
+============================================ */
+.role-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.role-option {
+    cursor: pointer;
+}
+
+.role-option input[type="radio"] {
+    display: none;
+}
+
+.role-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 15px 10px;
+    text-align: center;
+    transition: all var(--transition-fast);
+    background: var(--bg-tertiary);
+}
+
+.role-card i {
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: block;
+    transition: color var(--transition-fast);
+}
+
+.role-card span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.role-option input[type="radio"]:checked + .role-card {
+    border-color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.role-option input[type="radio"]:checked + .role-card i {
+    color: var(--brand-accent);
+}
+
+.role-option:hover .role-card {
+    border-color: var(--brand-accent-light);
+}
+
+/* ============================================
 حقول الإدخال
 ============================================ */
 .input-group {
@@ -85,15 +133,21 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
 }
 
 .input-group label {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin-bottom: 8px;
     color: var(--text-secondary);
     font-size: 0.9rem;
     font-weight: 600;
 }
 
-.input-group input,
-.input-group select {
+.input-group label i {
+    color: var(--brand-accent);
+    font-size: 0.85rem;
+}
+
+.input-group input {
     width: 100%;
     padding: 14px 18px;
     background: var(--bg-tertiary);
@@ -106,32 +160,45 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     transition: all var(--transition-fast);
 }
 
-.input-group input:focus,
-.input-group select:focus {
+.input-group input:focus {
     border-color: var(--brand-accent);
     background: var(--bg-secondary);
     box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
 }
 
-.input-group input::placeholder {
-    color: var(--text-muted);
+.password-wrapper {
+    position: relative;
 }
 
-.forgot-link {
+.toggle-password {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px;
+}
+
+.match-indicator {
     display: block;
     margin-top: 8px;
-    font-size: 0.85rem;
-    color: var(--brand-accent);
-    text-decoration: none;
-    transition: color var(--transition-fast);
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
-.forgot-link:hover {
-    color: var(--brand-accent-light);
+.match-indicator.match {
+    color: #10b981;
+}
+
+.match-indicator.no-match {
+    color: #ef4444;
 }
 
 /* ============================================
-الأزرار الرئيسية
+الأزرار
 ============================================ */
 .auth-btn {
     width: 100%;
@@ -157,19 +224,11 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
 }
 
-.auth-btn:active:not(:disabled) {
-    transform: translateY(0);
-}
-
 .auth-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    transform: none !important;
 }
 
-/* ============================================
-زر Google
-============================================ */
 .google-btn {
     width: 100%;
     padding: 14px;
@@ -188,24 +247,12 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     transition: all var(--transition-fast);
 }
 
-.google-btn:hover:not(:disabled) {
-    background: var(--bg-accent);
-    border-color: var(--brand-accent);
-}
-
-.google-btn:disabled {
-    opacity: 0.6;
+.google-btn.disabled-btn {
+    opacity: 0.5;
     cursor: not-allowed;
+    filter: grayscale(100%);
 }
 
-.google-btn img {
-    width: 20px;
-    height: 20px;
-}
-
-/* ============================================
-الفاصل
-============================================ */
 .divider {
     text-align: center;
     margin: 25px 0;
@@ -232,9 +279,6 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     z-index: 2;
 }
 
-/* ============================================
-روابط التذييل
-============================================ */
 .auth-footer {
     text-align: center;
     margin-top: 25px;
@@ -246,11 +290,6 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     color: var(--brand-accent);
     text-decoration: none;
     font-weight: 600;
-    transition: color var(--transition-fast);
-}
-
-.auth-footer a:hover {
-    color: var(--brand-accent-light);
 }
 
 .back-home-container {
@@ -281,99 +320,16 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     color: #000;
 }
 
-/* ============================================
-خطوات التحقق OTP
-============================================ */
-.hidden-step {
-    display: none !important;
-}
-
-.show-step-animation {
-    display: block !important;
-    animation: slideDownFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes slideDownFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.verify-icon {
-    text-align: center;
-    font-size: 4rem;
-    color: var(--brand-accent);
-    margin-bottom: 20px;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.8; }
-}
-
-.step-desc {
-    text-align: center;
-    color: var(--text-secondary);
-    margin-bottom: 25px;
-    font-size: 0.9rem;
-}
-
-.back-link-btn {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    width: 100%;
-    margin-top: 20px;
-    font-size: 0.9rem;
-    font-family: 'Cairo', sans-serif;
-    transition: color var(--transition-fast);
-}
-
-.back-link-btn:hover {
-    color: var(--brand-accent);
-}
-
-#timerContainer {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-top: 15px;
-    text-align: center;
-}
-
-#timer {
-    color: var(--brand-accent);
-    font-weight: bold;
-}
-
-/* ============================================
-Recaptcha
-============================================ */
-#recaptcha-container {
-    margin: 15px 0;
-    display: flex;
-    justify-content: center;
-}
-
-#recaptcha-container:empty {
-    display: none;
-}
-
-/* ============================================
-Responsive
-============================================ */
 @media (max-width: 480px) {
     .auth-container {
         padding: 25px;
         border: none;
         box-shadow: none;
         background: transparent;
+    }
+    
+    .role-selector {
+        grid-template-columns: 1fr;
     }
 }
 
