@@ -3,62 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="تسجيل الدخول إلى منصة BarberFlow Pro">
     <title>تسجيل الدخول | BarberFlow Pro</title>
     
-    <!-- الخطوط -->
+    <!-- الخطوط والأيقونات -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- التنسيقات المشتركة والحماية -->
     <link rel="stylesheet" href="../shared/styles/global.css">
     <link rel="stylesheet" href="../shared/styles/page-protection.css">
     <link rel="stylesheet" href="../shared/styles/notifications.css">
-    
-    <!-- تنسيقات الصفحة -->
     <link rel="stylesheet" href="./login.css">
 </head>
 <body>
     
     <!-- شاشة التحميل (Loader) -->
     <div id="pageLoader" class="page-loader-overlay">
-        <div class="loader-logo">
-            <i class="fas fa-cut"></i>
-            <span>BarberFlow Pro</span>
-        </div>
+        <div class="loader-logo"><i class="fas fa-cut"></i><span>BarberFlow Pro</span></div>
         <div class="loader-spinner"></div>
         <div class="loader-text">جاري التحقق من الحساب...</div>
     </div>
 
-    <!-- حاوية التنبيهات -->
     <div id="notification-container"></div>
     
-    <!-- محتوى الصفحة -->
     <main class="auth-page">
         <div class="auth-container">
             <div class="auth-header">
-                <a href="../index.html" class="auth-logo">
-                    <i class="fas fa-cut"></i>
-                    <span>BarberFlow Pro</span>
-                </a>
-                <h2 id="authHeading">مرحباً بعودتك</h2>
-                <p id="authSubheading">سجل دخولك لإدارة حسابك في BarberFlow Pro</p>
+                <a href="../index.html" class="auth-logo"><i class="fas fa-cut"></i><span>BarberFlow Pro</span></a>
+                <h2>مرحباً بعودتك</h2>
+                <p>سجل دخولك لإدارة حسابك في BarberFlow Pro</p>
             </div>
             
             <form id="loginForm" class="auth-form" novalidate>
                 <div class="input-group">
                     <label for="loginEmail"><i class="fas fa-user"></i> البريد الإلكتروني أو رقم الهاتف</label>
-                    <input type="text" id="loginEmail" name="identifier" placeholder="example@email.com أو 0612345678" required autocomplete="username">
+                    <input type="text" id="loginEmail" placeholder="example@email.com أو 0612345678" required autocomplete="username">
                 </div>
                 
                 <div class="input-group">
                     <label for="loginPassword"><i class="fas fa-lock"></i> كلمة المرور</label>
                     <div class="password-wrapper">
-                        <input type="password" id="loginPassword" name="password" placeholder="أدخل كلمة المرور" required autocomplete="current-password">
+                        <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required autocomplete="current-password">
                         <button type="button" class="toggle-password" data-target="loginPassword" aria-label="إظهار كلمة المرور">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -75,16 +61,15 @@
                 </div>
                 
                 <button type="submit" class="auth-btn" id="mainSubmitBtn">
-                    <span>تسجيل الدخول</span>
-                    <i class="fas fa-sign-in-alt"></i>
+                    <span>تسجيل الدخول</span><i class="fas fa-sign-in-alt"></i>
                 </button>
                 <div id="recaptcha-container"></div>
             </form>
             
             <div class="divider"><span>أو الدخول السريع عبر</span></div>
             
-            <button class="google-btn disabled-btn" id="googleBtn" type="button" title="قيد التطوير">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
+            <button class="google-btn disabled-btn" id="googleBtn" type="button">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                 <span>Google (قيد التطوير)</span>
             </button>
             
@@ -94,8 +79,7 @@
             
             <div class="back-home-container">
                 <button class="outline-btn" id="backToHomeBtn" type="button">
-                    <i class="fas fa-home"></i>
-                    <span>العودة للرئيسية</span>
+                    <i class="fas fa-home"></i><span>العودة للرئيسية</span>
                 </button>
             </div>
         </div>

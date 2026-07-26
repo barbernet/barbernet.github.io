@@ -4,7 +4,7 @@
 
 ## 1. تعريف المنصة
 BarberFlow Pro هي منصة رقمية متكاملة لقطاع الحلاقة والتجميل، تربط بين ثلاثة أطراف رئيسية:
-- **الصالونات:** لإدارة المواعيد، الموظفين، الخدمات، والمخزون.
+- **الصالونات:** لإدارة المواعيد، الموظفين، الفروع، الخدمات، والمخزون.
 - **المتاجر:** لبيع منتجات العناية والحلاقة وإدارة الطلبات.
 - **الزبائن:** لحجز المواعيد، شراء المنتجات، وتقييم الخدمات.
 
@@ -103,6 +103,256 @@ BarberFlow Pro هي منصة رقمية متكاملة لقطاع الحلاقة
 - **shop.html/.css/.js**: صفحة المتجر العام.
 - **survey.html/.css/.js**: صفحة الاستبيانات.
 - **terms.html/.css/.js**: شروط الاستخدام.
+
+### جداول تخزين المعلومات في supabsse
+-- ==========================================================================
+-- BarberFlow Pro - Database Schema & Security Policies (Supabase)
+-- ==========================================================================
+
+-- 1. إنشاء أنواع ENUM لتوحيد البيانات
+CREATE TYPE user_role AS ENUM ('customer', 'salon', 'store');
+CREATE TYPE onboarding_status AS ENUM ('empty', 'incomplete', 'completed');
+CREATE TYPE business_status AS ENUM ('inactive', 'active', 'suspended');
+
+-- 2. دالة ومُشغِّل إنشاء الملف الشخصي تلقائياً عند التسجيل
+-- يجب أن تكون هذه الدالة موجودة قبل إنشاء جدول profiles وسياساته
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, role)
+  VALUES (
+    new.id,
+    COALESCE(new.raw_user_meta_data->>'full_name', 'مستخدم جديد'),
+    (new.raw_user_meta_data->>'role')::user_role
+  );
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- 3. جدول الملفات الشخصية (Profiles)
+CREATE TABLE profiles (
+    id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+    full_name TEXT NOT NULL,
+    role user_role NOT NULL DEFAULT 'customer',
+    phone TEXT UNIQUE,
+    avatar_url TEXT,
+    onboarding_status onboarding_status DEFAULT 'empty',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- دالة لتحديث updated_at تلقائياً
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON profiles
+    FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+-- 4. جدول الشركات الرئيسية (Businesses)
+CREATE TABLE businesses (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    owner_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+    name TEXT NOT NULL,
+    type user_role NOT NULL, -- 'salon' or 'store'
+    description TEXT,
+    city TEXT,
+    address TEXT,
+    phone TEXT,
+    email TEXT,
+    logo_url TEXT,
+    cover_url TEXT,
+    working_hours JSONB DEFAULT '{"open": "09:00", "close": "21:00", "days": ["sun","mon","tue","wed","thu"]}',
+    status business_status DEFAULT 'inactive',
+    is_verified BOOLEAN DEFAULT FALSE,
+    rating DECIMAL(3,2) DEFAULT 0.00,
+    reviews_count INT DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TRIGGER update_businesses_updated_at BEFORE UPDATE ON businesses
+    FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+-- 5. جدول الفروع (Branches)
+CREATE TABLE branches (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE NOT NULL,
+    name TEXT NOT NULL,
+    city TEXT NOT NULL,
+    address TEXT NOT NULL,
+    phone TEXT,
+    manager_id UUID REFERENCES profiles(id),
+    working_hours JSONB,
+    status business_status DEFAULT 'active',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 6. جدول متاجر الصالونات (Salon Stores) - اختياري
+CREATE TABLE salon_stores (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    salon_id UUID REFERENCES businesses(id) ON DELETE CASCADE NOT NULL,
+    name TEXT DEFAULT 'متجر الصالون',
+    description TEXT,
+    status business_status DEFAULT 'inactive',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(salon_id) -- صالون واحد يمكن أن يكون له متجر واحد فقط
+);
+
+-- 7. جدول المنتجات (Products)
+CREATE TABLE products (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    seller_id UUID REFERENCES businesses(id) ON DELETE CASCADE, -- المتجر المستقل
+    salon_store_id UUID REFERENCES salon_stores(id) ON DELETE CASCADE, -- أو متجر الصالون
+    name TEXT NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    stock_quantity INT DEFAULT 0,
+    image_url TEXT,
+    category TEXT,
+    is_available BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 8. جدول الخدمات (Services)
+CREATE TABLE services (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE NOT NULL,
+    branch_id UUID REFERENCES branches(id) ON DELETE SET NULL, -- NULL تعني الخدمة في جميع الفروع
+    name TEXT NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    duration_min INT DEFAULT 30,
+    category TEXT,
+    is_available BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 9. جدول الحجوزات (Bookings/Appointments)
+CREATE TABLE bookings (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    customer_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+    service_id UUID REFERENCES services(id) ON DELETE RESTRICT NOT NULL,
+    branch_id UUID REFERENCES branches(id), -- إذا كان NULL فهي للحجز في الفرع الرئيسي
+    staff_id UUID REFERENCES profiles(id),
+    booking_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    status TEXT CHECK (status IN ('pending', 'confirmed', 'completed', 'cancelled')) DEFAULT 'pending',
+    notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 10. جدول التقييمات (Reviews)
+CREATE TABLE reviews (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    reviewer_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
+    branch_id UUID REFERENCES branches(id) ON DELETE CASCADE,
+    product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+    rating INT CHECK (rating >= 1 AND rating <= 5) NOT NULL,
+    comment TEXT,
+    reply TEXT,
+    replied_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ==========================================================================
+-- Row Level Security (RLS) Policies
+-- ==========================================================================
+
+-- تفعيل RLS لجميع الجداول
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE businesses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE branches ENABLE ROW LEVEL SECURITY;
+ALTER TABLE salon_stores ENABLE ROW LEVEL SECURITY;
+ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE services ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+
+-- سياسات جدول Profiles
+CREATE POLICY "Public profiles are viewable by everyone" ON profiles FOR SELECT USING (TRUE);
+CREATE POLICY "Users can insert own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+
+-- سياسات جدول Businesses (محدثة للسماح للمالك بالرؤية حتى لو كان غير نشط)
+CREATE POLICY "Businesses viewable by public if active or by owner" ON businesses 
+FOR SELECT USING (status = 'active' OR auth.uid() = owner_id);
+CREATE POLICY "Owners can manage their own business" ON businesses FOR ALL USING (auth.uid() = owner_id);
+
+-- سياسات جدول Branches
+CREATE POLICY "Branches of active businesses are viewable" ON branches FOR SELECT USING (
+    EXISTS (SELECT 1 FROM businesses WHERE businesses.id = branches.business_id AND businesses.status = 'active')
+);
+CREATE POLICY "Business owners can manage branches" ON branches FOR ALL USING (
+    EXISTS (SELECT 1 FROM businesses WHERE businesses.id = branches.business_id AND businesses.owner_id = auth.uid())
+);
+
+-- سياسات جدول Salon Stores
+CREATE POLICY "Salon stores are viewable if salon is active" ON salon_stores FOR SELECT USING (
+    EXISTS (SELECT 1 FROM businesses WHERE businesses.id = salon_stores.salon_id AND businesses.status = 'active')
+);
+CREATE POLICY "Salon owners can manage their store" ON salon_stores FOR ALL USING (
+    EXISTS (SELECT 1 FROM businesses WHERE businesses.id = salon_stores.salon_id AND businesses.owner_id = auth.uid())
+);
+
+-- سياسات جدول Products
+CREATE POLICY "Available products are viewable" ON products FOR SELECT USING (is_available = TRUE);
+CREATE POLICY "Sellers can manage their products" ON products FOR ALL USING (
+    (seller_id IS NOT NULL AND EXISTS (SELECT 1 FROM businesses WHERE businesses.id = products.seller_id AND businesses.owner_id = auth.uid()))
+    OR 
+    (salon_store_id IS NOT NULL AND EXISTS (SELECT 1 FROM salon_stores JOIN businesses ON businesses.id = salon_stores.salon_id WHERE salon_stores.id = products.salon_store_id AND businesses.owner_id = auth.uid()))
+);
+
+-- سياسات جدول Services
+CREATE POLICY "Available services are viewable" ON services FOR SELECT USING (is_available = TRUE);
+CREATE POLICY "Business owners can manage services" ON services FOR ALL USING (
+    EXISTS (SELECT 1 FROM businesses WHERE businesses.id = services.business_id AND businesses.owner_id = auth.uid())
+);
+
+-- سياسات جدول Bookings
+CREATE POLICY "Customers can view own bookings" ON bookings FOR SELECT USING (customer_id = auth.uid());
+CREATE POLICY "Business owners can view bookings for their services" ON bookings FOR SELECT USING (
+    EXISTS (SELECT 1 FROM services JOIN businesses ON businesses.id = services.business_id WHERE services.id = bookings.service_id AND businesses.owner_id = auth.uid())
+);
+CREATE POLICY "Customers can create bookings" ON bookings FOR INSERT WITH CHECK (customer_id = auth.uid());
+
+-- سياسات جدول Reviews
+CREATE POLICY "Reviews are viewable by everyone" ON reviews FOR SELECT USING (TRUE);
+CREATE POLICY "Authenticated users can create reviews" ON reviews FOR INSERT WITH CHECK (reviewer_id = auth.uid());
+CREATE POLICY "Reviewers can update own review" ON reviews FOR UPDATE USING (reviewer_id = auth.uid());
+CREATE POLICY "Business owners can reply to reviews" ON reviews FOR UPDATE USING (
+    (business_id IS NOT NULL AND EXISTS (SELECT 1 FROM businesses WHERE businesses.id = reviews.business_id AND businesses.owner_id = auth.uid()))
+    OR
+    (branch_id IS NOT NULL AND EXISTS (SELECT 1 FROM branches JOIN businesses ON businesses.id = branches.business_id WHERE branches.id = reviews.branch_id AND businesses.owner_id = auth.uid()))
+);
+
+-- ==========================================================================
+-- Indexes for Performance
+-- ==========================================================================
+CREATE INDEX idx_businesses_owner ON businesses(owner_id);
+CREATE INDEX idx_businesses_type_status ON businesses(type, status);
+CREATE INDEX idx_branches_business ON branches(business_id);
+CREATE INDEX idx_salon_stores_salon ON salon_stores(salon_id);
+CREATE INDEX idx_products_seller ON products(seller_id);
+CREATE INDEX idx_products_salon_store ON products(salon_store_id);
+CREATE INDEX idx_services_business ON services(business_id);
+CREATE INDEX idx_bookings_customer ON bookings(customer_id);
+CREATE INDEX idx_bookings_service_date ON bookings(service_id, booking_date);
+CREATE INDEX idx_reviews_business ON reviews(business_id);
+CREATE INDEX idx_reviews_product ON reviews(product_id);
+
 
 وأخيرا رابط مستودع الملفات على منصة github اذا اردت إلقاء نظرة هناك
 https://github.com/barbernet/barbernet.github.io.git

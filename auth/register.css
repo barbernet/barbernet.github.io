@@ -333,3 +333,38 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     }
 }
 
+/* ============================================
+زر Google
+============================================ */
+.google-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    transition: all var(--transition-fast);
+}
+
+.google-btn:hover:not(:disabled) {
+    background: var(--bg-accent);
+    border-color: var(--brand-accent);
+}
+
+.google-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+}

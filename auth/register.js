@@ -8,7 +8,7 @@ import { resolvePath } from "../shared/utils/paths.js";
 import { sanitizeText, sanitizeEmail } from "../middleware/validation/index.js";
 
 // ============================================
-// 1. نظام الحماية المدمج (بدون CSS visibility:hidden)
+// 1. نظام الحماية المدمج
 // ============================================
 const safetyTimer = setTimeout(() => {
     console.warn("⚠️ Safety Timer Triggered: Revealing register page.");
@@ -23,11 +23,10 @@ const safetyTimer = setTimeout(() => {
 const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
     clearTimeout(safetyTimer);
     
-    // إذا كان المستخدم مسجلاً دخوله بالفعل، وجهه لصفحته الشخصية
-    if (event === 'SIGNED_IN' && session?.user) {
+    if (session?.user) {
         try {
             const { data: userDoc, error } = await supabase
-                .from('users')
+                .from('profiles')
                 .select('role')
                 .eq('id', session.user.id)
                 .single();
@@ -56,7 +55,6 @@ const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event,
         }
     }
 
-    // إظهار الصفحة للمستخدمين غير المسجلين
     const loader = document.getElementById('pageLoader');
     if (loader) {
         loader.classList.add('hidden');
@@ -105,11 +103,11 @@ function initializeRegisterPage() {
     passwordInput.addEventListener('input', checkPasswordMatch);
     confirmPasswordInput.addEventListener('input', checkPasswordMatch);
 
-    // إظهار/إخفاء كلمة المرور
+    // ✅ إصلاح زر إظهار/إخفاء كلمة المرور
     document.querySelectorAll('.toggle-password').forEach(btn => {
         btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-target');
-            const input = document.getElementById(targetId);
+            const wrapper = btn.closest('.password-wrapper');
+            const input = wrapper ? wrapper.querySelector('input') : null;
             const icon = btn.querySelector('i');
             if (input && icon) {
                 if (input.type === 'password') {
@@ -125,7 +123,6 @@ function initializeRegisterPage() {
         });
     });
 
-    // معالجة نموذج التسجيل
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -135,7 +132,6 @@ function initializeRegisterPage() {
             const password = passwordInput.value;
             const selectedRole = document.querySelector('input[name="role"]:checked').value;
             
-            // التحقق من المدخلات
             if (!fullName || fullName.length < 3) {
                 return showNotification("يرجى إدخال اسم صحيح (3 أحرف على الأقل)", "error");
             }
@@ -190,14 +186,12 @@ function initializeRegisterPage() {
         });
     }
 
-    // تعطيل زر Google وإظهار تنبيه
     if (googleBtn) {
         googleBtn.onclick = () => {
             showNotification("التسجيل عبر Google قيد التطوير حالياً، يرجى استخدام البريد الإلكتروني.", "warning");
         };
     }
 
-    // زر العودة للرئيسية
     if (backToHomeBtn) {
         backToHomeBtn.onclick = () => window.location.href = resolvePath('INDEX');
     }

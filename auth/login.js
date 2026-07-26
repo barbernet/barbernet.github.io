@@ -11,7 +11,7 @@ import { sanitizeEmail, sanitizePhone } from "../middleware/validation/index.js"
 // 1. نظام الحماية المدمج (بدون CSS visibility:hidden)
 // ============================================
 const safetyTimer = setTimeout(() => {
-    console.warn("⚠️ Safety Timer Triggered: Revealing page to prevent permanent white screen.");
+    console.warn("⚠️ Safety Timer Triggered: Revealing login page.");
     const loader = document.getElementById('pageLoader');
     if (loader) {
         loader.classList.add('hidden');
@@ -23,10 +23,11 @@ const safetyTimer = setTimeout(() => {
 const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
     clearTimeout(safetyTimer);
     
-    if (event === 'SIGNED_IN' && session?.user) {
+    if (session?.user) {
         try {
+            // ✅ استخدام اسم الجدول الصحيح في Supabase: profiles
             const { data: userDoc, error } = await supabase
-                .from('users')
+                .from('profiles')
                 .select('role')
                 .eq('id', session.user.id)
                 .single();
@@ -78,6 +79,7 @@ function initializeLoginPage() {
     const rememberMeCheckbox = document.getElementById('rememberMe');
     const forgotPassLink = document.getElementById('forgotPassLink');
 
+    // تحميل البيانات المحفوظة
     const savedEmail = localStorage.getItem('bf-remember-email');
     if (savedEmail) {
         loginEmailInput.value = savedEmail;
@@ -96,7 +98,7 @@ function initializeLoginPage() {
     async function routeUserByRole(uid) {
         try {
             const { data: userDoc, error } = await supabase
-                .from('users')
+                .from('profiles')
                 .select('role')
                 .eq('id', uid)
                 .single();
@@ -115,11 +117,14 @@ function initializeLoginPage() {
         }
     }
 
+    // ✅ إصلاح زر إظهار/إخفاء كلمة المرور
     document.querySelectorAll('.toggle-password').forEach(btn => {
         btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-target');
-            const input = document.getElementById(targetId);
+            // استخدام closest للعثور على الحقل المرتبط بدقة
+            const wrapper = btn.closest('.password-wrapper');
+            const input = wrapper ? wrapper.querySelector('input') : null;
             const icon = btn.querySelector('i');
+            
             if (input && icon) {
                 if (input.type === 'password') {
                     input.type = 'text';
@@ -151,6 +156,7 @@ function initializeLoginPage() {
                     const sanitizedEmail = sanitizeEmail(identifier);
                     if (!sanitizedEmail) throw new Error("invalid_email");
                     
+                    // ✅ تسجيل الدخول عبر Supabase
                     const { data, error } = await supabase.auth.signInWithPassword({
                         email: sanitizedEmail,
                         password: password
