@@ -3,9 +3,6 @@ BarberFlow Pro - صفحة الترحيب الديناميكية
 المسار: onboarding/welcome.css
 ========================================================================== */
 
-/* ============================================
-الصفحة الرئيسية
-============================================ */
 .welcome-page {
     min-height: 100vh;
     display: flex;
@@ -34,9 +31,6 @@ BarberFlow Pro - صفحة الترحيب الديناميكية
     to { transform: rotate(360deg); }
 }
 
-/* ============================================
-الحاوية الرئيسية
-============================================ */
 .welcome-container {
     text-align: center;
     padding: 40px;
@@ -48,19 +42,10 @@ BarberFlow Pro - صفحة الترحيب الديناميكية
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* ============================================
-أيقونة الترحيب
-============================================ */
 .welcome-icon-wrapper {
     position: relative;
     width: 120px;
@@ -85,14 +70,8 @@ BarberFlow Pro - صفحة الترحيب الديناميكية
 }
 
 @keyframes pulse {
-    0%, 100% { 
-        transform: scale(1); 
-        opacity: 1; 
-    }
-    50% { 
-        transform: scale(1.05); 
-        opacity: 0.9; 
-    }
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.9; }
 }
 
 .welcome-icon-glow {
@@ -105,19 +84,10 @@ BarberFlow Pro - صفحة الترحيب الديناميكية
 }
 
 @keyframes glow {
-    0%, 100% { 
-        opacity: 0.5; 
-        transform: scale(1); 
-    }
-    50% { 
-        opacity: 1; 
-        transform: scale(1.1); 
-    }
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
 }
 
-/* ============================================
-النصوص
-============================================ */
 .welcome-container h1 {
     font-size: 2rem;
     color: var(--text-primary);
@@ -133,9 +103,6 @@ BarberFlow Pro - صفحة الترحيب الديناميكية
     margin-bottom: 40px;
 }
 
-/* ============================================
-شريط التقدم
-============================================ */
 .progress-container {
     width: 100%;
     height: 6px;
@@ -151,12 +118,9 @@ BarberFlow Pro - صفحة الترحيب الديناميكية
     background: linear-gradient(90deg, var(--brand-accent), var(--brand-accent-dark));
     border-radius: 10px;
     width: 0%;
-    transition: width 3s linear;
+    transition: width 2s linear;
 }
 
-/* ============================================
-معلومات التوجيه
-============================================ */
 .redirect-info {
     display: flex;
     align-items: center;
@@ -172,9 +136,6 @@ BarberFlow Pro - صفحة الترحيب الديناميكية
     font-size: 1.2rem;
 }
 
-/* ============================================
-رسالة الخطأ
-============================================ */
 .error-container {
     text-align: center;
     padding: 30px;
@@ -225,36 +186,15 @@ BarberFlow Pro - صفحة الترحيب الديناميكية
     box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
 }
 
-/* ============================================
-إخفاء العناصر
-============================================ */
 .hidden {
     display: none !important;
 }
 
-/* ============================================
-Responsive
-============================================ */
 @media (max-width: 480px) {
-    .welcome-container {
-        padding: 25px;
-    }
-    
-    .welcome-icon-wrapper {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .welcome-icon {
-        font-size: 2.5rem;
-    }
-    
-    .welcome-container h1 {
-        font-size: 1.6rem;
-    }
-    
-    .welcome-desc {
-        font-size: 0.95rem;
-    }
+    .welcome-container { padding: 25px; }
+    .welcome-icon-wrapper { width: 100px; height: 100px; }
+    .welcome-icon { font-size: 2.5rem; }
+    .welcome-container h1 { font-size: 1.6rem; }
+    .welcome-desc { font-size: 0.95rem; }
 }
 

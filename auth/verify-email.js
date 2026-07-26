@@ -18,18 +18,18 @@ const safetyTimer = setTimeout(() => {
     }
 }, 5000);
 
-// التحقق من حالة المستخدم
+// التحقق من حالة المستخدم وتوجيهه إذا كان مفعلاً
 const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
     clearTimeout(safetyTimer);
     
-    // إذا تم تفعيل البريد وتسجيل الدخول، وجهه للترحيب
-    if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
+    // ✅ الحارس: إذا كان مسجلاً وبريده مفعل، وجهه للترحيب فوراً
+    if (session?.user?.email_confirmed_at) {
         const loader = document.getElementById('pageLoader');
         if (loader) {
             loader.innerHTML = `<div class="loader-logo"><i class="fas fa-cut"></i><span>BarberFlow Pro</span></div><div class="loader-spinner"></div><div class="loader-text">تم التفعيل! جاري الترحيب...</div>`;
             loader.classList.remove('hidden');
         }
-        setTimeout(() => window.location.replace(resolvePath('WELCOME')), 1500);
+        setTimeout(() => window.location.replace(resolvePath('WELCOME')), 1000);
         return;
     }
 
@@ -50,20 +50,12 @@ function initializeVerifyPage() {
     const resendBtn = document.getElementById('resendBtn');
     const emailDisplay = document.getElementById('emailDisplay');
     
-    // عرض البريد الإلكتروني من الجلسة الحالية أو التخزين المحلي
-    const currentUser = supabase.auth.getSession().then(({ data }) => {
+    // عرض البريد الإلكتروني من الجلسة الحالية
+    supabase.auth.getSession().then(({ data }) => {
         if (data.session?.user?.email) {
             emailDisplay.textContent = data.session.user.email;
         } else {
-            // إذا لم يكن هناك جلسة نشطة، قد يكون المستخدم قد أغلق المتصفح
-            // يمكن استرجاعه من localStorage إذا تم حفظه أثناء التسجيل
-            const pendingData = localStorage.getItem('bf-pending-profile');
-            if (pendingData) {
-                // نحتاج لجلب البريد من مكان ما، هنا نفترض أنه محفوظ
-                // في التطبيق الحقيقي يفضل حفظ البريد في localStorage عند التسجيل
-            } else {
-                emailDisplay.textContent = "بريدك الإلكتروني";
-            }
+            emailDisplay.textContent = "بريدك الإلكتروني";
         }
     });
 
@@ -76,18 +68,12 @@ function initializeVerifyPage() {
             try {
                 const { data: { user }, error } = await supabase.auth.getUser();
                 
-                if (error || !user) {
-                    throw new Error("No active session found");
-                }
+                if (error || !user) throw new Error("No active session");
                 
-                await supabase.auth.resend({
-                    type: 'signup',
-                    email: user.email
-                });
+                await supabase.auth.resend({ type: 'signup', email: user.email });
                 
                 showNotification("تم إرسال رابط التفعيل مجدداً!", "success");
                 
-                // عداد زمني لإعادة التفعيل
                 let seconds = 60;
                 const originalText = resendBtn.innerHTML;
                 const timer = setInterval(() => {

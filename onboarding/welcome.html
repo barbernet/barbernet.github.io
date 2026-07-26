@@ -3,69 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="مرحباً بك في BarberFlow Pro">
     <title>مرحباً بك | BarberFlow Pro</title>
-    <meta name="description" content="مرحباً بك في BarberFlow Pro - نبدأ بتخصيص تجربتك">
     
-    <!-- CSS المركزي -->
-    <link rel="stylesheet" href="../shared/styles/global.css">
-    <link rel="stylesheet" href="../shared/styles/notifications.css">
-    
-    <!-- CSS الخاص بالصفحة -->
-    <link rel="stylesheet" href="welcome.css">
+    <!-- الخطوط -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
+    <!-- التنسيقات المشتركة والحماية -->
+    <link rel="stylesheet" href="../shared/styles/global.css">
+    <link rel="stylesheet" href="../shared/styles/page-protection.css">
+    <link rel="stylesheet" href="../shared/styles/notifications.css">
+    
+    <!-- تنسيقات الصفحة -->
+    <link rel="stylesheet" href="./welcome.css">
 </head>
-<body data-theme="dark">
-    <div class="welcome-page">
-        <div class="welcome-container">
-            <!-- أيقونة الترحيب المتحركة -->
-            <div class="welcome-icon-wrapper">
-                <div class="welcome-icon">
-                    <i class="fas fa-cut"></i>
-                </div>
-                <div class="welcome-icon-glow"></div>
-            </div>
-            
-            <!-- رسالة الترحيب الديناميكية -->
-            <h1 id="welcomeTitle">مرحباً بك في BarberFlow Pro</h1>
-            <p class="welcome-desc" id="welcomeDesc">
-                جاري التعرف على حسابك...
-            </p>
-            
-            <!-- مؤشر التقدم -->
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-            
-            <!-- معلومات التوجيه -->
-            <div class="redirect-info" id="redirectInfo">
-                <i class="fas fa-spinner fa-spin"></i>
-                <span id="redirectText">جاري التوجيه...</span>
-            </div>
-            
-            <!-- رسالة الخطأ (مخفية افتراضياً) -->
-            <div class="error-container hidden" id="errorContainer">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p id="errorMessage">حدث خطأ في التعرف على حسابك</p>
-                <button class="retry-btn" id="retryBtn">
-                    <i class="fas fa-redo"></i>
-                    <span>إعادة المحاولة</span>
-                </button>
-            </div>
+<body>
+    
+    <!-- شاشة التحميل (Loader) -->
+    <div id="pageLoader" class="page-loader-overlay">
+        <div class="loader-logo">
+            <i class="fas fa-cut"></i>
+            <span>BarberFlow Pro</span>
         </div>
+        <div class="loader-spinner"></div>
+        <div class="loader-text">جاري التعرف على حسابك...</div>
     </div>
 
     <!-- حاوية التنبيهات -->
     <div id="notification-container"></div>
-
-    <!-- السكريبتات -->
-    <script type="module" src="../shared/utils/paths.js"></script>
-    <script type="module" src="../shared/js/notifications.js"></script>
-    <script type="module" src="welcome.js"></script>
+    
+    <!-- محتوى الصفحة (يظهر للحظات فقط) -->
+    <main class="welcome-page">
+        <div class="welcome-container">
+            <div class="welcome-icon-wrapper">
+                <div class="welcome-icon-glow"></div>
+                <div class="welcome-icon">
+                    <i class="fas fa-hand-sparkles"></i>
+                </div>
+            </div>
+            
+            <h1 id="welcomeTitle">مرحباً بك في BarberFlow Pro!</h1>
+            <p class="welcome-desc" id="welcomeDesc">جاري إعداد تجربتك الشخصية...</p>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <div class="redirect-info" id="redirectInfo">
+                <i class="fas fa-arrow-right"></i>
+                <span id="redirectText">جاري التوجيه...</span>
+            </div>
+            
+            <div class="error-container hidden" id="errorContainer">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p id="errorMessage">حدث خطأ في التعرف على حسابك</p>
+                <button class="retry-btn" id="retryBtn">إعادة المحاولة</button>
+            </div>
+        </div>
+    </main>
+    
+    <script type="module" src="./welcome.js"></script>
 </body>
 </html>
 

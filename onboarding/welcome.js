@@ -1,17 +1,51 @@
 /**
- * BarberFlow Pro - صفحة الترحيب الديناميكية
- * المسار: onboarding/welcome.js
- * الدور: التعرف على المستخدم وتوجيهه تلقائياً حسب دوره
- */
-
-import { auth, db } from "../config/firebase-init.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { showNotification } from "../shared/js/notifications.js";
-import { PATHS, resolvePath } from "../shared/utils/paths.js";
+BarberFlow Pro - صفحة الترحيب الديناميكية وحارس التوجيه
+المسار: onboarding/welcome.js
+*/
+import { supabase } from "../config/supabase-init.js";
+import { showNotification } from "../shared/utils/notifications.js";
+import { resolvePath } from "../shared/utils/paths.js";
 
 // ============================================
-// عناصر DOM
+// 1. نظام الحماية المدمج
+// ============================================
+const safetyTimer = setTimeout(() => {
+    console.warn("⚠️ Safety Timer Triggered: Redirecting to login.");
+    window.location.replace(resolvePath('LOGIN'));
+}, 5000);
+
+// ============================================
+// 2. رسائل وأيقونات الترحيب حسب الدور
+// ============================================
+const WELCOME_DATA = {
+    'customer': {
+        title: 'مرحباً بك، زبوننا المميز! ✨',
+        desc: 'نبدأ الآن بتخصيص تجربتك لاكتشاف أفضل الصالونات والخدمات',
+        icon: 'fa-user',
+        empty: resolvePath('ADD_CUSTOMER'),
+        setup: resolvePath('SETUP_CUSTOMER'),
+        profile: resolvePath('PROFILE_CUSTOMER')
+    },
+    'salon': {
+        title: 'مرحباً بك، صاحب الصالون! 💈',
+        desc: 'نبدأ الآن بإعداد صالونك الاحترافي وجعله جاهزاً لاستقبال الحجوزات',
+        icon: 'fa-cut',
+        empty: resolvePath('ADD_SALON'),
+        setup: resolvePath('SETUP_SALON'),
+        profile: resolvePath('PROFILE_SALON')
+    },
+    'store': {
+        title: 'مرحباً بك، صاحب المتجر! 🛍️',
+        desc: 'نبدأ الآن بإعداد متجرك لعرض منتجاتك وجذب العملاء',
+        icon: 'fa-store',
+        empty: resolvePath('ADD_STORE'),
+        setup: resolvePath('SETUP_STORE'),
+        profile: resolvePath('PROFILE_STORE')
+    }
+};
+
+// ============================================
+// 3. عناصر DOM
 // ============================================
 const welcomeTitle = document.getElementById('welcomeTitle');
 const welcomeDesc = document.getElementById('welcomeDesc');
@@ -23,247 +57,133 @@ const errorMessage = document.getElementById('errorMessage');
 const retryBtn = document.getElementById('retryBtn');
 
 // ============================================
-// رسائل الترحيب حسب الدور
+// 4. دوال مساعدة
 // ============================================
-const WELCOME_MESSAGES = {
-    'salon': {
-        title: 'مرحباً بك، صاحب الصالون! 💈',
-        desc: 'نبدأ الآن بإعداد صالونك الاحترافي وجعله جاهزاً لاستقبال الحجوزات',
-        redirect: 'جاري توجيهك لإعداد الصالون...',
-        icon: 'fa-cut'
-    },
-    'store': {
-        title: 'مرحباً بك، صاحب المتجر! 🛍️',
-        desc: 'نبدأ الآن بإعداد متجرك لعرض منتجاتك وجذب العملاء',
-        redirect: 'جاري توجيهك لإعداد المتجر...',
-        icon: 'fa-store'
-    },
-    'customer': {
-        title: 'مرحباً بك، زبوننا المميز! ',
-        desc: 'نبدأ الآن بتخصيص تجربتك لاكتشاف أفضل الصالونات والخدمات',
-        redirect: 'جاري توجيهك لإعداد ملفك الشخصي...',
-        icon: 'fa-user'
-    }
-};
-
-// ============================================
-// الوجهات حسب الدور
-// ============================================
-const DESTINATIONS = {
-    'salon': PATHS.ADD_SALON,
-    'store': PATHS.ADD_STORE,
-    'customer': PATHS.ADD_CUSTOMER
-};
-
-// ============================================
-// المتغيرات العامة
-// ============================================
-let currentUserData = null;
-let redirectTimeout = null;
-
-// ============================================
-// دوال مساعدة
-// ============================================
-
-/**
- * تحديث واجهة المستخدم حسب الدور
- */
-function updateUI(role) {
-    const messages = WELCOME_MESSAGES[role] || WELCOME_MESSAGES['customer'];
+function updateUI(data) {
+    if (welcomeTitle) welcomeTitle.textContent = data.title;
+    if (welcomeDesc) welcomeDesc.textContent = data.desc;
+    if (redirectText) redirectText.textContent = 'جاري التوجيه...';
     
-    if (welcomeTitle) {
-        welcomeTitle.textContent = messages.title;
-    }
-    
-    if (welcomeDesc) {
-        welcomeDesc.textContent = messages.desc;
-    }
-    
-    if (redirectText) {
-        redirectText.textContent = messages.redirect;
-    }
-    
-    // تحديث الأيقونة
     const iconElement = document.querySelector('.welcome-icon i');
-    if (iconElement) {
-        iconElement.className = `fas ${messages.icon}`;
-    }
+    if (iconElement) iconElement.className = `fas ${data.icon}`;
 }
 
-/**
- * بدء شريط التقدم
- */
-function startProgressBar(duration = 3000) {
+function startProgressBar(duration = 2000) {
     if (!progressBar) return;
-    
     progressBar.style.transition = 'none';
     progressBar.style.width = '0%';
-    
     setTimeout(() => {
         progressBar.style.transition = `width ${duration}ms linear`;
         progressBar.style.width = '100%';
     }, 50);
 }
 
-/**
- * عرض رسالة خطأ
- */
 function showError(message) {
     if (redirectInfo) redirectInfo.classList.add('hidden');
     if (errorContainer) errorContainer.classList.remove('hidden');
     if (errorMessage) errorMessage.textContent = message;
 }
 
-/**
- * إخفاء رسالة الخطأ
- */
 function hideError() {
     if (errorContainer) errorContainer.classList.add('hidden');
     if (redirectInfo) redirectInfo.classList.remove('hidden');
 }
 
-/**
- * التوجيه إلى الصفحة المناسبة
- */
-function redirectToDestination(role) {
-    const destination = DESTINATIONS[role];
-    
-    if (!destination) {
-        showError('دور المستخدم غير محدد');
-        return;
-    }
-    
-    // حفظ البيانات في sessionStorage
-    sessionStorage.setItem('userRole', role);
-    sessionStorage.setItem('userUid', currentUserData.uid);
-    sessionStorage.setItem('lastActivePage', 'welcome');
-    
-    showNotification('جاري توجيهك لصفحة الإعداد...', 'info');
-    
-    // التوجيه بعد تأخير بسيط
-    setTimeout(() => {
-        window.location.href = resolvePath(destination);
-    }, 500);
-}
-
-/**
- * التحقق من حالة المستخدم وجلب بياناته
- */
+// ============================================
+// 5. المنطق المركزي للتوجيه (الحارس الذكي)
+// ============================================
 async function checkUserAndRedirect() {
     try {
-        // التحقق من تسجيل الدخول
-        const user = auth.currentUser;
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
-        if (!user) {
-            showError('لم يتم العثور على جلسة نشطة. يرجى تسجيل الدخول مرة أخرى.');
-            setTimeout(() => {
-                window.location.replace(resolvePath(PATHS.LOGIN));
-            }, 3000);
+        // ❌ الحالة 1: غير مسجل → توجيه إلى Login
+        if (sessionError || !session?.user) {
+            showNotification("يرجى تسجيل الدخول للمتابعة", "warning");
+            setTimeout(() => window.location.replace(resolvePath('LOGIN')), 1500);
             return;
         }
-        
-        // جلب بيانات المستخدم من Firestore
-        const userDocRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userDocRef);
-        
-        if (!userDoc.exists()) {
+
+        const user = session.user;
+
+        // ❌ الحالة 2: مسجل لكن البريد غير مفعل → توجيه إلى Verify Email
+        if (!user.email_confirmed_at) {
+            showNotification("يرجى تفعيل بريدك الإلكتروني أولاً", "warning");
+            setTimeout(() => window.location.replace(resolvePath('VERIFY_EMAIL')), 1500);
+            return;
+        }
+
+        // ✅ جلب بيانات المستخدم من جدول users
+        const { data: userData, error: dbError } = await supabase
+            .from('users')
+            .select('role, onboarding_status, full_name')
+            .eq('id', user.id)
+            .single();
+
+        if (dbError || !userData) {
             showError('لم يتم العثور على بيانات الحساب. يرجى إعادة التسجيل.');
-            setTimeout(() => {
-                window.location.replace(resolvePath(PATHS.LOGIN));
-            }, 3000);
+            setTimeout(() => window.location.replace(resolvePath('REGISTER')), 3000);
             return;
         }
-        
-        // حفظ بيانات المستخدم
-        currentUserData = {
-            uid: user.uid,
-            ...userDoc.data()
-        };
-        
-        const role = currentUserData.role || 'customer';
-        
-        // التحقق من إكمال الإعداد مسبقاً
-        const onboardingStatus = currentUserData.onboardingStatus;
-        
-        if (onboardingStatus === 'basic_done' || onboardingStatus === 'completed') {
-            // المستخدم أكمل الإعداد مسبقاً، توجيهه للصفحة الرئيسية
-            welcomeTitle.textContent = 'مرحباً بعودتك! ';
-            welcomeDesc.textContent = 'تم التعرف على حسابك. جاري توجيهك للصفحة الرئيسية...';
-            redirectText.textContent = 'جاري التوجيه للصفحة الرئيسية...';
-            
-            setTimeout(() => {
-                window.location.href = resolvePath(PATHS.INDEX);
-            }, 2000);
+
+        const role = userData.role || 'customer';
+        const status = userData.onboarding_status || 'empty';
+        const welcomeData = WELCOME_DATA[role] || WELCOME_DATA['customer'];
+
+        // تحديث الواجهة
+        updateUI(welcomeData);
+        startProgressBar(2000);
+
+        // ✅ الحالة 3: حساب فارغ (جديد) → توجيه إلى Add Page
+        if (status === 'empty' || !status) {
+            redirectText.textContent = 'جاري توجيهك لإكمال البيانات الأولية...';
+            setTimeout(() => window.location.replace(welcomeData.empty), 2000);
             return;
         }
-        
-        // تحديث الواجهة حسب الدور
-        updateUI(role);
-        
-        // بدء شريط التقدم
-        startProgressBar(3000);
-        
-        // التوجيه بعد 3 ثوانٍ
-        redirectTimeout = setTimeout(() => {
-            redirectToDestination(role);
-        }, 3000);
-        
+
+        // ✅ الحالة 4: حساب غير مكتمل → توجيه إلى Setup Page
+        if (status === 'incomplete') {
+            redirectText.textContent = 'جاري توجيهك لإكمال إعداد الحساب...';
+            setTimeout(() => window.location.replace(welcomeData.setup), 2000);
+            return;
+        }
+
+        // ✅ الحالة 5: حساب مكتمل → توجيه إلى Profile
+        if (status === 'completed') {
+            redirectText.textContent = 'جاري توجيهك لملفك الشخصي...';
+            setTimeout(() => window.location.replace(welcomeData.profile), 2000);
+            return;
+        }
+
+        // fallback آمن
+        window.location.replace(welcomeData.profile);
+
     } catch (error) {
         console.error('خطأ في التحقق من المستخدم:', error);
         showError('حدث خطأ في التعرف على حسابك. يرجى المحاولة مرة أخرى.');
+    } finally {
+        clearTimeout(safetyTimer);
     }
 }
 
 // ============================================
-// مراقبة حالة المصادقة
+// 6. التشغيل عند تحميل الصفحة
 // ============================================
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // المستخدم مسجل، التحقق من البيانات
-        checkUserAndRedirect();
-    } else {
-        // المستخدم غير مسجل
-        showError('انتهت الجلسة. جاري توجيهك لصفحة تسجيل الدخول...');
-        setTimeout(() => {
-            window.location.replace(resolvePath(PATHS.LOGIN));
-        }, 2000);
+document.addEventListener('DOMContentLoaded', () => {
+    // إزالة Loader وإظهار المحتوى للحظات قبل التوجيه
+    const loader = document.getElementById('pageLoader');
+    if (loader) {
+        loader.classList.add('hidden');
+        setTimeout(() => loader.remove(), 400);
     }
+    
+    checkUserAndRedirect();
 });
 
-// ============================================
 // زر إعادة المحاولة
-// ============================================
 if (retryBtn) {
     retryBtn.onclick = () => {
         hideError();
         checkUserAndRedirect();
     };
 }
-
-// ============================================
-// حماية من فقدان الجلسة
-// ============================================
-window.addEventListener('beforeunload', () => {
-    if (currentUserData) {
-        sessionStorage.setItem('lastActivePage', 'welcome');
-        sessionStorage.setItem('sessionTimestamp', Date.now().toString());
-    }
-});
-
-// ============================================
-// التحقق من صلاحية الجلسة عند التحميل
-// ============================================
-window.addEventListener('load', () => {
-    const timestamp = sessionStorage.getItem('sessionTimestamp');
-    
-    if (timestamp) {
-        const elapsed = Date.now() - parseInt(timestamp);
-        const maxSessionTime = 30 * 60 * 1000; // 30 دقيقة
-        
-        if (elapsed > maxSessionTime) {
-            console.warn('الجلسة منتهية الصلاحية');
-            sessionStorage.clear();
-        }
-    }
-});
 
