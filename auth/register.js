@@ -23,6 +23,7 @@ const safetyTimer = setTimeout(() => {
 const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
     clearTimeout(safetyTimer);
     
+    // إذا كان المستخدم مسجلاً دخوله بالفعل، وجهه لصفحته الشخصية
     if (event === 'SIGNED_IN' && session?.user) {
         try {
             const { data: userDoc, error } = await supabase
@@ -55,6 +56,7 @@ const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event,
         }
     }
 
+    // إظهار الصفحة للمستخدمين غير المسجلين
     const loader = document.getElementById('pageLoader');
     if (loader) {
         loader.classList.add('hidden');
@@ -71,7 +73,7 @@ function initializeRegisterPage() {
     const registerForm = document.getElementById('registerForm');
     const submitBtn = document.getElementById('submitBtn');
     const fullNameInput = document.getElementById('fullName');
-    const identifierInput = document.getElementById('identifier');
+    const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const matchIndicator = document.getElementById('matchIndicator');
@@ -129,12 +131,17 @@ function initializeRegisterPage() {
             e.preventDefault();
             
             const fullName = sanitizeText(fullNameInput.value.trim());
-            const identifier = identifierInput.value.trim();
+            const email = sanitizeEmail(emailInput.value.trim());
             const password = passwordInput.value;
             const selectedRole = document.querySelector('input[name="role"]:checked').value;
             
+            // التحقق من المدخلات
             if (!fullName || fullName.length < 3) {
                 return showNotification("يرجى إدخال اسم صحيح (3 أحرف على الأقل)", "error");
+            }
+            
+            if (!email) {
+                return showNotification("صيغة البريد الإلكتروني غير صحيحة", "error");
             }
             
             if (!checkPasswordMatch()) {
@@ -149,48 +156,31 @@ function initializeRegisterPage() {
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء الحساب...';
             
             try {
-                const isEmail = identifier.includes('@');
+                // ✅ تسجيل الدخول بالبريد فقط حالياً
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: fullName,
+                            role: selectedRole
+                        },
+                        // ✅ تحديد صفحة العودة بعد تفعيل البريد
+                        emailRedirectTo: window.location.origin + resolvePath('WELCOME')
+                    }
+                });
                 
-                if (isEmail) {
-                    const sanitizedEmail = sanitizeEmail(identifier);
-                    if (!sanitizedEmail) throw new Error("invalid_email");
-                    
-                    const { data, error } = await supabase.auth.signUp({
-                        email: sanitizedEmail,
-                        password: password,
-                        options: {
-                            data: {
-                                full_name: fullName,
-                                role: selectedRole
-                            }
-                        }
-                    });
-                    
-                    if (error) throw error;
-                    
-                    showNotification("تم إنشاء الحساب بنجاح! يرجى تفعيل بريدك الإلكتروني.", "success");
-                    
-                    localStorage.setItem('bf-pending-profile', JSON.stringify({
-                        uid: data.user.id,
-                        role: selectedRole,
-                        fullName: fullName
-                    }));
-                    
-                    setTimeout(() => {
-                        window.location.href = resolvePath('LOGIN');
-                    }, 3000);
-                    
-                } else {
-                    throw new Error("phone_disabled");
-                }
+                if (error) throw error;
+                
+                // ✅ التوجيه المباشر لصفحة الانتظار بدلاً من LOGIN
+                window.location.href = resolvePath('VERIFY_EMAIL');
                 
             } catch (error) {
                 console.error("Registration error:", error);
                 let msg = "فشل إنشاء الحساب، يرجى المحاولة مرة أخرى.";
                 
-                if (error.message === "invalid_email") msg = "صيغة البريد الإلكتروني غير صحيحة";
+                if (error.message.includes("invalid_email")) msg = "صيغة البريد الإلكتروني غير صحيحة";
                 if (error.code === "User already registered") msg = "هذا البريد الإلكتروني مستخدم مسبقاً";
-                if (error.message === "phone_disabled") msg = "التسجيل برقم الهاتف قيد التطوير حالياً، يرجى استخدام البريد الإلكتروني.";
                 
                 showNotification(msg, "error");
             } finally {

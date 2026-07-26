@@ -1,0 +1,103 @@
+/* ==========================================================================
+BarberFlow Pro - صفحة تأكيد البريد الإلكتروني
+المسار: auth/verify-email.css
+========================================================================== */
+
+.verify-container {
+    text-align: center;
+    padding: 50px 40px;
+}
+
+.verify-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    color: var(--brand-accent);
+    font-size: 2.5rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+.verify-container h2 {
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.verify-desc {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.email-display {
+    background: var(--bg-tertiary);
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    color: var(--brand-accent);
+    display: inline-block;
+    margin-bottom: 30px;
+    border: 1px dashed var(--border-gold);
+}
+
+.resend-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.resend-hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+}
+
+.resend-btn {
+    width: auto;
+    padding: 10px 25px;
+    font-size: 0.9rem;
+}
+
+.verify-footer {
+    margin-top: 30px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.back-link {
+    display: block;
+    margin-top: 10px;
+    color: var(--brand-accent);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color var(--transition-fast);
+}
+
+.back-link:hover {
+    color: var(--brand-accent-light);
+}
+
+@media (max-width: 480px) {
+    .verify-container {
+        padding: 30px 20px;
+    }
+    
+    .verify-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+}
+
