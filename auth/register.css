@@ -1,9 +1,7 @@
 /* ==========================================================================
-BarberFlow Pro - صفحة إنشاء حساب جديد
-المسار: auth/register.css
+BarberFlow Pro - صفحة تسجيل الدخول
+المسار: auth/login.css
 ========================================================================== */
-
-/* استخدام نفس أساسيات login.css للحفاظ على التناسق */
 .auth-page {
     min-height: 100vh;
     display: flex;
@@ -44,10 +42,7 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     z-index: 1;
 }
 
-.auth-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
+.auth-header { text-align: center; margin-bottom: 30px; }
 
 .auth-logo {
     display: inline-flex;
@@ -60,77 +55,12 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     text-decoration: none;
 }
 
-.auth-header h2 {
-    color: var(--text-primary);
-    font-size: 1.6rem;
-    margin-bottom: 8px;
-}
+.auth-logo i { font-size: 1.8rem; }
 
-.auth-header p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-}
+.auth-header h2 { color: var(--text-primary); font-size: 1.6rem; margin-bottom: 8px; }
+.auth-header p { color: var(--text-secondary); font-size: 0.95rem; }
 
-/* ============================================
-اختيار الدور
-============================================ */
-.role-selector {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 25px;
-}
-
-.role-option {
-    cursor: pointer;
-}
-
-.role-option input[type="radio"] {
-    display: none;
-}
-
-.role-card {
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 15px 10px;
-    text-align: center;
-    transition: all var(--transition-fast);
-    background: var(--bg-tertiary);
-}
-
-.role-card i {
-    font-size: 1.5rem;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-    display: block;
-    transition: color var(--transition-fast);
-}
-
-.role-card span {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-}
-
-.role-option input[type="radio"]:checked + .role-card {
-    border-color: var(--brand-accent);
-    background: rgba(212, 175, 55, 0.1);
-}
-
-.role-option input[type="radio"]:checked + .role-card i {
-    color: var(--brand-accent);
-}
-
-.role-option:hover .role-card {
-    border-color: var(--brand-accent-light);
-}
-
-/* ============================================
-حقول الإدخال
-============================================ */
-.input-group {
-    margin-bottom: 20px;
-}
+.input-group { margin-bottom: 20px; }
 
 .input-group label {
     display: flex;
@@ -142,10 +72,7 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     font-weight: 600;
 }
 
-.input-group label i {
-    color: var(--brand-accent);
-    font-size: 0.85rem;
-}
+.input-group label i { color: var(--brand-accent); font-size: 0.85rem; }
 
 .input-group input {
     width: 100%;
@@ -166,9 +93,7 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
 }
 
-.password-wrapper {
-    position: relative;
-}
+.password-wrapper { position: relative; }
 
 .toggle-password {
     position: absolute;
@@ -180,26 +105,67 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     color: var(--text-muted);
     cursor: pointer;
     padding: 5px;
+    transition: color var(--transition-fast);
 }
 
-.match-indicator {
-    display: block;
-    margin-top: 8px;
-    font-size: 0.8rem;
+.toggle-password:hover { color: var(--brand-accent); }
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    user-select: none;
+}
+
+.remember-me input[type="checkbox"] { display: none; }
+
+.checkmark {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.remember-me input[type="checkbox"]:checked + .checkmark {
+    background: var(--brand-accent);
+    border-color: var(--brand-accent);
+}
+
+.remember-me input[type="checkbox"]:checked + .checkmark::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: #000;
+    font-size: 0.7rem;
+}
+
+.forgot-link {
+    font-size: 0.85rem;
+    color: var(--brand-accent);
+    text-decoration: none;
     font-weight: 600;
+    transition: color var(--transition-fast);
 }
 
-.match-indicator.match {
-    color: #10b981;
-}
+.forgot-link:hover { color: var(--brand-accent-light); text-decoration: underline; }
 
-.match-indicator.no-match {
-    color: #ef4444;
-}
-
-/* ============================================
-الأزرار
-============================================ */
 .auth-btn {
     width: 100%;
     padding: 16px;
@@ -224,10 +190,7 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
 }
 
-.auth-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
+.auth-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
 
 .google-btn {
     width: 100%;
@@ -247,11 +210,7 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     transition: all var(--transition-fast);
 }
 
-.google-btn.disabled-btn {
-    opacity: 0.5;
-    cursor: not-allowed;
-    filter: grayscale(100%);
-}
+.google-btn.disabled-btn { opacity: 0.5; cursor: not-allowed; filter: grayscale(100%); }
 
 .divider {
     text-align: center;
@@ -272,31 +231,13 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     z-index: 1;
 }
 
-.divider span {
-    background: var(--bg-secondary);
-    padding: 0 15px;
-    position: relative;
-    z-index: 2;
-}
+.divider span { background: var(--bg-secondary); padding: 0 15px; position: relative; z-index: 2; }
 
-.auth-footer {
-    text-align: center;
-    margin-top: 25px;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-}
+.auth-footer { text-align: center; margin-top: 25px; color: var(--text-secondary); font-size: 0.95rem; }
+.auth-footer a { color: var(--brand-accent); text-decoration: none; font-weight: 600; }
+.auth-footer a:hover { color: var(--brand-accent-light); }
 
-.auth-footer a {
-    color: var(--brand-accent);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.back-home-container {
-    margin-top: 20px;
-    border-top: 1px solid var(--border-color);
-    padding-top: 20px;
-}
+.back-home-container { margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px; }
 
 .outline-btn {
     background: transparent;
@@ -315,56 +256,10 @@ BarberFlow Pro - صفحة إنشاء حساب جديد
     transition: all var(--transition-fast);
 }
 
-.outline-btn:hover {
-    background: var(--brand-accent);
-    color: #000;
-}
+.outline-btn:hover { background: var(--brand-accent); color: #000; }
 
 @media (max-width: 480px) {
-    .auth-container {
-        padding: 25px;
-        border: none;
-        box-shadow: none;
-        background: transparent;
-    }
-    
-    .role-selector {
-        grid-template-columns: 1fr;
-    }
+    .auth-container { padding: 25px; border: none; box-shadow: none; background: transparent; }
+    .form-options { flex-direction: column; align-items: flex-start; }
 }
 
-/* ============================================
-زر Google
-============================================ */
-.google-btn {
-    width: 100%;
-    padding: 14px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
-    border-radius: var(--radius-md);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    font-family: 'Cairo', sans-serif;
-    font-size: 0.95rem;
-    transition: all var(--transition-fast);
-}
-
-.google-btn:hover:not(:disabled) {
-    background: var(--bg-accent);
-    border-color: var(--brand-accent);
-}
-
-.google-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.google-btn img {
-    width: 20px;
-    height: 20px;
-}

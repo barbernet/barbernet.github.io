@@ -12,18 +12,18 @@ export const PATHS = {
     NOT_FOUND: '/404.html',
 
     // ============================================
-    // المصادقة (Authentication)
+    // المصادقة والترحيل (Authentication & Onboarding)
     // ============================================
     LOGIN: '/auth/login.html',
     REGISTER: '/auth/register.html',
     FORGOT_PASSWORD: '/auth/forgot-password.html',
     RESET_PASSWORD: '/auth/reset-password.html',
     VERIFY_EMAIL: '/auth/verify-email.html',
+    WELCOME: '/auth/welcome.html', // ✅ تم التحديث: نقلت إلى مجلد auth
 
     // ============================================
-    // الترحيب والإعداد (Onboarding)
+    // الإعداد الأولي (Onboarding Setup)
     // ============================================
-    WELCOME: '/onboarding/welcome.html',
     ADD_SALON: '/onboarding/add-salon.html',
     ADD_STORE: '/onboarding/add-store.html',
     ADD_CUSTOMER: '/onboarding/add-customer.html',
@@ -60,7 +60,7 @@ export const PATHS = {
     // ============================================
     // لوحة التحكم (Dashboard) - الرئيسية
     // ============================================
-    DASHBOARD: '/dashboard/index.html', // ملاحظة: تأكد من وجود index.html في dashboard أو عدله لـ staff/index.html حسب رغبتك
+    DASHBOARD: '/dashboard/index.html',
 
     // ============================================
     // لوحة التحكم - الإعدادات (مجلد settings/)
@@ -77,7 +77,7 @@ export const PATHS = {
     DASHBOARD_PRODUCTS: '/dashboard/products/index.html',
     DASHBOARD_ORDERS: '/dashboard/orders/index.html',
     DASHBOARD_STAFF: '/dashboard/staff/index.html',
-    
+
     // ============================================
     // لوحة التحكم - الطاقم (Staff) - صفحات جديدة
     // ============================================
@@ -113,18 +113,19 @@ export const PATHS = {
 export function resolvePath(key) {
     const absolutePath = PATHS[key];
     if (!absolutePath) return '#';
-    
+
     // حساب عمق الصفحة الحالية
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const depth = pathSegments.length - 1;
-    
+
     // إزالة الـ / الأولى من المسار المطلق
     const cleanPath = absolutePath.substring(1);
-    
+
     // بناء المسار النسبي
     if (depth <= 0) {
         return cleanPath;
     }
+
     const prefix = '../'.repeat(depth);
     return prefix + cleanPath;
 }

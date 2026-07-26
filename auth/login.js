@@ -11,7 +11,7 @@ import { sanitizeEmail, sanitizePhone } from "../middleware/validation/index.js"
 // 1. نظام الحماية المدمج (بدون CSS visibility:hidden)
 // ============================================
 const safetyTimer = setTimeout(() => {
-    console.warn("⚠️ Safety Timer Triggered: Revealing login page.");
+    console.warn("️ Safety Timer Triggered: Revealing login page.");
     const loader = document.getElementById('pageLoader');
     if (loader) {
         loader.classList.add('hidden');
@@ -19,36 +19,27 @@ const safetyTimer = setTimeout(() => {
     }
 }, 5000);
 
-// التحقق من حالة المستخدم
+// التحقق من حالة المستخدم وتوجيهه إذا كان مسجلاً
 const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
     clearTimeout(safetyTimer);
     
     if (session?.user) {
         try {
-            // ✅ استخدام اسم الجدول الصحيح في Supabase: profiles
-            const { data: userDoc, error } = await supabase
+            // ✅ استخدام جدول profiles حسب دليل Supabase
+            const { data: profile, error } = await supabase
                 .from('profiles')
                 .select('role')
                 .eq('id', session.user.id)
                 .single();
 
-            if (!error && userDoc) {
-                const routes = {
-                    'salon': resolvePath('PROFILE_SALON'),
-                    'store': resolvePath('PROFILE_STORE'),
-                    'customer': resolvePath('PROFILE_CUSTOMER')
-                };
-                const targetRoute = routes[userDoc.role] || resolvePath('INDEX');
-                
-                showNotification("أنت مسجل دخولك بالفعل، جاري توجيهك...", "info");
-                
+            if (!error && profile) {
+                // توجيه جميع المستخدمين المسجلين إلى welcome للتحقق من الحالة
                 const loader = document.getElementById('pageLoader');
                 if (loader) {
                     loader.innerHTML = `<div class="loader-logo"><i class="fas fa-cut"></i><span>BarberFlow Pro</span></div><div class="loader-spinner"></div><div class="loader-text">جاري توجيهك...</div>`;
                     loader.classList.remove('hidden');
                 }
-                
-                setTimeout(() => window.location.replace(targetRoute), 1500);
+                setTimeout(() => window.location.replace(resolvePath('WELCOME')), 1000);
                 return;
             }
         } catch (error) {
@@ -95,32 +86,9 @@ function initializeLoginPage() {
         }
     }
 
-    async function routeUserByRole(uid) {
-        try {
-            const { data: userDoc, error } = await supabase
-                .from('profiles')
-                .select('role')
-                .eq('id', uid)
-                .single();
-
-            if (!error && userDoc) {
-                const routes = {
-                    'salon': resolvePath('PROFILE_SALON'),
-                    'customer': resolvePath('PROFILE_CUSTOMER'),
-                    'store': resolvePath('PROFILE_STORE')
-                };
-                window.location.replace(routes[userDoc.role] || resolvePath('INDEX'));
-            }
-        } catch (error) {
-            console.error("Error routing user:", error);
-            showNotification("حدث خطأ في توجيه الحساب", "error");
-        }
-    }
-
-    // ✅ إصلاح زر إظهار/إخفاء كلمة المرور
+    // ✅ إصلاح زر إظهار/إخفاء كلمة المرور باستخدام closest
     document.querySelectorAll('.toggle-password').forEach(btn => {
         btn.addEventListener('click', () => {
-            // استخدام closest للعثور على الحقل المرتبط بدقة
             const wrapper = btn.closest('.password-wrapper');
             const input = wrapper ? wrapper.querySelector('input') : null;
             const icon = btn.querySelector('i');
@@ -165,7 +133,8 @@ function initializeLoginPage() {
                     if (error) throw error;
                     
                     handleRememberMe(sanitizedEmail);
-                    await routeUserByRole(data.user.id);
+                    // عند نجاح التسجيل، سيتم تفعيل onAuthStateChange تلقائياً وتوجيه المستخدم لـ welcome
+                    
                 } else {
                     showNotification("تسجيل الدخول برقم الهاتف قيد التطوير حالياً", "warning");
                     submitBtn.disabled = false;

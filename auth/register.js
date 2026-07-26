@@ -25,19 +25,19 @@ const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event,
     
     if (session?.user) {
         try {
-            const { data: userDoc, error } = await supabase
+            const { data: profile, error } = await supabase
                 .from('profiles')
                 .select('role')
                 .eq('id', session.user.id)
                 .single();
 
-            if (!error && userDoc) {
+            if (!error && profile) {
                 const routes = {
                     'salon': resolvePath('PROFILE_SALON'),
                     'store': resolvePath('PROFILE_STORE'),
                     'customer': resolvePath('PROFILE_CUSTOMER')
                 };
-                const targetRoute = routes[userDoc.role] || resolvePath('INDEX');
+                const targetRoute = routes[profile.role] || resolvePath('INDEX');
                 
                 showNotification("أنت مسجل دخولك بالفعل، جاري توجيهك...", "info");
                 

@@ -20,21 +20,150 @@ BarberFlow Pro هي منصة رقمية متكاملة لقطاع الحلاقة
 تم استبدال Firebase تماماً بـ Supabase. يجب استخدام `config/supabase-init.js` للاتصال، واستخدام دوال Supabase للمصادقة وقاعدة البيانات والتخزين. لا يُسمح باستخدام أي مكتبات تابعة لـ Firebase.
 
 ### د. توحيد أسماء المتغيرات والحقول
-يجب تطابق أسماء المتغيرات في كود JavaScript/TypeScript تماماً مع أسماء الحقول المخزنة في قاعدة بيانات Supabase. 
+يجب تطابق أسماء المتغيرات في كود JavaScript/TypeScript تماماً مع أسماء الحقول المخزنة في قاعدة بيانات Supabase.
 - ما يتم تخزينه في قاعدة البيانات هو نفس الاسم الذي يتم جلبه أو التعديل عليه في الواجهة الأمامية.
 - يمنع هذا الاختلاف تجنب الأخطاء المنطقية والبحث عن حقول بأسماء غير موجودة.
 
-## 3. هيكلية الملفات الكاملة (بناءً على الهيكلية الجديدة)
+## 3. مرجع قاعدة البيانات (Supabase Schema Reference)
+
+فيما يلي الجداول الأساسية وأسماء الحقول الدقيقة التي يجب استخدامها في الكود (`select`, `insert`, `update`).
+
+### 3.1 جدول `profiles` (الملفات الشخصية للمستخدمين)
+يرتبط مباشرة بجدول المصادقة `auth.users`. يتم إنشاؤه تلقائياً عبر Trigger عند التسجيل.
+
+| اسم الحقل (Field Name) | النوع (Type) | الوصف والاستخدام في الكود |
+| :--- | :--- | :--- |
+| `id` | UUID | المعرف الرئيسي. يساوي `user.uid` من المصادقة. |
+| `full_name` | TEXT | الاسم الكامل للمستخدم. يستخدم في عرض البروفايل. |
+| `role` | ENUM | دور المستخدم. القيم المسموحة: `'customer'`, `'salon'`, `'store'`. |
+| `phone` | TEXT | رقم الهاتف (فريد). يستخدم لتسجيل الدخول أو التواصل. |
+| `avatar_url` | TEXT | رابط صورة الملف الشخصي. |
+| `onboarding_status` | ENUM | حالة الإعداد الأولي. القيم: `'empty'`, `'incomplete'`, `'completed'`. |
+| `created_at` | TIMESTAMPTZ | تاريخ الإنشاء (تلقائي). |
+| `updated_at` | TIMESTAMPTZ | تاريخ آخر تعديل (تلقائي). |
+
+> ⚠️ **ملاحظة:** عند التسجيل، يجب تمرير `full_name` و `role` داخل `options.data` في دالة `supabase.auth.signUp` ليتم التقاطها بواسطة الـ Trigger وإنشاء السجل في هذا الجدول.
+
+### 3.2 جدول `businesses` (الشركات / الصالونات / المتاجر)
+يمثل الكيان التجاري الرئيسي.
+
+| اسم الحقل (Field Name) | النوع (Type) | الوصف والاستخدام في الكود |
+| :--- | :--- | :--- |
+| `id` | UUID | معرف النشاط التجاري. |
+| `owner_id` | UUID | معرف المالك (يرتبط بـ `profiles.id`). |
+| `name` | TEXT | اسم الصالون أو المتجر. |
+| `type` | ENUM | نوع النشاط: `'salon'` أو `'store'`. |
+| `description` | TEXT | وصف تفصيلي للنشاط. |
+| `city` | TEXT | المدينة. |
+| `address` | TEXT | العنوان التفصيلي. |
+| `phone` | TEXT | هاتف التواصل الخاص بالنشاط. |
+| `email` | TEXT | البريد الإلكتروني الرسمي للنشاط. |
+| `logo_url` | TEXT | رابط شعار النشاط. |
+| `cover_url` | TEXT | رابط صورة الغلاف. |
+| `working_hours` | JSONB | أوقات العمل. مثال: `{"open": "09:00", "close": "21:00", "days": ["sun","mon"]}` |
+| `status` | ENUM | حالة النشاط: `'inactive'`, `'active'`, `'suspended'`. |
+| `is_verified` | BOOLEAN | هل تم توثيق الحساب؟ |
+| `rating` | DECIMAL | متوسط التقييم (0.00 - 5.00). |
+| `reviews_count` | INT | عدد التقييمات الكلي. |
+
+### 3.3 جدول `branches` (الفروع)
+يدعم تعدد الفروع للصالونات والمتاجر.
+
+| اسم الحقل (Field Name) | النوع (Type) | الوصف والاستخدام في الكود |
+| :--- | :--- | :--- |
+| `id` | UUID | معرف الفرع. |
+| `business_id` | UUID | يرتبط بجدول `businesses`. |
+| `name` | TEXT | اسم الفرع. |
+| `city` | TEXT | مدينة الفرع. |
+| `address` | TEXT | عنوان الفرع. |
+| `phone` | TEXT | هاتف الفرع. |
+| `manager_id` | UUID | مدير الفرع (يرتبط بـ `profiles.id`). |
+| `working_hours` | JSONB | أوقات عمل الفرع (يمكن أن تختلف عن الرئيسي). |
+| `status` | ENUM | حالة الفرع: `'active'`, `'inactive'`. |
+
+### 3.4 جدول `salon_stores` (متاجر الصالونات - اختياري)
+يسمح للصالون ببيع منتجاته.
+
+| اسم الحقل (Field Name) | النوع (Type) | الوصف والاستخدام في الكود |
+| :--- | :--- | :--- |
+| `id` | UUID | معرف متجر الصالون. |
+| `salon_id` | UUID | يرتبط بجدول `businesses` (حيث type='salon'). فريد لكل صالون. |
+| `name` | TEXT | اسم المتجر (افتراضي: 'متجر الصالون'). |
+| `description` | TEXT | وصف المتجر. |
+| `status` | ENUM | حالة المتجر: `'inactive'`, `'active'`. |
+
+### 3.5 جدول `products` (المنتجات)
+للمنتجات العامة أو منتجات المتاجر/صالونات.
+
+| اسم الحقل (Field Name) | النوع (Type) | الوصف والاستخدام في الكود |
+| :--- | :--- | :--- |
+| `id` | UUID | معرف المنتج. |
+| `seller_id` | UUID | معرف المتجر المستقل (يرتبط بـ `businesses`). |
+| `salon_store_id` | UUID | معرف متجر الصالون (يرتبط بـ `salon_stores`). |
+| `name` | TEXT | اسم المنتج. |
+| `description` | TEXT | وصف المنتج. |
+| `price` | DECIMAL | سعر المنتج. |
+| `stock_quantity` | INT | كمية المخزون المتاحة. |
+| `image_url` | TEXT | رابط صورة المنتج. |
+| `category` | TEXT | تصنيف المنتج. |
+| `is_available` | BOOLEAN | هل المنتج متاح للبيع؟ |
+
+### 3.6 جدول `services` (الخدمات)
+خاصة بالصالونات وفروعها.
+
+| اسم الحقل (Field Name) | النوع (Type) | الوصف والاستخدام في الكود |
+| :--- | :--- | :--- |
+| `id` | UUID | معرف الخدمة. |
+| `business_id` | UUID | يرتبط بجدول `businesses` (حيث type='salon'). |
+| `branch_id` | UUID | الفرع المرتبط (NULL تعني جميع الفروع). |
+| `name` | TEXT | اسم الخدمة. |
+| `description` | TEXT | وصف الخدمة. |
+| `price` | DECIMAL | سعر الخدمة. |
+| `duration_min` | INT | مدة الخدمة بالدقائق. |
+| `category` | TEXT | تصنيف الخدمة. |
+| `is_available` | BOOLEAN | هل الخدمة متاحة للحجز؟ |
+
+### 3.7 جدول `bookings` (الحجوزات)
+
+| اسم الحقل (Field Name) | النوع (Type) | الوصف والاستخدام في الكود |
+| :--- | :--- | :--- |
+| `id` | UUID | معرف الحجز. |
+| `customer_id` | UUID | العميل الحاجز (يرتبط بـ `profiles`). |
+| `service_id` | UUID | الخدمة المحجوزة (يرتبط بـ `services`). |
+| `branch_id` | UUID | الفرع المحجوز فيه (NULL = الفرع الرئيسي). |
+| `staff_id` | UUID | الموظف المنفذ (يرتبط بـ `profiles`). |
+| `booking_date` | DATE | تاريخ الحجز. |
+| `start_time` | TIME | وقت البدء. |
+| `end_time` | TIME | وقت الانتهاء. |
+| `status` | TEXT | حالة الحجز: `'pending'`, `'confirmed'`, `'completed'`, `'cancelled'`. |
+| `notes` | TEXT | ملاحظات إضافية. |
+
+### 3.8 جدول `reviews` (التقييمات)
+
+| اسم الحقل (Field Name) | النوع (Type) | الوصف والاستخدام في الكود |
+| :--- | :--- | :--- |
+| `id` | UUID | معرف التقييم. |
+| `reviewer_id` | UUID | صاحب التقييم (يرتبط بـ `profiles`). |
+| `business_id` | UUID | النشاط المُقيَّم (صالون/متجر). |
+| `branch_id` | UUID | الفرع المُقيَّم (اختياري). |
+| `product_id` | UUID | المنتج المُقيَّم (اختياري). |
+| `rating` | INT | التقييم (1-5). |
+| `comment` | TEXT | نص التقييم. |
+| `reply` | TEXT | رد المالك على التقييم. |
+| `replied_at` | TIMESTAMPTZ | تاريخ الرد. |
+
+## 4. هيكلية الملفات الكاملة (بناءً على الهيكلية الجديدة)
 
 ### مجلد config/
 - **supabase-init.js**: تهيئة عميل Supabase والاتصال بقاعدة البيانات والمصادقة. المسار: `config/supabase-init.js`. الدور: نقطة الدخول الوحيدة للاتصال بالخلفية.
 
-### مجلد auth/ (صفحات المصادقة)
+### مجلد auth/ (صفحات المصادقة والترحيب)
 - **login.html / .css / .js**: صفحة تسجيل الدخول (بريد/هاتف/Google). المسار: `auth/login.*`. الدور: بوابة دخول المستخدمين.
 - **register.html / .css / .js**: صفحة إنشاء حساب جديد مع اختيار الدور. المسار: `auth/register.*`. الدور: تسجيل مستخدمين جدد.
 - **forgot-password.html / .css / .js**: استعادة كلمة المرور عبر البريد. المسار: `auth/forgot-password.*`. الدور: مساعدة المستخدمين الذين نسوا كلمات مرورهم.
 - **reset-password.html / .css / .js**: إعادة تعيين كلمة المرور الجديدة. المسار: `auth/reset-password.*`. الدور: إكمال عملية استعادة الحساب.
 - **verify-email.html / .css / .js**: تأكيد البريد الإلكتروني. المسار: `auth/verify-email.*`. الدور: تفعيل الحسابات الجديدة.
+- **welcome.html / .css / .js**: صفحة الترحيب الديناميكية وحارس التوجيه. المسار: `auth/welcome.*`. الدور: التعرف على حالة المستخدم وتوجيهه للصفحة المناسبة (إعداد أو بروفايل). ✅ تم النقل هنا.
 
 ### مجلد billing/ (الفواتير والمدفوعات)
 - **checkout.html / .css / .js**: صفحة إتمام الدفع. المسار: `billing/checkout.*`. الدور: معالجة عمليات الشراء والاشتراكات.
@@ -66,7 +195,7 @@ BarberFlow Pro هي منصة رقمية متكاملة لقطاع الحلاقة
 ### مجلد onboarding/ (الإرشاد الأولي)
 - **add-customer/salon/store.html/.css/.js**: صفحات إضافة البيانات الأولية. الدور: إدخال المعلومات الأساسية عند التسجيل.
 - **setup-customer/salon/store.html/.css/.js**: صفحات إعداد الحساب. الدور: تخصيص التجربة الأولى.
-- **welcome.html/.css/.js**: صفحة الترحيب. الدور: شاشة البداية بعد إكمال الإعداد.
+*(ملاحظة: welcome.html لم تعد هنا بل انتقلت إلى auth/)*
 
 ### مجلد profile/ (الملفات الشخصية العامة)
 - **customer.html/.css/.js**: بروفايل الزبون. المسار: `profile/customer.*`. الدور: عرض سجل الحجوزات والمفضلة.
@@ -104,255 +233,3 @@ BarberFlow Pro هي منصة رقمية متكاملة لقطاع الحلاقة
 - **survey.html/.css/.js**: صفحة الاستبيانات.
 - **terms.html/.css/.js**: شروط الاستخدام.
 
-### جداول تخزين المعلومات في supabsse
--- ==========================================================================
--- BarberFlow Pro - Database Schema & Security Policies (Supabase)
--- ==========================================================================
-
--- 1. إنشاء أنواع ENUM لتوحيد البيانات
-CREATE TYPE user_role AS ENUM ('customer', 'salon', 'store');
-CREATE TYPE onboarding_status AS ENUM ('empty', 'incomplete', 'completed');
-CREATE TYPE business_status AS ENUM ('inactive', 'active', 'suspended');
-
--- 2. دالة ومُشغِّل إنشاء الملف الشخصي تلقائياً عند التسجيل
--- يجب أن تكون هذه الدالة موجودة قبل إنشاء جدول profiles وسياساته
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO public.profiles (id, full_name, role)
-  VALUES (
-    new.id,
-    COALESCE(new.raw_user_meta_data->>'full_name', 'مستخدم جديد'),
-    (new.raw_user_meta_data->>'role')::user_role
-  );
-  RETURN new;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-
--- 3. جدول الملفات الشخصية (Profiles)
-CREATE TABLE profiles (
-    id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
-    full_name TEXT NOT NULL,
-    role user_role NOT NULL DEFAULT 'customer',
-    phone TEXT UNIQUE,
-    avatar_url TEXT,
-    onboarding_status onboarding_status DEFAULT 'empty',
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- دالة لتحديث updated_at تلقائياً
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
-
-CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON profiles
-    FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-
--- 4. جدول الشركات الرئيسية (Businesses)
-CREATE TABLE businesses (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    owner_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
-    name TEXT NOT NULL,
-    type user_role NOT NULL, -- 'salon' or 'store'
-    description TEXT,
-    city TEXT,
-    address TEXT,
-    phone TEXT,
-    email TEXT,
-    logo_url TEXT,
-    cover_url TEXT,
-    working_hours JSONB DEFAULT '{"open": "09:00", "close": "21:00", "days": ["sun","mon","tue","wed","thu"]}',
-    status business_status DEFAULT 'inactive',
-    is_verified BOOLEAN DEFAULT FALSE,
-    rating DECIMAL(3,2) DEFAULT 0.00,
-    reviews_count INT DEFAULT 0,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE TRIGGER update_businesses_updated_at BEFORE UPDATE ON businesses
-    FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-
--- 5. جدول الفروع (Branches)
-CREATE TABLE branches (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE NOT NULL,
-    name TEXT NOT NULL,
-    city TEXT NOT NULL,
-    address TEXT NOT NULL,
-    phone TEXT,
-    manager_id UUID REFERENCES profiles(id),
-    working_hours JSONB,
-    status business_status DEFAULT 'active',
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 6. جدول متاجر الصالونات (Salon Stores) - اختياري
-CREATE TABLE salon_stores (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    salon_id UUID REFERENCES businesses(id) ON DELETE CASCADE NOT NULL,
-    name TEXT DEFAULT 'متجر الصالون',
-    description TEXT,
-    status business_status DEFAULT 'inactive',
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    UNIQUE(salon_id) -- صالون واحد يمكن أن يكون له متجر واحد فقط
-);
-
--- 7. جدول المنتجات (Products)
-CREATE TABLE products (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    seller_id UUID REFERENCES businesses(id) ON DELETE CASCADE, -- المتجر المستقل
-    salon_store_id UUID REFERENCES salon_stores(id) ON DELETE CASCADE, -- أو متجر الصالون
-    name TEXT NOT NULL,
-    description TEXT,
-    price DECIMAL(10,2) NOT NULL,
-    stock_quantity INT DEFAULT 0,
-    image_url TEXT,
-    category TEXT,
-    is_available BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 8. جدول الخدمات (Services)
-CREATE TABLE services (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE NOT NULL,
-    branch_id UUID REFERENCES branches(id) ON DELETE SET NULL, -- NULL تعني الخدمة في جميع الفروع
-    name TEXT NOT NULL,
-    description TEXT,
-    price DECIMAL(10,2) NOT NULL,
-    duration_min INT DEFAULT 30,
-    category TEXT,
-    is_available BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 9. جدول الحجوزات (Bookings/Appointments)
-CREATE TABLE bookings (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    customer_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
-    service_id UUID REFERENCES services(id) ON DELETE RESTRICT NOT NULL,
-    branch_id UUID REFERENCES branches(id), -- إذا كان NULL فهي للحجز في الفرع الرئيسي
-    staff_id UUID REFERENCES profiles(id),
-    booking_date DATE NOT NULL,
-    start_time TIME NOT NULL,
-    end_time TIME NOT NULL,
-    status TEXT CHECK (status IN ('pending', 'confirmed', 'completed', 'cancelled')) DEFAULT 'pending',
-    notes TEXT,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 10. جدول التقييمات (Reviews)
-CREATE TABLE reviews (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    reviewer_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
-    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
-    branch_id UUID REFERENCES branches(id) ON DELETE CASCADE,
-    product_id UUID REFERENCES products(id) ON DELETE CASCADE,
-    rating INT CHECK (rating >= 1 AND rating <= 5) NOT NULL,
-    comment TEXT,
-    reply TEXT,
-    replied_at TIMESTAMPTZ,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- ==========================================================================
--- Row Level Security (RLS) Policies
--- ==========================================================================
-
--- تفعيل RLS لجميع الجداول
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE businesses ENABLE ROW LEVEL SECURITY;
-ALTER TABLE branches ENABLE ROW LEVEL SECURITY;
-ALTER TABLE salon_stores ENABLE ROW LEVEL SECURITY;
-ALTER TABLE products ENABLE ROW LEVEL SECURITY;
-ALTER TABLE services ENABLE ROW LEVEL SECURITY;
-ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
-ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
-
--- سياسات جدول Profiles
-CREATE POLICY "Public profiles are viewable by everyone" ON profiles FOR SELECT USING (TRUE);
-CREATE POLICY "Users can insert own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
-CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
-
--- سياسات جدول Businesses (محدثة للسماح للمالك بالرؤية حتى لو كان غير نشط)
-CREATE POLICY "Businesses viewable by public if active or by owner" ON businesses 
-FOR SELECT USING (status = 'active' OR auth.uid() = owner_id);
-CREATE POLICY "Owners can manage their own business" ON businesses FOR ALL USING (auth.uid() = owner_id);
-
--- سياسات جدول Branches
-CREATE POLICY "Branches of active businesses are viewable" ON branches FOR SELECT USING (
-    EXISTS (SELECT 1 FROM businesses WHERE businesses.id = branches.business_id AND businesses.status = 'active')
-);
-CREATE POLICY "Business owners can manage branches" ON branches FOR ALL USING (
-    EXISTS (SELECT 1 FROM businesses WHERE businesses.id = branches.business_id AND businesses.owner_id = auth.uid())
-);
-
--- سياسات جدول Salon Stores
-CREATE POLICY "Salon stores are viewable if salon is active" ON salon_stores FOR SELECT USING (
-    EXISTS (SELECT 1 FROM businesses WHERE businesses.id = salon_stores.salon_id AND businesses.status = 'active')
-);
-CREATE POLICY "Salon owners can manage their store" ON salon_stores FOR ALL USING (
-    EXISTS (SELECT 1 FROM businesses WHERE businesses.id = salon_stores.salon_id AND businesses.owner_id = auth.uid())
-);
-
--- سياسات جدول Products
-CREATE POLICY "Available products are viewable" ON products FOR SELECT USING (is_available = TRUE);
-CREATE POLICY "Sellers can manage their products" ON products FOR ALL USING (
-    (seller_id IS NOT NULL AND EXISTS (SELECT 1 FROM businesses WHERE businesses.id = products.seller_id AND businesses.owner_id = auth.uid()))
-    OR 
-    (salon_store_id IS NOT NULL AND EXISTS (SELECT 1 FROM salon_stores JOIN businesses ON businesses.id = salon_stores.salon_id WHERE salon_stores.id = products.salon_store_id AND businesses.owner_id = auth.uid()))
-);
-
--- سياسات جدول Services
-CREATE POLICY "Available services are viewable" ON services FOR SELECT USING (is_available = TRUE);
-CREATE POLICY "Business owners can manage services" ON services FOR ALL USING (
-    EXISTS (SELECT 1 FROM businesses WHERE businesses.id = services.business_id AND businesses.owner_id = auth.uid())
-);
-
--- سياسات جدول Bookings
-CREATE POLICY "Customers can view own bookings" ON bookings FOR SELECT USING (customer_id = auth.uid());
-CREATE POLICY "Business owners can view bookings for their services" ON bookings FOR SELECT USING (
-    EXISTS (SELECT 1 FROM services JOIN businesses ON businesses.id = services.business_id WHERE services.id = bookings.service_id AND businesses.owner_id = auth.uid())
-);
-CREATE POLICY "Customers can create bookings" ON bookings FOR INSERT WITH CHECK (customer_id = auth.uid());
-
--- سياسات جدول Reviews
-CREATE POLICY "Reviews are viewable by everyone" ON reviews FOR SELECT USING (TRUE);
-CREATE POLICY "Authenticated users can create reviews" ON reviews FOR INSERT WITH CHECK (reviewer_id = auth.uid());
-CREATE POLICY "Reviewers can update own review" ON reviews FOR UPDATE USING (reviewer_id = auth.uid());
-CREATE POLICY "Business owners can reply to reviews" ON reviews FOR UPDATE USING (
-    (business_id IS NOT NULL AND EXISTS (SELECT 1 FROM businesses WHERE businesses.id = reviews.business_id AND businesses.owner_id = auth.uid()))
-    OR
-    (branch_id IS NOT NULL AND EXISTS (SELECT 1 FROM branches JOIN businesses ON businesses.id = branches.business_id WHERE branches.id = reviews.branch_id AND businesses.owner_id = auth.uid()))
-);
-
--- ==========================================================================
--- Indexes for Performance
--- ==========================================================================
-CREATE INDEX idx_businesses_owner ON businesses(owner_id);
-CREATE INDEX idx_businesses_type_status ON businesses(type, status);
-CREATE INDEX idx_branches_business ON branches(business_id);
-CREATE INDEX idx_salon_stores_salon ON salon_stores(salon_id);
-CREATE INDEX idx_products_seller ON products(seller_id);
-CREATE INDEX idx_products_salon_store ON products(salon_store_id);
-CREATE INDEX idx_services_business ON services(business_id);
-CREATE INDEX idx_bookings_customer ON bookings(customer_id);
-CREATE INDEX idx_bookings_service_date ON bookings(service_id, booking_date);
-CREATE INDEX idx_reviews_business ON reviews(business_id);
-CREATE INDEX idx_reviews_product ON reviews(product_id);
-
-
-وأخيرا رابط مستودع الملفات على منصة github اذا اردت إلقاء نظرة هناك
-https://github.com/barbernet/barbernet.github.io.git
