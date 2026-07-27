@@ -237,3 +237,26 @@ if (typeof document !== 'undefined') {
     });
 }
 
+/**
+ * الحصول على الثيم الحالي
+ */
+export const getCurrentTheme = () => {
+    return UserPreferences.theme.get();
+};
+
+/**
+ * تطبيق الثيم
+ */
+export const applyTheme = (theme) => {
+    UserPreferences.theme.set(theme);
+};
+
+/**
+ * تبديل الثيم بين الفاتح والداكن
+ */
+export const toggleTheme = () => {
+    const currentTheme = getCurrentTheme();
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    applyTheme(newTheme);
+    return newTheme;
+};
