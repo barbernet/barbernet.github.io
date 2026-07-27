@@ -1,7 +1,17 @@
 /* ==========================================================================
 BarberFlow Pro - About Page
-المسار: support/css/about.css
+المسار: about.css
+️ لا يوجد padding-top هنا - global-navbar.css يتكفل به
 ========================================================================== */
+
+/* ============================================
+الصفحة الرئيسية
+============================================ */
+.about-page {
+    /* ✅ تم إزالة padding-top - global-navbar.css يتكفل بالمسافة */
+    min-height: 100vh;
+    background: var(--bg-primary);
+}
 
 /* ============================================
 Hero Section
@@ -100,7 +110,10 @@ Story Section
 
 .story-content p {
     color: var(--text-secondary);
-    line-height: 1.8;
+    line-height: 1.8;Counters();
+                observer.disconnect();
+            }
+
     margin-bottom: 15px;
     font-size: 1rem;
 }
@@ -126,7 +139,7 @@ Story Section
     content: '';
     position: absolute;
     inset: 0;
-    background: 
+    background:
         radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 50%),
         radial-gradient(circle at 70% 70%, rgba(0,0,0,0.2) 0%, transparent 50%);
 }
@@ -313,7 +326,7 @@ Statistics Section
     content: '';
     position: absolute;
     inset: 0;
-    background: 
+    background:
         radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
 }
@@ -452,6 +465,18 @@ CTA Section
 .cta-btn.outline:hover {
     background: #000;
     color: var(--brand-accent);
+}
+
+/* ============================================
+التذييل
+============================================ */
+.about-footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    padding: 20px 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
 }
 
 /* ============================================

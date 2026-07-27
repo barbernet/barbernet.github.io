@@ -1,146 +1,176 @@
-/* ==========================================================================
-BarberFlow Pro - Survey Page
-المسار: support/css/survey.css
-========================================================================== */
+/* ============================================
+استطلاع الرأي - Survey Page Styles
+المسار: survey.css
+============================================ */
 
 /* ============================================
-Hero Section
+الصفحة الرئيسية
 ============================================ */
-.survey-hero {
-    position: relative;
-    padding: 100px 20px 60px;
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
-    text-align: center;
-    overflow: hidden;
-}
-
-.survey-hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
-    animation: rotate 30s linear infinite;
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.survey-hero .container {
-    position: relative;
-    z-index: 1;
-}
-
-.survey-hero h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    color: var(--text-primary);
-    margin-bottom: 15px;
-    font-weight: 800;
-}
-
-.survey-hero h1 span {
-    color: var(--brand-accent);
-}
-
-.survey-hero p {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    max-width: 700px;
-    margin: 0 auto;
-    line-height: 1.8;
-}
-
-/* ============================================
-Survey Container
-============================================ */
-.survey-section {
-    padding: 60px 20px;
+.survey-page {
+    padding-top: var(--navbar-height, 70px);
+    min-height: 100vh;
     background: var(--bg-primary);
 }
 
-.survey-container {
-    max-width: 800px;
+/* ============================================
+قسم Hero
+============================================ */
+.hero-section {
+    background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-accent-dark) 100%);
+    color: white;
+    padding: var(--spacing-xxl) 0;
+    text-align: center;
+}
+
+.page-title {
+    font-size: var(--font-size-4xl, 2.5rem);
+    font-weight: var(--font-weight-bold, 700);
+    margin-bottom: var(--spacing-md);
+}
+
+.page-subtitle {
+    font-size: var(--font-size-xl, 1.2rem);
+    opacity: 0.95;
+    margin-bottom: var(--spacing-sm);
+}
+
+.page-description {
+    font-size: var(--font-size-lg, 1rem);
+    opacity: 0.9;
+    max-width: 600px;
     margin: 0 auto;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-gold);
-    border-radius: var(--radius-lg);
-    padding: 40px;
-    box-shadow: var(--shadow-md);
+    line-height: 1.6;
 }
 
-/* Progress Bar */
+/* ============================================
+قسم المحتوى
+============================================ */
+.content-section {
+    padding: var(--spacing-xxl) 0;
+}
+
+/* ============================================
+شريط التقدم
+============================================ */
 .survey-progress {
-    margin-bottom: 40px;
+    background: var(--bg-secondary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--spacing-xl);
+    border: 1px solid var(--border-color);
 }
 
-.progress-info {
+.progress-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.progress-label {
+    font-size: var(--font-size-sm, 0.9rem);
+    font-weight: var(--font-weight-semibold, 600);
+    color: var(--text-primary);
+}
+
+.progress-percent {
+    font-size: var(--font-size-lg, 1.1rem);
+    font-weight: var(--font-weight-bold, 700);
+    color: var(--brand-accent);
 }
 
 .progress-bar {
-    height: 8px;
+    width: 100%;
+    height: 12px;
     background: var(--bg-tertiary);
-    border-radius: 10px;
+    border-radius: var(--radius-full, 9999px);
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
-    border-radius: 10px;
-    transition: width var(--transition-normal);
-    width: 0%;
+    background: linear-gradient(90deg, var(--brand-accent), var(--brand-accent-dark));
+    border-radius: var(--radius-full, 9999px);
+    transition: width 0.5s ease;
 }
 
-/* Question Card */
+/* ============================================
+نموذج الاستطلاع
+============================================ */
+.survey-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 .question-card {
-    margin-bottom: 30px;
-    padding-bottom: 30px;
-    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--spacing-lg);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-fast);
 }
 
-.question-card:last-of-type {
-    border-bottom: none;
+.question-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--brand-accent);
+}
+
+.question-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
 }
 
 .question-number {
-    display: inline-block;
+    width: 32px;
+    height: 32px;
     background: var(--brand-accent);
     color: #000;
-    width: 30px;
-    height: 30px;
     border-radius: 50%;
-    text-align: center;
-    line-height: 30px;
-    font-weight: 700;
-    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-bold, 700);
+    font-size: var(--font-size-sm, 0.9rem);
 }
 
-.question-text {
-    font-size: 1.1rem;
-    color: var(--text-primary);
-    margin-bottom: 20px;
-    font-weight: 600;
-}
-
-.required-mark {
+.required-badge {
     color: var(--brand-danger);
+    font-size: var(--font-size-sm, 0.85rem);
+    font-weight: var(--font-weight-semibold, 600);
 }
 
-/* Rating Stars */
+.optional-badge {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm, 0.85rem);
+    font-weight: var(--font-weight-normal, 400);
+}
+
+.question-title {
+    font-size: var(--font-size-xl, 1.2rem);
+    font-weight: var(--font-weight-semibold, 600);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.5;
+}
+
+/* ============================================
+نظام التقييم بالنجوم
+============================================ */
 .rating-container {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.rating-stars {
+    display: flex;
+    gap: var(--spacing-sm);
     direction: ltr;
-    justify-content: center;
 }
 
 .rating-star {
@@ -153,23 +183,29 @@ Survey Container
 .rating-star:hover,
 .rating-star.active {
     color: var(--brand-accent);
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
-/* Radio & Checkbox Options */
-.options-list {
+.rating-star:hover ~ .rating-star {
+    color: var(--border-color);
+}
+
+/* ============================================
+خيارات الأسئلة
+============================================ */
+.options-container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--spacing-md);
 }
 
 .option-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 15px;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
     background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
+    border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -180,6 +216,11 @@ Survey Container
     background: rgba(212, 175, 55, 0.05);
 }
 
+.option-item.selected {
+    border-color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.1);
+}
+
 .option-item input[type="radio"],
 .option-item input[type="checkbox"] {
     width: 20px;
@@ -188,121 +229,163 @@ Survey Container
     cursor: pointer;
 }
 
-.option-item label {
+.option-text {
     flex: 1;
-    cursor: pointer;
+    font-size: var(--font-size-base, 1rem);
     color: var(--text-primary);
-    font-size: 0.95rem;
-}
-
-.option-item.selected {
-    border-color: var(--brand-accent);
-    background: rgba(212, 175, 55, 0.1);
-}
-
-/* Textarea */
-.survey-textarea {
-    width: 100%;
-    padding: 15px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    color: var(--text-primary);
-    font-family: 'Cairo', sans-serif;
-    font-size: 0.95rem;
-    resize: vertical;
-    min-height: 120px;
-    transition: all var(--transition-fast);
-    box-sizing: border-box;
-}
-
-.survey-textarea:focus {
-    outline: none;
-    border-color: var(--brand-accent);
-    background: var(--bg-secondary);
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
-}
-
-/* Submit Button */
-.survey-submit {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
-    color: #000;
-    border: none;
-    border-radius: var(--radius-md);
-    font-weight: 700;
-    font-size: 1.05rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all var(--transition-fast);
-    font-family: 'Cairo', sans-serif;
-    margin-top: 20px;
-}
-
-.survey-submit:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-}
-
-.survey-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* Success Message */
-.survey-success {
-    text-align: center;
-    padding: 40px 20px;
-    display: none;
-}
-
-.survey-success.show {
-    display: block;
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.success-icon {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    color: #000;
-    margin: 0 auto 20px;
-}
-
-.survey-success h2 {
-    color: var(--text-primary);
-    margin-bottom: 15px;
-}
-
-.survey-success p {
-    color: var(--text-secondary);
-    line-height: 1.7;
+    line-height: 1.5;
 }
 
 /* ============================================
-Responsive
+حقل النص الطويل
+============================================ */
+.form-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: 'Cairo', sans-serif;
+    font-size: var(--font-size-base, 1rem);
+    resize: vertical;
+    transition: all var(--transition-fast);
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--brand-accent);
+    background: var(--bg-secondary);
+}
+
+.form-textarea::placeholder {
+    color: var(--text-muted);
+}
+
+/* ============================================
+أزرار الإجراءات
+============================================ */
+.form-actions {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+}
+
+.form-actions .btn {
+    width: auto;
+    padding: var(--spacing-md) var(--spacing-xl);
+}
+
+/* ============================================
+رسالة النجاح
+============================================ */
+.success-message {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    padding: var(--spacing-xxl);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    animation: fadeIn 0.5s ease;
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: var(--brand-success);
+    margin-bottom: var(--spacing-lg);
+}
+
+.success-title {
+    font-size: var(--font-size-2xl, 1.5rem);
+    font-weight: var(--font-weight-bold, 700);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.success-text {
+    font-size: var(--font-size-lg, 1.05rem);
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-xl);
+}
+
+.success-message .btn {
+    width: auto;
+    padding: var(--spacing-md) var(--spacing-xl);
+}
+
+/* ============================================
+التذييل
+============================================ */
+.page-footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    padding: var(--spacing-lg) 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* ============================================
+Responsive Design
 ============================================ */
 @media (max-width: 768px) {
-    .survey-container {
-        padding: 25px;
+    .page-title {
+        font-size: var(--font-size-3xl, 2rem);
+    }
+    
+    .page-subtitle {
+        font-size: var(--font-size-lg, 1.1rem);
+    }
+    
+    .question-card {
+        padding: var(--spacing-lg);
+    }
+    
+    .question-title {
+        font-size: var(--font-size-lg, 1.1rem);
     }
     
     .rating-star {
         font-size: 1.5rem;
+    }
+    
+    .option-text {
+        font-size: var(--font-size-sm, 0.9rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .content-section {
+        padding: var(--spacing-xl) 0;
+    }
+    
+    .question-card {
+        padding: var(--spacing-md);
+    }
+    
+    .rating-stars {
+        justify-content: center;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+
+/* ============================================
+Animations
+============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 

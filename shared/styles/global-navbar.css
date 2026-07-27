@@ -7,13 +7,21 @@
 /* ============================================
 الشريط العلوي
 ============================================ */
+/*عائم فوق الصفحات */
+
 .global-navbar {
     background: var(--bg-secondary, #ffffff);
     border-bottom: 1px solid var(--border-color, #dee2e6);
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 9000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
+
 
 .navbar-content {
     display: flex;
@@ -604,4 +612,6 @@ Responsive
         display: block;
     }
 }
-
+body {
+    padding-top: 50px;
+}

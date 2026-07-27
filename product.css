@@ -1,60 +1,67 @@
-/* ==========================================================================
-BarberFlow Pro - صفحة تفاصيل المنتج
+/* ============================================
+تفاصيل المنتج - Product Page Styles
 المسار: product.css
-========================================================================== */
+⚠️ لا يوجد padding-top هنا - global-navbar.css يتكفل به
+============================================ */
 
 /* ============================================
-مسار التنقل (Breadcrumb)
+الصفحة الرئيسية
+============================================ */
+.product-page {
+    /* ✅ تم إزالة padding-top - global-navbar.css يتكفل بالمسافة */
+    min-height: 100vh;
+    background: var(--bg-primary);
+}
+
+/* ============================================
+Breadcrumb
 ============================================ */
 .breadcrumb {
     background: var(--bg-secondary);
-    padding: 15px 0;
+    padding: var(--spacing-md) 0;
     border-bottom: 1px solid var(--border-color);
 }
 
 .breadcrumb .container {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--spacing-sm);
     flex-wrap: wrap;
 }
 
-.breadcrumb-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+.breadcrumb a {
     color: var(--text-secondary);
     font-size: 0.9rem;
-    text-decoration: none;
     transition: color var(--transition-fast);
 }
 
-.breadcrumb-item:hover {
+.breadcrumb a:hover {
     color: var(--brand-accent);
 }
 
-.breadcrumb-item.active {
-    color: var(--text-primary);
-    font-weight: 600;
+.breadcrumb i.fa-chevron-left {
+    font-size: 0.7rem;
+    color: var(--text-muted);
 }
 
-.breadcrumb-separator {
-    color: var(--text-muted);
-    font-size: 0.8rem;
+.breadcrumb span {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
 /* ============================================
-المحتوى الرئيسي للمنتج
+قسم تفاصيل المنتج
 ============================================ */
-.product-main {
-    padding: 40px 0;
-    background: var(--bg-primary);
+.product-details-section {
+    padding: var(--spacing-xxl) 0;
 }
 
 .product-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: var(--spacing-xxl);
+    align-items: start;
 }
 
 /* ============================================
@@ -62,82 +69,52 @@ BarberFlow Pro - صفحة تفاصيل المنتج
 ============================================ */
 .product-gallery {
     position: sticky;
-    top: 100px;
-    align-self: start;
+    top: 90px;
 }
 
-.main-image-container {
+.main-image-wrapper {
     position: relative;
-    width: 100%;
-    height: 500px;
     background: var(--bg-secondary);
     border-radius: var(--radius-lg);
     overflow: hidden;
+    aspect-ratio: 1;
     border: 1px solid var(--border-color);
-}
-
-.main-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    margin-bottom: var(--spacing-md);
 }
 
 .image-placeholder {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-accent));
     font-size: 5rem;
     color: var(--text-muted);
-    background: var(--bg-tertiary);
 }
 
-.image-badges {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.badge {
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.discount-badge {
-    background: var(--brand-danger);
-    color: #fff;
-}
-
-.new-badge {
-    background: var(--brand-success);
-    color: #fff;
+#mainProductImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
 .zoom-btn {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
-    width: 45px;
-    height: 45px;
+    bottom: 15px;
+    left: 15px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: var(--bg-secondary);
+    background: rgba(255, 255, 255, 0.9);
     border: none;
-    color: var(--text-primary);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
     transition: all var(--transition-fast);
+    z-index: 2;
 }
 
 .zoom-btn:hover {
@@ -145,23 +122,45 @@ BarberFlow Pro - صفحة تفاصيل المنتج
     color: #000;
 }
 
+.discount-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--brand-danger);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 0.9rem;
+    z-index: 2;
+}
+
+.new-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: var(--brand-success);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 0.9rem;
+    z-index: 2;
+}
+
 .thumbnail-list {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    overflow-x: auto;
-    padding-bottom: 5px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--spacing-sm);
 }
 
 .thumbnail-item {
-    width: 80px;
-    height: 80px;
-    border-radius: var(--radius-sm);
+    aspect-ratio: 1;
+    border-radius: var(--radius-md);
     overflow: hidden;
     cursor: pointer;
-    border: 2px solid transparent;
+    border: 2px solid var(--border-color);
     transition: all var(--transition-fast);
-    flex-shrink: 0;
 }
 
 .thumbnail-item:hover {
@@ -170,6 +169,7 @@ BarberFlow Pro - صفحة تفاصيل المنتج
 
 .thumbnail-item.active {
     border-color: var(--brand-accent);
+    box-shadow: 0 0 0 2px var(--brand-accent);
 }
 
 .thumbnail-item img {
@@ -184,42 +184,35 @@ BarberFlow Pro - صفحة تفاصيل المنتج
 .product-info {
     display: flex;
     flex-direction: column;
-    gap: 25px;
-}
-
-.product-header {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    gap: var(--spacing-lg);
 }
 
 .product-category {
-    display: inline-block;
-    padding: 6px 15px;
-    background: rgba(212, 175, 55, 0.1);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
     color: var(--brand-accent);
-    border-radius: 20px;
-    font-size: 0.85rem;
     font-weight: 600;
-    align-self: flex-start;
+    font-size: 0.9rem;
 }
 
 .product-name {
     font-size: 2rem;
+    font-weight: 700;
     color: var(--text-primary);
-    margin: 0;
     line-height: 1.3;
 }
 
 .product-rating {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--spacing-md);
 }
 
-.stars-display {
+.stars {
+    display: flex;
+    gap: 2px;
     color: var(--brand-accent);
-    font-size: 1.1rem;
 }
 
 .rating-count {
@@ -227,21 +220,16 @@ BarberFlow Pro - صفحة تفاصيل المنتج
     font-size: 0.9rem;
 }
 
-/* ============================================
-السعر
-============================================ */
 .product-price-section {
-    padding: 20px;
-    background: var(--bg-secondary);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
 }
 
-.price-container {
+.price-group {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 8px;
+    gap: var(--spacing-md);
 }
 
 .current-price {
@@ -251,26 +239,51 @@ BarberFlow Pro - صفحة تفاصيل المنتج
 }
 
 .old-price {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: var(--text-muted);
     text-decoration: line-through;
 }
 
-.tax-info {
+.vat-note {
     font-size: 0.85rem;
     color: var(--text-muted);
 }
 
-/* ============================================
-الوصف
-============================================ */
+.product-stock {
+    display: inline-block;
+}
+
+.stock-status {
+    padding: 6px 16px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.stock-status.in-stock {
+    background: rgba(43, 138, 62, 0.1);
+    color: var(--brand-success);
+}
+
+.stock-status.out-of-stock {
+    background: rgba(201, 42, 42, 0.1);
+    color: var(--brand-danger);
+}
+
+.product-description {
+    background: var(--bg-secondary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
 .product-description h3 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--text-primary);
-    margin: 0 0 12px 0;
+    margin-bottom: var(--spacing-md);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--spacing-sm);
 }
 
 .product-description h3 i {
@@ -280,48 +293,18 @@ BarberFlow Pro - صفحة تفاصيل المنتج
 .product-description p {
     color: var(--text-secondary);
     line-height: 1.8;
-    font-size: 1rem;
 }
 
-/* ============================================
-المميزات
-============================================ */
-.product-features {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.feature-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-}
-
-.feature-item i {
-    color: var(--brand-success);
-    font-size: 1rem;
-}
-
-/* ============================================
-المعلومات الإضافية
-============================================ */
 .product-meta {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 20px;
-    background: var(--bg-secondary);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
+    gap: var(--spacing-md);
 }
 
 .meta-item {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--spacing-md);
     color: var(--text-secondary);
     font-size: 0.95rem;
 }
@@ -333,23 +316,13 @@ BarberFlow Pro - صفحة تفاصيل المنتج
 
 .meta-item strong {
     color: var(--text-primary);
+    font-weight: 600;
 }
 
-.in-stock {
-    color: var(--brand-success);
-}
-
-.out-of-stock {
-    color: var(--brand-danger);
-}
-
-/* ============================================
-الكمية
-============================================ */
 .quantity-selector {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: var(--spacing-md);
 }
 
 .quantity-selector label {
@@ -360,17 +333,17 @@ BarberFlow Pro - صفحة تفاصيل المنتج
 .quantity-controls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--spacing-xs);
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    padding: 5px;
+    border-radius: var(--radius-md);
+    padding: 4px;
 }
 
 .qty-btn {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
     border: none;
     background: var(--bg-tertiary);
     color: var(--text-primary);
@@ -386,7 +359,7 @@ BarberFlow Pro - صفحة تفاصيل المنتج
     color: #000;
 }
 
-.quantity-controls input {
+#quantityInput {
     width: 60px;
     text-align: center;
     border: none;
@@ -394,128 +367,82 @@ BarberFlow Pro - صفحة تفاصيل المنتج
     color: var(--text-primary);
     font-size: 1rem;
     font-weight: 600;
-    outline: none;
-}
-
-/* ============================================
-أزرار الإجراءات
-============================================ */
-.product-actions {
-    display: flex;
-    gap: 12px;
-}
-
-.btn-primary {
-    flex: 1;
-    padding: 16px 30px;
-    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
-    color: #000;
-    border: none;
-    border-radius: var(--radius-md);
-    font-weight: 700;
-    font-size: 1.05rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all var(--transition-fast);
     font-family: 'Cairo', sans-serif;
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+#quantityInput:focus {
+    outline: none;
 }
 
-.btn-secondary {
-    width: 55px;
-    height: 55px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    cursor: pointer;
+.product-actions {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    transition: all var(--transition-fast);
+    gap: var(--spacing-md);
 }
 
-.btn-secondary:hover {
-    border-color: var(--brand-accent);
-    color: var(--brand-accent);
+.product-actions .btn-lg {
+    flex: 1;
 }
 
-.wishlist-btn.active {
-    background: var(--brand-danger);
-    border-color: var(--brand-danger);
-    color: #fff;
+.product-actions .btn-icon {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
 }
 
-/* ============================================
-شارات الثقة
-============================================ */
-.trust-badges {
+.product-guarantees {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    padding: 20px;
-    background: var(--bg-secondary);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-color);
 }
 
-.trust-item {
+.guarantee-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: var(--spacing-xs);
     text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
 }
 
-.trust-item i {
+.guarantee-item i {
     font-size: 1.5rem;
     color: var(--brand-accent);
 }
 
-.trust-item span {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
 /* ============================================
-تبويبات التفاصيل
+قسم التبويبات
 ============================================ */
 .product-tabs-section {
-    padding: 40px 0;
-    background: var(--bg-primary);
+    padding: var(--spacing-xxl) 0;
+    background: var(--bg-secondary);
 }
 
 .tabs-header {
     display: flex;
-    gap: 10px;
-    margin-bottom: 30px;
-    border-bottom: 1px solid var(--border-color);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 2px solid var(--border-color);
     overflow-x: auto;
 }
 
 .tab-btn {
-    padding: 15px 25px;
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-weight: 600;
-    font-family: 'Cairo', sans-serif;
-    font-size: 1rem;
     display: flex;
     align-items: center;
-    gap: 8px;
-    white-space: nowrap;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: transparent;
+    border: none;
     border-bottom: 3px solid transparent;
+    color: var(--text-secondary);
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
     transition: all var(--transition-fast);
+    white-space: nowrap;
 }
 
 .tab-btn:hover {
@@ -533,44 +460,29 @@ BarberFlow Pro - صفحة تفاصيل المنتج
     padding: 2px 8px;
     border-radius: 10px;
     font-size: 0.75rem;
+    font-weight: 700;
 }
 
 .tab-content {
     display: none;
+    animation: fadeIn 0.3s ease;
 }
 
 .tab-content.active {
     display: block;
-    animation: fadeIn 0.3s ease;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.tab-inner {
-    background: var(--bg-secondary);
-    border-radius: var(--radius-md);
-    padding: 30px;
-    border: 1px solid var(--border-color);
-}
-
-.tab-inner h3 {
+.tab-content h3 {
     font-size: 1.3rem;
     color: var(--text-primary);
-    margin: 0 0 20px 0;
+    margin-bottom: var(--spacing-lg);
 }
 
-.tab-inner p {
+.tab-content p {
     color: var(--text-secondary);
     line-height: 1.8;
-    font-size: 1rem;
 }
 
-/* ============================================
-جدول المواصفات
-============================================ */
 .specs-table {
     width: 100%;
     border-collapse: collapse;
@@ -580,20 +492,18 @@ BarberFlow Pro - صفحة تفاصيل المنتج
     border-bottom: 1px solid var(--border-color);
 }
 
-.specs-table tr:last-child {
-    border-bottom: none;
+.specs-table td {
+    padding: var(--spacing-md);
 }
 
 .spec-label {
-    padding: 15px;
-    color: var(--text-secondary);
     font-weight: 600;
-    width: 40%;
+    color: var(--text-primary);
+    width: 30%;
 }
 
 .spec-value {
-    padding: 15px;
-    color: var(--text-primary);
+    color: var(--text-secondary);
 }
 
 /* ============================================
@@ -601,44 +511,52 @@ BarberFlow Pro - صفحة تفاصيل المنتج
 ============================================ */
 .reviews-summary {
     display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 30px;
-    padding: 25px;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl);
     background: var(--bg-tertiary);
-    border-radius: var(--radius-md);
-    margin-bottom: 25px;
-}
-
-.summary-rating {
-    text-align: center;
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-xl);
 }
 
 .big-rating {
-    font-size: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+}
+
+.big-rating #bigRating {
+    font-size: 3.5rem;
     font-weight: 700;
     color: var(--brand-accent);
-    margin-bottom: 10px;
+    line-height: 1;
+}
+
+.big-rating .stars {
+    font-size: 1.2rem;
 }
 
 .total-reviews {
-    font-size: 0.9rem;
     color: var(--text-muted);
+    font-size: 0.9rem;
 }
 
 .rating-bars {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--spacing-sm);
 }
 
 .rating-bar-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--spacing-md);
 }
 
 .star-label {
-    width: 50px;
+    width: 60px;
     font-size: 0.9rem;
     color: var(--text-secondary);
 }
@@ -665,41 +583,40 @@ BarberFlow Pro - صفحة تفاصيل المنتج
 .bar-count {
     width: 30px;
     text-align: left;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
 }
 
 .reviews-list {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: var(--spacing-lg);
 }
 
 .review-card {
     background: var(--bg-tertiary);
-    padding: 20px;
+    padding: var(--spacing-lg);
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
 }
 
 .review-header {
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 12px;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
 .reviewer-avatar {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: var(--brand-accent);
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
     display: flex;
     align-items: center;
     justify-content: center;
     color: #000;
     font-size: 1.2rem;
-    flex-shrink: 0;
 }
 
 .reviewer-info {
@@ -708,25 +625,25 @@ BarberFlow Pro - صفحة تفاصيل المنتج
 
 .reviewer-info strong {
     display: block;
-    margin-bottom: 5px;
     color: var(--text-primary);
+    font-size: 1rem;
+    margin-bottom: 4px;
 }
 
 .review-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+    gap: var(--spacing-md);
 }
 
 .review-stars {
     color: var(--brand-accent);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .review-date {
-    font-size: 0.8rem;
     color: var(--text-muted);
+    font-size: 0.85rem;
 }
 
 .review-text {
@@ -735,141 +652,115 @@ BarberFlow Pro - صفحة تفاصيل المنتج
     margin: 0;
 }
 
+.empty-reviews {
+    text-align: center;
+    padding: var(--spacing-xxl);
+    color: var(--text-muted);
+}
+
+.empty-reviews i {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    display: block;
+}
+
 /* ============================================
 المنتجات المشابهة
 ============================================ */
 .related-products-section {
-    padding: 40px 0;
-    background: var(--bg-secondary);
+    padding: var(--spacing-xxl) 0;
 }
 
 .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: var(--spacing-xl);
 }
 
 .section-header h2 {
     font-size: 1.5rem;
     color: var(--text-primary);
-    margin: 0;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--spacing-sm);
 }
 
 .section-header h2 i {
     color: var(--brand-accent);
 }
 
-.view-all-link {
+.view-all {
+    color: var(--brand-accent);
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: var(--brand-accent);
-    text-decoration: none;
-    font-weight: 600;
+    gap: var(--spacing-sm);
     transition: all var(--transition-fast);
 }
 
-.view-all-link:hover {
-    gap: 12px;
+.view-all:hover {
+    gap: var(--spacing-md);
 }
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-lg);
 }
 
-.product-card {
-    background: var(--bg-primary);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    transition: all var(--transition-fast);
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--brand-accent);
-}
-
-.product-image-wrapper {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-}
-
-.product-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.product-details {
-    padding: 15px;
-}
-
-.product-details .product-category {
-    font-size: 0.75rem;
-    padding: 4px 10px;
-}
-
-.product-details .product-name {
-    font-size: 1rem;
-    margin: 8px 0 12px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.product-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.price-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.price-group .old-price {
-    font-size: 0.8rem;
-    text-decoration: line-through;
-}
-
-.price-group .current-price {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--brand-accent);
-}
-
-.product-footer .add-to-cart-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--brand-accent);
-    border: none;
-    color: #000;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-fast);
-}
-
-.product-footer .add-to-cart-btn:hover {
-    transform: scale(1.1);
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-xxl);
+    color: var(--text-muted);
+    grid-column: 1 / -1;
 }
 
 /* ============================================
-زر العودة للأعلى
+Zoom Modal
+============================================ */
+.zoom-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+    padding: var(--spacing-lg);
+}
+
+.zoom-modal.active {
+    display: flex;
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.close-modal:hover {
+    background: var(--brand-danger);
+}
+
+#zoomedImage {
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+/* ============================================
+Scroll to Top Button
 ============================================ */
 .scroll-top-btn {
     position: fixed;
@@ -879,123 +770,56 @@ BarberFlow Pro - صفحة تفاصيل المنتج
     height: 50px;
     border-radius: 50%;
     background: var(--brand-accent);
-    border: none;
     color: #000;
+    border: none;
     cursor: pointer;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
     box-shadow: var(--shadow-lg);
     transition: all var(--transition-fast);
-    z-index: 99;
+    z-index: 9999;
 }
 
 .scroll-top-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-xl);
+    background: var(--brand-accent-dark);
+    transform: translateY(-3px);
+}
+
+.scroll-top-btn.visible {
+    display: flex;
 }
 
 /* ============================================
-نافذة التكبير
+التذييل
 ============================================ */
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.9);
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-}
-
-.modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.zoom-modal {
-    position: relative;
-    max-width: 90%;
-    max-height: 90%;
-}
-
-.zoom-modal img {
-    max-width: 100%;
-    max-height: 90vh;
-    object-fit: contain;
-}
-
-.modal-close {
-    position: absolute;
-    top: -40px;
-    right: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+.page-footer {
     background: var(--bg-secondary);
-    border: none;
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    transition: all var(--transition-fast);
-}
-
-.modal-close:hover {
-    background: var(--brand-danger);
-    color: #fff;
-}
-
-/* ============================================
-الحالات الفارغة
-============================================ */
-.empty-state,
-.empty-reviews {
+    border-top: 1px solid var(--border-color);
+    padding: var(--spacing-lg) 0;
     text-align: center;
-    padding: 60px 20px;
     color: var(--text-muted);
-}
-
-.empty-state i,
-.empty-reviews i {
-    font-size: 3rem;
-    margin-bottom: 15px;
-    display: block;
-    color: var(--brand-accent);
+    font-size: 0.9rem;
 }
 
 /* ============================================
-Responsive
+Responsive Design
 ============================================ */
-@media (max-width: 992px) {
-    .product-layout {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-
-    .product-gallery {
-        position: static;
-    }
-
-    .main-image-container {
-        height: 400px;
+@media (max-width: 1024px) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (max-width: 768px) {
-    .product-main {
-        padding: 20px 0;
+    .product-layout {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
     }
 
-    .main-image-container {
-        height: 350px;
+    .product-gallery {
+        position: static;
     }
 
     .product-name {
@@ -1006,16 +830,9 @@ Responsive
         font-size: 2rem;
     }
 
-    .product-actions {
-        flex-wrap: wrap;
-    }
-
-    .btn-primary {
-        width: 100%;
-    }
-
-    .trust-badges {
+    .product-guarantees {
         grid-template-columns: 1fr;
+        gap: var(--spacing-md);
     }
 
     .reviews-summary {
@@ -1024,34 +841,49 @@ Responsive
 
     .products-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    .product-actions {
+        flex-wrap: wrap;
+    }
+
+    .product-actions .btn-lg {
+        width: 100%;
     }
 }
 
 @media (max-width: 480px) {
-    .main-image-container {
-        height: 300px;
+    .product-details-section {
+        padding: var(--spacing-xl) 0;
     }
 
-    .product-name {
-        font-size: 1.3rem;
+    .product-tabs-section,
+    .related-products-section {
+        padding: var(--spacing-xl) 0;
     }
 
     .tabs-header {
-        flex-direction: column;
+        gap: var(--spacing-xs);
     }
 
     .tab-btn {
-        border-bottom: none;
-        border-right: 3px solid transparent;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.9rem;
     }
 
-    .tab-btn.active {
-        border-right-color: var(--brand-accent);
-        border-bottom: none;
+    .thumbnail-list {
+        grid-template-columns: repeat(4, 1fr);
     }
 
     .products-grid {
         grid-template-columns: 1fr;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
     }
 }
 

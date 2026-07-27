@@ -1,18 +1,33 @@
 /**
  * BarberFlow Pro - Contact Page Logic
- * المسار: support/js/contact.js
+ * المسار: contact.js
+ * الدور: إدارة منطق صفحة اتصل بنا
  */
 
-import { showNotification } from "../../auth/js/notifications.js";
+import { showNotification } from './shared/utils/notifications.js';
+import { resolvePath } from './shared/utils/paths.js';
 
 // ============================================
-// FAQ Accordion
+// 1. تهيئة الصفحة
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('✅ صفحة اتصل بنا تم تحميلها بنجاح');
+    
+    initFAQ();
+    initTicketForm();
+    updateDynamicLinks();
+});
+
+// ============================================
+// 2. FAQ Accordion
 // ============================================
 function initFAQ() {
     const faqItems = document.querySelectorAll('.faq-item');
     
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
+        if (!question) return;
+        
         question.addEventListener('click', () => {
             // إغلاق العناصر الأخرى
             faqItems.forEach(otherItem => {
@@ -28,7 +43,7 @@ function initFAQ() {
 }
 
 // ============================================
-// Ticket Form Submission
+// 3. Ticket Form Submission
 // ============================================
 function initTicketForm() {
     const form = document.getElementById('ticketForm');
@@ -62,23 +77,22 @@ function initTicketForm() {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>جاري الإرسال...</span>';
         
         try {
-            // محاكاة إرسال التذكرة (يمكن ربطها بـ Firestore لاحقاً)
+            // محاكاة إرسال التذكرة (يمكن ربطها بـ Supabase لاحقاً)
             await new Promise(resolve => setTimeout(resolve, 1500));
             
             // حفظ التذكرة في localStorage كـ backup
-            const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');
+            const tickets = JSON.parse(localStorage.getItem('bf-support-tickets') || '[]');
             tickets.push({
                 ...ticketData,
                 id: 'TKT-' + Date.now(),
                 createdAt: ticketData.createdAt.toISOString()
             });
-            localStorage.setItem('support_tickets', JSON.stringify(tickets));
+            localStorage.setItem('bf-support-tickets', JSON.stringify(tickets));
             
             showNotification('تم إرسال تذكرتك بنجاح! سنرد عليك خلال 24 ساعة', 'success');
             
             // إعادة تعيين النموذج
             form.reset();
-            
         } catch (error) {
             console.error('Error submitting ticket:', error);
             showNotification('حدث خطأ أثناء إرسال التذكرة، يرجى المحاولة مرة أخرى', 'error');
@@ -90,10 +104,14 @@ function initTicketForm() {
 }
 
 // ============================================
-// تهيئة الصفحة
+// 4. تحديث الروابط الديناميكية
 // ============================================
-document.addEventListener('DOMContentLoaded', () => {
-    initFAQ();
-    initTicketForm();
-});
+function updateDynamicLinks() {
+    const links = document.querySelectorAll('[data-path]');
+    links.forEach(link => {
+        const key = link.getAttribute('data-path');
+        const fullPath = resolvePath(key);
+        link.setAttribute('href', fullPath);
+    });
+}
 

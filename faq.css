@@ -1,83 +1,55 @@
 /* ============================================
-   شريط التنقل العلوي
-   ============================================ */
-.faq-header {
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
-    padding: 15px 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
+الأسئلة الشائعة - FAQ Page Styles
+المسار: faq.css
+️ لا يوجد padding-top هنا - global-navbar.css يتكفل به
+============================================ */
 
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--brand-primary);
-}
-
-.logo i {
-    color: var(--brand-accent);
-    font-size: 1.5rem;
-}
-
-.header-nav {
-    display: flex;
-    gap: 20px;
-}
-
-.header-nav a {
-    color: var(--text-secondary);
-    font-weight: 600;
-    transition: color var(--transition-fast);
-}
-
-.header-nav a:hover {
-    color: var(--brand-accent);
+/* ============================================
+الصفحة الرئيسية
+============================================ */
+.faq-page {
+    /* ✅ تم إزالة padding-top - global-navbar.css يتكفل بالمسافة */
+    min-height: 100vh;
+    background: var(--bg-primary);
 }
 
 /* ============================================
-   المحتوى الرئيسي
-   ============================================ */
-.faq-content {
-    padding: 60px 0;
-    min-height: calc(100vh - 200px);
-}
-
-.faq-header-section {
+قسم Hero
+============================================ */
+.hero-section {
+    background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-accent-dark) 100%);
+    color: white;
+    padding: var(--spacing-xxl) 0;
     text-align: center;
-    margin-bottom: 40px;
 }
 
-.faq-header-section h1 {
-    font-size: 2.5rem;
-    color: var(--text-primary);
-    margin-bottom: 15px;
+.page-title {
+    font-size: var(--font-size-4xl, 2.5rem);
+    font-weight: var(--font-weight-bold, 700);
+    margin-bottom: var(--spacing-md);
 }
 
-.faq-subtitle {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
+.page-subtitle {
+    font-size: var(--font-size-lg, 1.1rem);
+    opacity: 0.95;
     max-width: 600px;
     margin: 0 auto;
 }
 
 /* ============================================
-   شريط البحث
-   ============================================ */
+قسم المحتوى
+============================================ */
+.content-section {
+    padding: var(--spacing-xxl) 0;
+}
+
+/* ============================================
+شريط البحث
+============================================ */
 .faq-search-box {
     position: relative;
     max-width: 600px;
-    margin: 0 auto 40px;
+    margin: 0 auto var(--spacing-xl);
 }
 
 .faq-search-box i {
@@ -108,13 +80,13 @@
 }
 
 /* ============================================
-   تصنيفات الأسئلة
-   ============================================ */
+تصنيفات الأسئلة
+============================================ */
 .faq-categories {
     display: flex;
     justify-content: center;
     gap: 12px;
-    margin-bottom: 40px;
+    margin-bottom: var(--spacing-xl);
     flex-wrap: wrap;
 }
 
@@ -145,16 +117,16 @@
 
 .category-btn.active {
     background: var(--brand-accent);
-    color: var(--brand-primary);
+    color: #000;
     border-color: var(--brand-accent);
 }
 
 /* ============================================
-   قائمة الأسئلة (Accordion)
-   ============================================ */
+قائمة الأسئلة (Accordion)
+============================================ */
 .faq-list {
     max-width: 900px;
-    margin: 0 auto 60px;
+    margin: 0 auto var(--spacing-xxl);
 }
 
 .faq-item {
@@ -189,6 +161,7 @@
     color: var(--text-primary);
     font-weight: 600;
     flex: 1;
+    margin: 0;
 }
 
 .faq-icon {
@@ -215,7 +188,7 @@
 
 .faq-item.active .faq-icon i {
     transform: rotate(180deg);
-    color: var(--brand-primary);
+    color: #000;
 }
 
 .faq-answer {
@@ -259,12 +232,12 @@
 }
 
 /* ============================================
-   قسم المساعدة الإضافية
-   ============================================ */
+قسم المساعدة الإضافية
+============================================ */
 .faq-help-section {
     text-align: center;
     background: var(--bg-secondary);
-    padding: 50px 30px;
+    padding: var(--spacing-xxl) var(--spacing-xl);
     border-radius: var(--radius-lg);
     border: 1px solid var(--border-color);
     max-width: 700px;
@@ -295,26 +268,26 @@
 }
 
 /* ============================================
-   التذييل
-   ============================================ */
+التذييل
+============================================ */
 .faq-footer {
     background: var(--bg-secondary);
     border-top: 1px solid var(--border-color);
-    padding: 20px 0;
+    padding: var(--spacing-lg) 0;
     text-align: center;
     color: var(--text-muted);
     font-size: 0.9rem;
 }
 
 /* ============================================
-   Responsive Design
-   ============================================ */
+Responsive Design
+============================================ */
 @media (max-width: 768px) {
-    .faq-header-section h1 {
-        font-size: 2rem;
+    .page-title {
+        font-size: var(--font-size-3xl, 2rem);
     }
     
-    .faq-subtitle {
+    .page-subtitle {
         font-size: 1rem;
     }
     
@@ -340,7 +313,7 @@
     }
     
     .faq-help-section {
-        padding: 40px 20px;
+        padding: var(--spacing-xl) var(--spacing-lg);
     }
     
     .help-actions {
@@ -353,12 +326,12 @@
 }
 
 @media (max-width: 480px) {
-    .faq-content {
-        padding: 40px 0;
+    .content-section {
+        padding: var(--spacing-xl) 0;
     }
     
-    .faq-header-section h1 {
-        font-size: 1.7rem;
+    .page-title {
+        font-size: var(--font-size-2xl, 1.7rem);
     }
     
     .faq-search-input {

@@ -1,9 +1,11 @@
 /**
  * BarberFlow Pro - Survey Page Logic
- * المسار: support/js/survey.js
+ * المسار: survey.js
+ * الدور: إدارة منطق صفحة استطلاع الرأي
  */
 
-import { showNotification } from "shared/js/notifications.js";
+import { showNotification } from './shared/utils/notifications.js';
+import { resolvePath } from './shared/utils/paths.js';
 
 // ============================================
 // Rating Stars
@@ -106,6 +108,7 @@ function initOptionSelection() {
             } else {
                 item.classList.toggle('selected', input.checked);
             }
+            
             updateProgress();
         });
     });
@@ -130,7 +133,6 @@ function updateProgress() {
     // Q6 (Textarea) - اختياري
     
     const percent = Math.round((answeredQuestions / totalQuestions) * 100);
-    
     const progressFill = document.getElementById('progressFill');
     const progressPercent = document.getElementById('progressPercent');
     
@@ -173,24 +175,26 @@ function initSurveyForm() {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>جاري الإرسال...</span>';
         
         try {
-            // محاكاة الإرسال
+            // محاكاة الإرسال (يمكن استبدالها بـ API حقيقي)
             await new Promise(resolve => setTimeout(resolve, 1500));
             
             // حفظ في localStorage
-            const surveys = JSON.parse(localStorage.getItem('surveys') || '[]');
+            const surveys = JSON.parse(localStorage.getItem('bf-surveys') || '[]');
             surveys.push({
                 ...surveyData,
                 id: 'SRV-' + Date.now()
             });
-            localStorage.setItem('surveys', JSON.stringify(surveys));
+            localStorage.setItem('bf-surveys', JSON.stringify(surveys));
             
             // إظهار رسالة النجاح
             form.style.display = 'none';
             document.querySelector('.survey-progress').style.display = 'none';
-            successMessage.classList.add('show');
+            successMessage.style.display = 'block';
             
             showNotification('تم إرسال استطلاعك بنجاح! شكراً لمساهمتك', 'success');
             
+            // تحديث روابط النجاح
+            updateSuccessLinks();
         } catch (error) {
             console.error('Error submitting survey:', error);
             showNotification('حدث خطأ أثناء إرسال الاستطلاع، يرجى المحاولة مرة أخرى', 'error');
@@ -202,12 +206,34 @@ function initSurveyForm() {
 }
 
 // ============================================
+// تحديث روابط النجاح
+// ============================================
+function updateSuccessLinks() {
+    const links = document.querySelectorAll('[data-path]');
+    links.forEach(link => {
+        const key = link.getAttribute('data-path');
+        const fullPath = resolvePath(key);
+        link.setAttribute('href', fullPath);
+    });
+}
+
+// ============================================
 // تهيئة الصفحة
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('✅ صفحة استطلاع الرأي تم تحميلها بنجاح');
+    
     initRatingStars();
     initOptionSelection();
     initSurveyForm();
     updateProgress();
+    
+    // تحديث جميع الروابط الديناميكية
+    const links = document.querySelectorAll('[data-path]');
+    links.forEach(link => {
+        const key = link.getAttribute('data-path');
+        const fullPath = resolvePath(key);
+        link.setAttribute('href', fullPath);
+    });
 });
 
