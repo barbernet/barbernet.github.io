@@ -1,84 +1,114 @@
 /**
-middleware/routing/page-router.js
-نظام التوجيه والحماية المركزي
-*/
-import { auth, db } from "../../config/firebase-init.js"; // ✅ تم التصحيح
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { showNotification } from "../../shared/utils/notifications.js"; // ✅ تم التصحيح
-import { PATHS } from "../../shared/utils/paths.js"; // ✅ تم التصحيح
+ * middleware/routing/page-router.js
+ * نظام التوجيه والحماية المركزي
+ */
+import { supabase } from "../../config/supabase-init.js";
+import { showNotification } from "../../shared/utils/notifications.js";
+import { PATHS } from "../../shared/utils/paths.js";
 
 export const initPageRouter = () => {
-    onAuthStateChanged(auth, async (user) => {
-        const currentPath = window.location.pathname;
-        const isWelcomePage = currentPath.includes("welcome.html");
-        const isAddPage = currentPath.includes("add-salon.html") || 
-                          currentPath.includes("add-store.html") || 
-                          currentPath.includes("add-customer.html");
-        const isSetupPage = currentPath.includes("setup-salon.html") || 
-                            currentPath.includes("setup-store.html");
-        const isOnboardingZone = isWelcomePage || isAddPage || isSetupPage;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event !== 'INITIAL_SESSION' || !session) {
+            const currentPath = window.location.pathname;
+            const isOnboardingZone = currentPath.includes("welcome.html") ||
+                currentPath.includes("add-salon.html") ||
+                currentPath.includes("add-store.html") ||
+                currentPath.includes("add-customer.html") ||
+                currentPath.includes("setup-salon.html") ||
+                currentPath.includes("setup-store.html");
 
-        if (user) {
-            try {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    const role = userData.role;
-                    const userStatus = userData.status || "new";
-                    const onboardingStatus = userData.onboardingStatus || "none";
-
-                    if (userStatus === "active" || onboardingStatus === "completed") {
-                        showPageContent();
-                        return;
-                    }
-
-                    if (userStatus === "new" && onboardingStatus !== "completed") {
-                        if (sessionStorage.getItem("skipOnboardingAsset")) {
-                            showPageContent();
-                            return;
-                        }
-
-                        if (!isOnboardingZone) {
-                            let targetPath = PATHS.WELCOME;
-                            if (onboardingStatus === "none" || !onboardingStatus) {
-                                if (role === "salon") targetPath = PATHS.ADD_SALON;
-                                else if (role === "store") targetPath = PATHS.ADD_STORE;
-                                else if (role === "customer") targetPath = PATHS.ADD_CUSTOMER;
-                            } else if (onboardingStatus === "basic_done") {
-                                if (role === "salon") targetPath = PATHS.SETUP_SALON;
-                                else if (role === "store") targetPath = PATHS.SETUP_STORE;
-                                else if (role === "customer") {
-                                    showPageContent();
-                                    return;
-                                }
-                            }
-                            triggerRecoveryModal(role, onboardingStatus, targetPath);
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error("❌ خطأ في نظام التوجيه:", error);
-            }
-        } else {
             if (isOnboardingZone) {
                 window.location.replace(PATHS.LOGIN);
                 return;
             }
+            showPageContent();
+            return;
         }
-        showPageContent();
+
+        const currentPath = window.location.pathname;
+        const isWelcomePage = currentPath.includes("welcome.html");
+        const isAddPage = currentPath.includes("add-salon.html") ||
+            currentPath.includes("add-store.html") ||
+            currentPath.includes("add-customer.html");
+        const isSetupPage = currentPath.includes("setup-salon.html") ||
+            currentPath.includes("setup-store.html");
+        const isOnboardingZone = isWelcomePage || isAddPage || isSetupPage;
+
+        const user = session.user;
+
+        try {
+            const { data: profile, error } = await supabase
+                .from('profiles')
+                .select('role, onboarding_status')
+                .eq('id', user.id)
+                .single();
+
+            if (error || !profile) {
+                showPageContent();
+                return;
+            }
+
+            const role = profile.role;
+            const onboardingStatus = profile.onboarding_status || "empty";
+
+            // إذا كان المستخدم أكمل الإعداد
+            if (onboardingStatus === "completed") {
+                showPageContent();
+                return;
+            }
+
+            // إذا كان المستخدم في منطقة Onboarding
+            if (isOnboardingZone) {
+                showPageContent();
+                return;
+            }
+
+            // إذا كان المستخدم قد تجاوز الرسالة
+            if (sessionStorage.getItem("skipOnboardingAsset")) {
+                showPageContent();
+                return;
+            }
+
+            // توجيه المستخدم لإكمال الإعداد
+            let targetPath = PATHS.WELCOME;
+            
+            if (onboardingStatus === "empty") {
+                if (role === "salon") targetPath = PATHS.ADD_SALON;
+                else if (role === "store") targetPath = PATHS.ADD_STORE;
+                else if (role === "customer") targetPath = PATHS.ADD_CUSTOMER;
+            } else if (onboardingStatus === "incomplete") {
+                if (role === "salon") targetPath = PATHS.SETUP_SALON;
+                else if (role === "store") targetPath = PATHS.SETUP_STORE;
+                else if (role === "customer") {
+                    showPageContent();
+                    return;
+                }
+            }
+
+            triggerRecoveryModal(role, onboardingStatus, targetPath);
+        } catch (error) {
+            console.error("❌ خطأ في نظام التوجيه:", error);
+            showPageContent();
+        }
     });
 };
 
 function triggerRecoveryModal(role, currentStep, targetPath) {
     if (document.getElementById('routerRecoveryModal')) return;
 
-    let title = "تخصيص حسابك التجاري ";
+    let title = "تخصيص حسابك التجاري";
     let text = "لم تقم بتهيئة ملفك العملي بالكامل بعد.";
 
-    if (role === "salon") { title = "إعداد صالونك المحترف 💈"; text = "تبقى خطوة واحدة لتفعيل نظام الحجوزات والظهور للزبائن."; } 
-    else if (role === "store") { title = "تجهيز متجرك الموثق ️"; text = "ابدأ في عرض وبيع منتجاتك. أكمل إعداد المتجر لتنشيط سلة الشراء."; } 
-    else if (role === "customer") { title = "إكمال ملفك الشخصي 👤"; text = "لنستمتع بتجربة حجز فريدة، يرجى إكمال معلومات ملفك الشخصي."; }
+    if (role === "salon") {
+        title = "إعداد صالونك المحترف 💈";
+        text = "تبقى خطوة واحدة لتفعيل نظام الحجوزات والظهور للزبائن.";
+    } else if (role === "store") {
+        title = "تجهيز متجرك الموثق 🏪";
+        text = "ابدأ في عرض وبيع منتجاتك. أكمل إعداد المتجر لتنشيط سلة الشراء.";
+    } else if (role === "customer") {
+        title = "إكمال ملفك الشخصي 👤";
+        text = "لنستمتع بتجربة حجز فريدة، يرجى إكمال معلومات ملفك الشخصي.";
+    }
 
     const modal = document.createElement('div');
     modal.id = 'routerRecoveryModal';
@@ -96,7 +126,11 @@ function triggerRecoveryModal(role, currentStep, targetPath) {
     `;
     document.body.appendChild(modal);
 
-    modal.querySelector('#modalConfirmBtn').onclick = () => { modal.remove(); window.location.href = targetPath; };
+    modal.querySelector('#modalConfirmBtn').onclick = () => {
+        modal.remove();
+        window.location.href = targetPath;
+    };
+
     modal.querySelector('#modalCancelBtn').onclick = () => {
         sessionStorage.setItem("skipOnboardingAsset", "true");
         modal.remove();

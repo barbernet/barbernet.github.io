@@ -1,5 +1,4 @@
 /**
- * middleware/validation/index.js
  * التصدير المركزي لدوال الفلترة والتحقق
  */
 export {
@@ -8,9 +7,12 @@ export {
   sanitizePhone,
   sanitizeURL,
   validateLength,
+  isValidMoroccanPhone,
   sanitizeUserData,
-  sanitizeSalonData,
-  sanitizeBookingData
+  sanitizeBusinessData,
+  sanitizeBookingData,
+  sanitizeServiceData,
+  sanitizeProductData
 }
 from './input-sanitizer.js';
 
@@ -19,6 +21,7 @@ export {
   validateImageSize,
   validateImageDimensions,
   detectInappropriateContent,
-  validateAndProcessImage
+  validateImage,
+  generateStoragePath
 }
 from './images-sanitizer.js';

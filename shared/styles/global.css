@@ -1,16 +1,22 @@
+/* ==========================================================================
+BarberFlow Pro - الأنماط العامة والمتغيرات
+المسار: shared/styles/global.css
+⚠️ الثيم الفاتح هو الافتراضي، الثيم الداكن اختياري عبر data-theme="dark"
+========================================================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
 
 /* ==========================================================================
-المتغيرات العامة للألوان والثيمات (CSS Variables)
+1. المتغيرات العامة للألوان والثيمات (CSS Variables)
 ========================================================================== */
 :root {
-    /* === الخلفيات (Light Theme) === */
+    /* === الخلفيات (Light Theme - افتراضي) === */
     --bg-primary: #f8f9fa;
     --bg-secondary: #ffffff;
     --bg-tertiary: #f1f3f5;
     --bg-accent: #e9ecef;
     
-    /* === النصوص (Light Theme) === */
+    /* === النصوص (Light Theme - افتراضي) === */
     --text-primary: #212529;
     --text-secondary: #495057;
     --text-muted: #868e96;
@@ -50,13 +56,13 @@
     --spacing-xl: 32px;
     --spacing-xxl: 48px;
     
-    /* === متغيرات جديدة للشاشات الكبيرة (جديد) === */
+    /* === متغيرات للشاشات الكبيرة === */
     --container-max-width: 1400px;
     --sidebar-width: 280px;
     --header-height: 70px;
 }
 
-/* === الثيم الداكن === */
+/* === الثيم الداكن (اختياري) === */
 [data-theme="dark"] {
     --bg-primary: #121212;
     --bg-secondary: #1e1e1e;
@@ -144,7 +150,7 @@ img {
 }
 
 /* ============================================
-تخطيط الشبكة (Grid Layout) - جديد
+تخطيط الشبكة (Grid Layout)
 ============================================ */
 .grid {
     display: grid;
@@ -223,7 +229,7 @@ img {
 }
 
 /* ============================================
-أزرار جديدة (جديد)
+أزرار جديدة
 ============================================ */
 .btn-sm {
     padding: 6px 12px;
@@ -318,7 +324,7 @@ img {
 }
 
 /* ============================================
-حقول إدخال جديدة (جديد)
+حقول إدخال جديدة
 ============================================ */
 .form-textarea {
     min-height: 120px;
@@ -390,7 +396,7 @@ img {
 }
 
 /* ============================================
-أنيميشن جديدة (جديد)
+أنيميشن جديدة
 ============================================ */
 @keyframes fadeIn {
     from { opacity: 0; }
@@ -398,22 +404,22 @@ img {
 }
 
 @keyframes slideUp {
-    from { 
+    from {
         opacity: 0;
         transform: translateY(20px);
     }
-    to { 
+    to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
 @keyframes slideDown {
-    from { 
+    from {
         opacity: 0;
         transform: translateY(-20px);
     }
-    to { 
+    to {
         opacity: 1;
         transform: translateY(0);
     }
@@ -462,23 +468,26 @@ img {
 .hidden { display: none !important; }
 .text-center { text-align: center; }
 .text-gold { color: var(--brand-accent); }
+
 .mt-1 { margin-top: var(--spacing-xs); }
 .mt-2 { margin-top: var(--spacing-sm); }
 .mt-3 { margin-top: var(--spacing-md); }
 .mt-4 { margin-top: var(--spacing-lg); }
+
 .mb-1 { margin-bottom: var(--spacing-xs); }
 .mb-2 { margin-bottom: var(--spacing-sm); }
 .mb-3 { margin-bottom: var(--spacing-md); }
 .mb-4 { margin-bottom: var(--spacing-lg); }
 
 /* ============================================
-أدوات مساعدة جديدة (جديد)
+أدوات مساعدة جديدة
 ============================================ */
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
+
 .gap-1 { gap: var(--spacing-xs); }
 .gap-2 { gap: var(--spacing-sm); }
 .gap-3 { gap: var(--spacing-md); }
@@ -491,7 +500,6 @@ img {
 
 .rounded { border-radius: var(--radius-md); }
 .rounded-full { border-radius: 9999px; }
-
 .shadow { box-shadow: var(--shadow-md); }
 .shadow-lg { box-shadow: var(--shadow-lg); }
 

@@ -1,6 +1,7 @@
 /* ==========================================================================
 BarberFlow Pro - نظام التنبيهات الموحد
 المسار: shared/styles/notifications.css
+⚠️ الثيم الفاتح افتراضي، الداكن اختياري عبر data-theme="dark"
 ========================================================================== */
 
 /* ============================================
@@ -19,20 +20,20 @@ BarberFlow Pro - نظام التنبيهات الموحد
 }
 
 /* ============================================
-التنبيه الفردي
+التنبيه الفردي (الثيم الفاتح افتراضي)
 ============================================ */
 .notification {
     min-width: 280px;
     max-width: 380px;
     padding: 15px 20px;
     border-radius: var(--radius-md, 12px);
-    background: var(--bg-secondary, #1e1e1e);
-    color: var(--text-primary, #f8f9fa);
+    background: var(--bg-secondary, #ffffff);
+    color: var(--text-primary, #212529);
     display: flex;
     align-items: center;
     gap: 12px;
     border: 1px solid var(--border-gold, rgba(212, 175, 55, 0.3));
-    box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.4));
+    box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.08));
     animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     direction: rtl;
     pointer-events: auto;
@@ -100,7 +101,7 @@ BarberFlow Pro - نظام التنبيهات الموحد
 .notification-close {
     background: transparent;
     border: none;
-    color: var(--text-muted, #adb5bd);
+    color: var(--text-muted, #868e96);
     cursor: pointer;
     padding: 5px;
     border-radius: 50%;
@@ -111,8 +112,8 @@ BarberFlow Pro - نظام التنبيهات الموحد
 }
 
 .notification-close:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary, #f8f9fa);
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary, #212529);
 }
 
 /* ============================================
@@ -179,7 +180,7 @@ BarberFlow Pro - نظام التنبيهات الموحد
 }
 
 /* ============================================
-نافذة OTP المنبثقة
+نافذة OTP المنبثقة (الثيم الفاتح افتراضي)
 ============================================ */
 .global-otp-overlay {
     position: fixed;
@@ -187,7 +188,7 @@ BarberFlow Pro - نظام التنبيهات الموحد
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
@@ -199,13 +200,13 @@ BarberFlow Pro - نظام التنبيهات الموحد
 }
 
 .global-otp-modal {
-    background: var(--bg-secondary, #1e1e1e);
+    background: var(--bg-secondary, #ffffff);
     border: 1px solid var(--border-gold, rgba(212, 175, 55, 0.3));
     padding: 30px;
     border-radius: var(--radius-lg, 16px);
     width: 100%;
     max-width: 400px;
-    box-shadow: var(--shadow-xl, 0 20px 50px rgba(0, 0, 0, 0.7));
+    box-shadow: var(--shadow-xl, 0 20px 50px rgba(0, 0, 0, 0.15));
     text-align: center;
     position: relative;
     box-sizing: border-box;
@@ -217,7 +218,7 @@ BarberFlow Pro - نظام التنبيهات الموحد
     left: 15px;
     background: transparent;
     border: none;
-    color: var(--text-muted, #888);
+    color: var(--text-muted, #868e96);
     font-size: 1.2rem;
     cursor: pointer;
     transition: color 0.3s;
@@ -230,8 +231,8 @@ BarberFlow Pro - نظام التنبيهات الموحد
 }
 
 .global-otp-close:hover {
-    color: var(--brand-danger, #ff4d4d);
-    background: rgba(255, 77, 77, 0.1);
+    color: var(--brand-danger, #c92a2a);
+    background: rgba(201, 42, 42, 0.1);
 }
 
 .global-otp-icon {
@@ -241,7 +242,7 @@ BarberFlow Pro - نظام التنبيهات الموحد
 }
 
 .global-otp-title {
-    color: var(--text-primary, #fff);
+    color: var(--text-primary, #212529);
     font-size: 1.4rem;
     font-weight: bold;
     margin: 0 0 10px 0;
@@ -254,10 +255,10 @@ BarberFlow Pro - نظام التنبيهات الموحد
 .global-otp-input {
     width: 100%;
     padding: 14px;
-    background: var(--bg-tertiary, #2d2d2d);
-    border: 1px solid var(--border-color, #333);
+    background: var(--bg-tertiary, #f1f3f5);
+    border: 1px solid var(--border-color, #dee2e6);
     border-radius: var(--radius-md, 10px);
-    color: var(--text-primary, #fff);
+    color: var(--text-primary, #212529);
     font-size: 1.5rem;
     letter-spacing: 8px;
     text-align: center;
@@ -273,7 +274,7 @@ BarberFlow Pro - نظام التنبيهات الموحد
 }
 
 /* ============================================
-تحسينات للشاشات الكبيرة (جديد)
+تحسينات للشاشات الكبيرة
 ============================================ */
 @media (min-width: 768px) {
     #notification-container {
@@ -281,22 +282,22 @@ BarberFlow Pro - نظام التنبيهات الموحد
         right: 40px;
         max-width: 450px;
     }
-    
+
     .notification {
         min-width: 350px;
         max-width: 450px;
         padding: 18px 24px;
     }
-    
+
     .notification span {
         font-size: 1rem;
     }
-    
+
     .global-otp-modal {
         max-width: 450px;
         padding: 40px;
     }
-    
+
     .global-otp-title {
         font-size: 1.6rem;
     }
@@ -308,17 +309,17 @@ BarberFlow Pro - نظام التنبيهات الموحد
         right: 60px;
         max-width: 500px;
     }
-    
+
     .notification {
         min-width: 400px;
         max-width: 500px;
         padding: 20px 28px;
     }
-    
+
     .notification span {
         font-size: 1.05rem;
     }
-    
+
     .global-otp-modal {
         max-width: 500px;
         padding: 50px;
@@ -326,7 +327,7 @@ BarberFlow Pro - نظام التنبيهات الموحد
 }
 
 /* ============================================
-تحسينات للشاشات الصغيرة جداً (جديد)
+تحسينات للشاشات الصغيرة جداً
 ============================================ */
 @media (max-width: 480px) {
     #notification-container {
@@ -335,58 +336,58 @@ BarberFlow Pro - نظام التنبيهات الموحد
         max-width: none;
         top: 10px;
     }
-    
+
     .notification {
         min-width: auto;
         max-width: none;
         padding: 12px 16px;
     }
-    
+
     .notification span {
         font-size: 0.9rem;
     }
-    
+
     .global-otp-modal {
         padding: 20px;
     }
 }
 
 /* ============================================
-دعم الوضع الفاتح للتنبيهات (جديد)
+دعم الثيم الداكن (اختياري)
 ============================================ */
-[data-theme="light"] .notification {
-    background: #ffffff;
-    color: #212529;
-    border-color: rgba(0, 0, 0, 0.1);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+[data-theme="dark"] .notification {
+    background: var(--bg-secondary, #1e1e1e);
+    color: var(--text-primary, #f8f9fa);
+    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
-[data-theme="light"] .notification-close {
-    color: #868e96;
+[data-theme="dark"] .notification-close {
+    color: var(--text-muted, #adb5bd);
 }
 
-[data-theme="light"] .notification-close:hover {
-    background: rgba(0, 0, 0, 0.05);
-    color: #212529;
+[data-theme="dark"] .notification-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary, #f8f9fa);
 }
 
-[data-theme="light"] .global-otp-modal {
-    background: #ffffff;
-    border-color: rgba(0, 0, 0, 0.1);
+[data-theme="dark"] .global-otp-modal {
+    background: var(--bg-secondary, #1e1e1e);
+    border-color: rgba(212, 175, 55, 0.3);
 }
 
-[data-theme="light"] .global-otp-close {
-    color: #868e96;
+[data-theme="dark"] .global-otp-close {
+    color: var(--text-muted, #adb5bd);
 }
 
-[data-theme="light"] .global-otp-close:hover {
-    color: #c92a2a;
-    background: rgba(201, 42, 42, 0.1);
+[data-theme="dark"] .global-otp-close:hover {
+    color: var(--brand-danger, #c92a2a);
+    background: rgba(201, 42, 42, 0.2);
 }
 
-[data-theme="light"] .global-otp-input {
-    background: #f1f3f5;
-    border-color: #dee2e6;
-    color: #212529;
+[data-theme="dark"] .global-otp-input {
+    background: var(--bg-tertiary, #2d2d2d);
+    border-color: var(--border-color, #495057);
+    color: var(--text-primary, #f8f9fa);
 }
 

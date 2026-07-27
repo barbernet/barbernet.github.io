@@ -2,7 +2,6 @@
  * middleware/subscription/index.js
  * التصدير المركزي لدوال الاشتراكات
  */
-
 export {
     checkSubscription,
     hasFeature,

@@ -1,20 +1,14 @@
 /**
-BarberFlow Pro - مكون بطاقة الصالون
-المسار: shared/components/card-salon.js
-الدور: إنشاء وعرض بطاقات الصالونات بشكل احترافي
-*/
-import { auth, db } from "../../config/firebase-init.js";
-import { 
-    doc, 
-    setDoc, 
-    deleteDoc, 
-    getDoc 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+ * BarberFlow Pro - مكون بطاقة الصالون
+ * المسار: shared/components/card-salon.js
+ * الدور: إنشاء وعرض بطاقات الصالونات بشكل احترافي
+ */
+import { supabase } from "../../config/supabase-init.js";
 import { PATHS, resolvePath } from "../utils/paths.js";
 
 /**
-HTML Template لبطاقة الصالون
-*/
+ * HTML Template لبطاقة الصالون
+ */
 const SALON_CARD_TEMPLATE = `
 <article class="salon-card">
     <div class="salon-card__image-wrapper">
@@ -25,7 +19,7 @@ const SALON_CARD_TEMPLATE = `
         <div class="salon-card__badges">
             <span class="salon-card__status" data-status="open">مفتوح الآن</span>
             <span class="salon-card__featured" style="display:none;">
-                <i class="fas fa-crown"></i> مميز
+                <i class="fas fa-crown"></i> موثق
             </span>
         </div>
         <button class="salon-card__favorite" aria-label="إضافة للمفضلة">
@@ -66,18 +60,24 @@ const SALON_CARD_TEMPLATE = `
 `;
 
 /**
-التحقق من حالة المفضلة للصالون بالنسبة للمستخدم الحالي
-@param {string} salonId - معرف الصالون
-@returns {Promise<boolean>}
-*/
+ * التحقق من حالة المفضلة للصالون بالنسبة للمستخدم الحالي
+ * @param {string} salonId - معرف الصالون
+ * @returns {Promise<boolean>}
+ */
 async function checkSalonFavorite(salonId) {
-    const userId = auth.currentUser?.uid;
-    if (!userId) return false;
-    
     try {
-        const favoriteRef = doc(db, "users", userId, "favorites", `salon_${salonId}`);
-        const favoriteDoc = await getDoc(favoriteRef);
-        return favoriteDoc.exists();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) return false;
+
+        const { data, error } = await supabase
+            .from('favorites')
+            .select('id')
+            .eq('user_id', session.user.id)
+            .eq('item_id', salonId)
+            .eq('item_type', 'salon')
+            .single();
+
+        return !error && data;
     } catch (error) {
         console.error("Error checking salon favorite:", error);
         return false;
@@ -85,31 +85,37 @@ async function checkSalonFavorite(salonId) {
 }
 
 /**
-تبديل حالة المفضلة للصالون (إضافة/حذف)
-@param {string} salonId - معرف الصالون
-@param {boolean} isLiked - الحالة الجديدة
-@returns {Promise<boolean>} نجاح العملية
-*/
+ * تبديل حالة المفضلة للصالون (إضافة/حذف)
+ * @param {string} salonId - معرف الصالون
+ * @param {boolean} isLiked - الحالة الجديدة
+ * @returns {Promise<boolean>} نجاح العملية
+ */
 async function toggleSalonFavorite(salonId, isLiked) {
-    const userId = auth.currentUser?.uid;
-    if (!userId) {
-        console.warn("User must be logged in to add favorites");
-        return false;
-    }
-    
     try {
-        const favoriteRef = doc(db, "users", userId, "favorites", `salon_${salonId}`);
-        
-        if (isLiked) {
-            await setDoc(favoriteRef, {
-                salonId: salonId,
-                itemType: "salon",
-                addedAt: new Date().toISOString()
-            });
-        } else {
-            await deleteDoc(favoriteRef);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+            console.warn("User must be logged in to add favorites");
+            return false;
         }
-        return true;
+
+        if (isLiked) {
+            const { error } = await supabase
+                .from('favorites')
+                .insert({
+                    user_id: session.user.id,
+                    item_id: salonId,
+                    item_type: 'salon'
+                });
+            return !error;
+        } else {
+            const { error } = await supabase
+                .from('favorites')
+                .delete()
+                .eq('user_id', session.user.id)
+                .eq('item_id', salonId)
+                .eq('item_type', 'salon');
+            return !error;
+        }
     } catch (error) {
         console.error("Error toggling salon favorite:", error);
         return false;
@@ -117,11 +123,11 @@ async function toggleSalonFavorite(salonId, isLiked) {
 }
 
 /**
-إنشاء بطاقة صالون
-@param {Object} salon - بيانات الصالون
-@param {string} id - معرف الصالون
-@returns {HTMLElement|null}
-*/
+ * إنشاء بطاقة صالون
+ * @param {Object} salon - بيانات الصالون من جدول businesses
+ * @param {string} id - معرف الصالون
+ * @returns {HTMLElement|null}
+ */
 export async function createSalonCard(salon, id) {
     const salonId = id || salon?.id;
     if (!salonId) {
@@ -138,8 +144,8 @@ export async function createSalonCard(salon, id) {
         const img = card.querySelector('.salon-card__image');
         const placeholder = card.querySelector('.salon-card__placeholder');
         if (img && placeholder) {
-            if (salon.coverImage) {
-                img.src = salon.coverImage;
+            if (salon.cover_url) {
+                img.src = salon.cover_url;
                 img.style.display = 'block';
                 placeholder.style.display = 'none';
                 img.onerror = () => {
@@ -153,13 +159,13 @@ export async function createSalonCard(salon, id) {
             }
         }
 
-        // ===== اسم الصالون (تم التوحيد: name فقط) =====
+        // ===== اسم الصالون =====
         const nameElement = card.querySelector('.salon-card__name');
         if (nameElement) {
             nameElement.textContent = salon.name || "صالون غير مسمى";
         }
 
-        // ===== الموقع (تم التوحيد: city فقط) =====
+        // ===== الموقع =====
         const locationElement = card.querySelector('.salon-card__location span');
         if (locationElement) {
             locationElement.textContent = salon.city || "الموقع غير محدد";
@@ -173,23 +179,35 @@ export async function createSalonCard(salon, id) {
             ratingElement.textContent = rating.toFixed(1);
         }
         if (ratingCount) {
-            const count = salon.reviewCount || 0;
+            const count = salon.reviews_count || 0;
             ratingCount.textContent = `(${count})`;
         }
 
-        // ===== عدد الخدمات =====
+        // ===== عدد الخدمات (جلب من جدول services) =====
         const servicesElement = card.querySelector('.salon-card__services span');
         if (servicesElement) {
-            const count = salon.services?.length || 0;
+            const { data: services } = await supabase
+                .from('services')
+                .select('id')
+                .eq('business_id', salonId)
+                .eq('is_available', true);
+            
+            const count = services?.length || 0;
             servicesElement.textContent = `${count} ${count === 1 ? 'خدمة' : 'خدمات'}`;
         }
 
         // ===== أقل سعر =====
         const minPriceElement = card.querySelector('.salon-card__price-value');
         if (minPriceElement) {
+            const { data: services } = await supabase
+                .from('services')
+                .select('price')
+                .eq('business_id', salonId)
+                .eq('is_available', true);
+            
             let minPrice = "0";
-            if (salon.services && salon.services.length > 0) {
-                const prices = salon.services.map(s => parseFloat(s.price) || 0);
+            if (services && services.length > 0) {
+                const prices = services.map(s => parseFloat(s.price) || 0);
                 minPrice = Math.min(...prices).toString();
             }
             minPriceElement.textContent = `${minPrice} DH`;
@@ -198,22 +216,21 @@ export async function createSalonCard(salon, id) {
         // ===== حالة الصالون (مفتوح/مغلق) =====
         const statusBadge = card.querySelector('.salon-card__status');
         if (statusBadge) {
-            const isOpen = isSalonOpen(salon.workingHours);
+            const isOpen = isSalonOpen(salon.working_hours);
             statusBadge.textContent = isOpen ? 'مفتوح الآن' : 'مغلق حالياً';
             statusBadge.dataset.status = isOpen ? 'open' : 'closed';
         }
 
-        // ===== Badge مميز =====
+        // ===== Badge موثق =====
         const featuredBadge = card.querySelector('.salon-card__featured');
-        if (featuredBadge && salon.isFeatured) {
+        if (featuredBadge && salon.is_verified) {
             featuredBadge.style.display = 'flex';
         }
 
-        // ===== زر الإعجاب (تم إصلاح المنطق) =====
+        // ===== زر الإعجاب =====
         const favoriteBtn = card.querySelector('.salon-card__favorite');
         const favoriteIcon = favoriteBtn?.querySelector('i');
         
-        // التحقق من حالة المفضلة من قاعدة البيانات (خاصة بالمستخدم)
         let isLiked = await checkSalonFavorite(salonId);
         
         const updateFavoriteUI = (liked) => {
@@ -225,29 +242,27 @@ export async function createSalonCard(salon, id) {
                 favoriteBtn.classList.toggle('active', liked);
             }
         };
-        
+
         updateFavoriteUI(isLiked);
-        
+
         if (favoriteBtn) {
             favoriteBtn.onclick = async (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                
-                // التحقق من تسجيل الدخول
-                if (!auth.currentUser) {
+
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
                     window.location.href = resolvePath('LOGIN');
                     return;
                 }
-                
+
                 const newLikedState = !isLiked;
                 updateFavoriteUI(newLikedState);
-                
+
                 const success = await toggleSalonFavorite(salonId, newLikedState);
-                
                 if (success) {
                     isLiked = newLikedState;
                 } else {
-                    // التراجع عن التغيير في حالة الفشل
                     isLiked = !newLikedState;
                     updateFavoriteUI(isLiked);
                 }
@@ -273,22 +288,24 @@ export async function createSalonCard(salon, id) {
 }
 
 /**
-التحقق من حالة الصالون (مفتوح/مغلق)
-*/
-function isSalonOpen(hours) {
-    if (!hours?.open || !hours?.close) return true;
+ * التحقق من حالة الصالون (مفتوح/مغلق)
+ */
+function isSalonOpen(workingHours) {
+    if (!workingHours?.open || !workingHours?.close) return true;
+    
     const now = new Date();
     const curr = now.getHours() * 60 + now.getMinutes();
-    const [oh, om] = hours.open.split(':').map(Number);
-    const [ch, cm] = hours.close.split(':').map(Number);
+    const [oh, om] = workingHours.open.split(':').map(Number);
+    const [ch, cm] = workingHours.close.split(':').map(Number);
     const ot = oh * 60 + om;
     const ct = ch * 60 + cm;
+
     return ct > ot ? (curr >= ot && curr < ct) : (curr >= ot || curr < ct);
 }
 
 /**
-إضافة تأثيرات التفاعل (Animations)
-*/
+ * إضافة تأثيرات التفاعل (Animations)
+ */
 function addInteractionEffects(card) {
     card.style.opacity = '0';
     card.style.transform = 'translateY(20px)';
@@ -316,8 +333,8 @@ function addInteractionEffects(card) {
 }
 
 /**
-إنشاء عدة بطاقات صالون
-*/
+ * إنشاء عدة بطاقات صالون
+ */
 export async function createSalonCards(salons) {
     const cards = [];
     for (const salon of salons) {

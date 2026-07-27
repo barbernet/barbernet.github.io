@@ -1,13 +1,13 @@
 /**
-BarberFlow Pro - مكون بطاقة الكونسيرج (الخدمات المنزلية)
-المسار: shared/components/card-concierge.js
-الدور: إنشاء وعرض بطاقات الخدمات المنزلية الفاخرة
-*/
-import { PATHS, resolvePath } from "../utils/paths.js"; // ✅ تم تصحيح المسار
+ * BarberFlow Pro - مكون بطاقة الكونسيرج (الخدمات المنزلية)
+ * المسار: shared/components/card-concierge.js
+ * الدور: إنشاء وعرض بطاقات الخدمات المنزلية الفاخرة
+ */
+import { PATHS, resolvePath } from "../utils/paths.js";
 
 /**
-HTML Template لبطاقة الكونسيرج
-*/
+ * HTML Template لبطاقة الكونسيرج
+ */
 const CONCIERGE_CARD_TEMPLATE = `
 <article class="concierge-card">
     <div class="concierge-card__badge">
@@ -48,10 +48,10 @@ const CONCIERGE_CARD_TEMPLATE = `
 `;
 
 /**
-إنشاء بطاقة كونسيرج
-@param {Object} service - بيانات الخدمة
-@returns {HTMLElement|null}
-*/
+ * إنشاء بطاقة كونسيرج
+ * @param {Object} service - بيانات الخدمة
+ * @returns {HTMLElement|null}
+ */
 export async function createConciergeCard(service) {
     if (!service?.id) {
         console.error('[ConciergeCard] ❌ معرف الخدمة غير مُعرّف!');
@@ -101,10 +101,10 @@ export async function createConciergeCard(service) {
         // ===== زر CTA =====
         const ctaBtn = card.querySelector('.concierge-card__cta');
         if (ctaBtn) {
-            if (service.ctaLink) {
-                ctaBtn.href = service.ctaLink;
-            } else if (service.ctaText) {
-                ctaBtn.querySelector('span').textContent = service.ctaText;
+            if (service.cta_link) {
+                ctaBtn.href = service.cta_link;
+            } else if (service.cta_text) {
+                ctaBtn.querySelector('span').textContent = service.cta_text;
             }
         }
 
@@ -118,8 +118,8 @@ export async function createConciergeCard(service) {
 }
 
 /**
-إضافة تأثيرات التفاعل
-*/
+ * إضافة تأثيرات التفاعل
+ */
 function addInteractionEffects(card) {
     card.style.opacity = '0';
     card.style.transform = 'translateY(20px)';
@@ -129,7 +129,6 @@ function addInteractionEffects(card) {
         card.style.transform = 'translateY(0)';
     });
 
-    // تأثير glow عند hover
     if (window.matchMedia('(hover: hover)').matches) {
         card.addEventListener('mouseenter', () => {
             const glow = card.querySelector('.concierge-card__icon-glow');
@@ -143,8 +142,8 @@ function addInteractionEffects(card) {
 }
 
 /**
-إنشاء عدة بطاقات كونسيرج
-*/
+ * إنشاء عدة بطاقات كونسيرج
+ */
 export async function createConciergeCards(services) {
     const cards = [];
     for (const service of services) {

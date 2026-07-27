@@ -1,20 +1,14 @@
 /**
-BarberFlow Pro - مكون بطاقة المنتج/المتجر
-المسار: shared/components/card-store.js
-الدور: إنشاء وعرض بطاقات المنتجات بشكل احترافي
-*/
-import { auth, db } from "../../config/firebase-init.js";
-import { 
-    doc, 
-    setDoc, 
-    deleteDoc, 
-    getDoc 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+ * BarberFlow Pro - مكون بطاقة المنتج/المتجر
+ * المسار: shared/components/card-store.js
+ * الدور: إنشاء وعرض بطاقات المنتجات بشكل احترافي
+ */
+import { supabase } from "../../config/supabase-init.js";
 import { PATHS, resolvePath } from "../utils/paths.js";
 
 /**
-HTML Template لبطاقة المنتج
-*/
+ * HTML Template لبطاقة المنتج
+ */
 const STORE_CARD_TEMPLATE = `
 <article class="store-card">
     <div class="store-card__image-wrapper">
@@ -67,18 +61,22 @@ const STORE_CARD_TEMPLATE = `
 `;
 
 /**
-التحقق من حالة المفضلة للمنتج بالنسبة للمستخدم الحالي
-@param {string} productId - معرف المنتج
-@returns {Promise<boolean>}
-*/
+ * التحقق من حالة المفضلة للمنتج
+ */
 async function checkProductFavorite(productId) {
-    const userId = auth.currentUser?.uid;
-    if (!userId) return false;
-    
     try {
-        const favoriteRef = doc(db, "users", userId, "favorites", `product_${productId}`);
-        const favoriteDoc = await getDoc(favoriteRef);
-        return favoriteDoc.exists();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) return false;
+
+        const { data, error } = await supabase
+            .from('favorites')
+            .select('id')
+            .eq('user_id', session.user.id)
+            .eq('item_id', productId)
+            .eq('item_type', 'product')
+            .single();
+
+        return !error && data;
     } catch (error) {
         console.error("Error checking product favorite:", error);
         return false;
@@ -86,31 +84,31 @@ async function checkProductFavorite(productId) {
 }
 
 /**
-تبديل حالة المفضلة للمنتج (إضافة/حذف)
-@param {string} productId - معرف المنتج
-@param {boolean} isLiked - الحالة الجديدة
-@returns {Promise<boolean>} نجاح العملية
-*/
+ * تبديل حالة المفضلة للمنتج
+ */
 async function toggleProductFavorite(productId, isLiked) {
-    const userId = auth.currentUser?.uid;
-    if (!userId) {
-        console.warn("User must be logged in to add favorites");
-        return false;
-    }
-    
     try {
-        const favoriteRef = doc(db, "users", userId, "favorites", `product_${productId}`);
-        
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) return false;
+
         if (isLiked) {
-            await setDoc(favoriteRef, {
-                productId: productId,
-                itemType: "product",
-                addedAt: new Date().toISOString()
-            });
+            const { error } = await supabase
+                .from('favorites')
+                .insert({
+                    user_id: session.user.id,
+                    item_id: productId,
+                    item_type: 'product'
+                });
+            return !error;
         } else {
-            await deleteDoc(favoriteRef);
+            const { error } = await supabase
+                .from('favorites')
+                .delete()
+                .eq('user_id', session.user.id)
+                .eq('item_id', productId)
+                .eq('item_type', 'product');
+            return !error;
         }
-        return true;
     } catch (error) {
         console.error("Error toggling product favorite:", error);
         return false;
@@ -118,11 +116,11 @@ async function toggleProductFavorite(productId, isLiked) {
 }
 
 /**
-إنشاء بطاقة منتج
-@param {Object} product - بيانات المنتج
-@param {string} id - معرف المنتج
-@returns {HTMLElement|null}
-*/
+ * إنشاء بطاقة منتج
+ * @param {Object} product - بيانات المنتج من جدول products
+ * @param {string} id - معرف المنتج
+ * @returns {HTMLElement|null}
+ */
 export async function createStoreCard(product, id) {
     const productId = id || product?.id;
     if (!productId) {
@@ -135,12 +133,12 @@ export async function createStoreCard(product, id) {
     const card = doc.querySelector('.store-card');
 
     try {
-        // ===== صورة المنتج (تم التوحيد: image فقط) =====
+        // ===== صورة المنتج =====
         const img = card.querySelector('.store-card__image');
         const placeholder = card.querySelector('.store-card__placeholder');
         if (img && placeholder) {
-            if (product.image) {
-                img.src = product.image;
+            if (product.image_url) {
+                img.src = product.image_url;
                 img.style.display = 'block';
                 placeholder.style.display = 'none';
                 img.onerror = () => {
@@ -154,13 +152,13 @@ export async function createStoreCard(product, id) {
             }
         }
 
-        // ===== اسم المنتج (تم التوحيد: name فقط) =====
+        // ===== اسم المنتج =====
         const nameElement = card.querySelector('.store-card__name');
         if (nameElement) {
             nameElement.textContent = product.name || "منتج غير مسمى";
         }
 
-        // ===== الفئة (تم التوحيد: category فقط) =====
+        // ===== الفئة =====
         const categoryElement = card.querySelector('.store-card__category span');
         if (categoryElement) {
             categoryElement.textContent = product.category || "عام";
@@ -189,18 +187,17 @@ export async function createStoreCard(product, id) {
             }
         }
 
-        // ===== السعر (تم التوحيد: oldPrice فقط) =====
+        // ===== السعر =====
         const priceCurrent = card.querySelector('.store-card__price-current');
         const priceOld = card.querySelector('.store-card__price-old');
         const discountBadge = card.querySelector('.store-card__discount');
-        
         if (priceCurrent) {
             const price = parseFloat(product.price) || 0;
             priceCurrent.textContent = `${price} DH`;
         }
-        
-        if (product.oldPrice) {
-            const oldPrice = parseFloat(product.oldPrice);
+
+        if (product.old_price) {
+            const oldPrice = parseFloat(product.old_price);
             if (priceOld) {
                 priceOld.textContent = `${oldPrice} DH`;
                 priceOld.style.display = 'block';
@@ -217,15 +214,14 @@ export async function createStoreCard(product, id) {
 
         // ===== Badge جديد =====
         const newBadge = card.querySelector('.store-card__new');
-        if (newBadge && product.isNew) {
+        if (newBadge && product.is_new) {
             newBadge.style.display = 'block';
         }
 
-        // ===== زر المفضلة (تم إصلاح المنطق) =====
+        // ===== زر المفضلة =====
         const favoriteBtn = card.querySelector('.store-card__favorite');
         const favoriteIcon = favoriteBtn?.querySelector('i');
         
-        // التحقق من حالة المفضلة من قاعدة البيانات (خاصة بالمستخدم)
         let isLiked = await checkProductFavorite(productId);
         
         const updateFavoriteUI = (liked) => {
@@ -237,29 +233,27 @@ export async function createStoreCard(product, id) {
                 favoriteBtn.classList.toggle('active', liked);
             }
         };
-        
+
         updateFavoriteUI(isLiked);
-        
+
         if (favoriteBtn) {
             favoriteBtn.onclick = async (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                
-                // التحقق من تسجيل الدخول
-                if (!auth.currentUser) {
+
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
                     window.location.href = resolvePath('LOGIN');
                     return;
                 }
-                
+
                 const newLikedState = !isLiked;
                 updateFavoriteUI(newLikedState);
-                
+
                 const success = await toggleProductFavorite(productId, newLikedState);
-                
                 if (success) {
                     isLiked = newLikedState;
                 } else {
-                    // التراجع عن التغيير في حالة الفشل
                     isLiked = !newLikedState;
                     updateFavoriteUI(isLiked);
                 }
@@ -302,12 +296,11 @@ export async function createStoreCard(product, id) {
 }
 
 /**
-إضافة المنتج إلى السلة
-*/
+ * إضافة المنتج إلى السلة
+ */
 function addToCart(product) {
     const cart = JSON.parse(localStorage.getItem('bf-cart') || '[]');
     const existingItem = cart.find(item => item.id === product.id);
-    
     if (existingItem) {
         existingItem.quantity = (existingItem.quantity || 1) + 1;
     } else {
@@ -315,7 +308,7 @@ function addToCart(product) {
             id: product.id,
             name: product.name,
             price: product.price,
-            image: product.image,
+            image: product.image_url,
             quantity: 1
         });
     }
@@ -325,8 +318,8 @@ function addToCart(product) {
 }
 
 /**
-عرض تنبيه إضافة للسلة
-*/
+ * عرض تنبيه إضافة للسلة
+ */
 function showAddToCartFeedback() {
     const notification = document.createElement('div');
     notification.className = 'add-to-cart-feedback';
@@ -340,15 +333,15 @@ function showAddToCartFeedback() {
 }
 
 /**
-عرض نافذة العرض السريع
-*/
+ * عرض نافذة العرض السريع
+ */
 function showQuickView(product) {
     console.log('Quick view for:', product);
 }
 
 /**
-إضافة تأثيرات التفاعل
-*/
+ * إضافة تأثيرات التفاعل
+ */
 function addInteractionEffects(card) {
     card.style.opacity = '0';
     card.style.transform = 'translateY(20px)';
@@ -360,8 +353,8 @@ function addInteractionEffects(card) {
 }
 
 /**
-إنشاء عدة بطاقات منتجات
-*/
+ * إنشاء عدة بطاقات منتجات
+ */
 export async function createStoreCards(products) {
     const cards = [];
     for (const product of products) {

@@ -1,14 +1,19 @@
 /**
-نقطة التصدير المركزية لجميع دوال الـ Middleware
-*/
+ * middleware/index.js
+ * نقطة التصدير المركزية لجميع دوال الـ Middleware
+ */
 
 // Auth Middleware
-export { getCurrentUser, isUserLoggedIn, getCurrentUserId } from './auth/auth-state.js';
+export { 
+    getCurrentUser, 
+    isUserLoggedIn, 
+    getCurrentUserId 
+} from './auth/auth-state.js';
 
 // Guards Middleware
 export {
     checkRole,
-    checkUserStatus,
+    checkBusinessStatus,
     handleUnauthorizedAccess,
     hasCompletedOnboarding
 } from './guards/role-guard.js';
@@ -45,8 +50,10 @@ export {
     sanitizeURL,
     validateLength,
     sanitizeUserData,
-    sanitizeSalonData,
-    sanitizeBookingData
+    sanitizeBusinessData,
+    sanitizeBookingData,
+    sanitizeServiceData,
+    sanitizeProductData
 } from './validation/input-sanitizer.js';
 
 export {
@@ -54,7 +61,8 @@ export {
     validateImageSize,
     validateImageDimensions,
     detectInappropriateContent,
-    validateAndProcessImage
+    validateImage,
+    generateStoragePath
 } from './validation/images-sanitizer.js';
 
 // Subscription Middleware

@@ -100,6 +100,7 @@ BarberFlow Pro - مكونات البطاقات
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 700;
+    display: flex;
     align-items: center;
     gap: 5px;
 }
@@ -288,6 +289,36 @@ BarberFlow Pro - مكونات البطاقات
     font-weight: 700;
 }
 
+.store-card__favorite {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.store-card__favorite:hover {
+    transform: scale(1.1);
+}
+
+.store-card__favorite.active i {
+    color: var(--brand-danger);
+}
+
+.store-card__favorite i {
+    color: #666;
+    font-size: 1rem;
+}
+
 .store-card__quick-view {
     position: absolute;
     bottom: 12px;
@@ -304,6 +335,7 @@ BarberFlow Pro - مكونات البطاقات
     opacity: 0;
     transform: translateY(10px);
     transition: all 0.3s ease;
+    z-index: 2;
 }
 
 .store-card:hover .store-card__quick-view {
@@ -682,6 +714,496 @@ BarberFlow Pro - مكونات البطاقات
 }
 
 /* ============================================
+🆕 بطاقة الموظف/الحلاق (جديد)
+============================================ */
+.staff-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.staff-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--brand-accent);
+}
+
+.staff-card__avatar-wrapper {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.staff-card__avatar-placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #000;
+}
+
+.staff-card__avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--brand-accent);
+}
+
+.staff-card__status {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--brand-success);
+    border: 3px solid var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.staff-card__status i {
+    font-size: 0.5rem;
+    color: #fff;
+}
+
+.staff-card__status[data-status="busy"] {
+    background: var(--brand-warning);
+}
+
+.staff-card__status[data-status="offline"] {
+    background: var(--text-muted);
+}
+
+.staff-card__content {
+    width: 100%;
+}
+
+.staff-card__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 5px 0;
+}
+
+.staff-card__role {
+    font-size: 0.85rem;
+    color: var(--brand-accent);
+    font-weight: 600;
+    margin: 0 0 12px 0;
+}
+
+.staff-card__rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 15px;
+    color: var(--brand-accent);
+    font-size: 0.9rem;
+}
+
+.staff-card__rating-value {
+    font-weight: 700;
+}
+
+.staff-card__rating-count {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.staff-card__specialties {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+}
+
+.staff-card__specialty {
+    padding: 4px 10px;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--brand-accent);
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* ============================================
+🆕 بطاقة الخدمة (جديد)
+============================================ */
+.service-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.service-card:hover {
+    transform: translateX(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--brand-accent);
+}
+
+.service-card__icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #000;
+    flex-shrink: 0;
+}
+
+.service-card__content {
+    flex: 1;
+}
+
+.service-card__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+}
+
+.service-card__description {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0 0 12px 0;
+}
+
+.service-card__details {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.service-card__duration,
+.service-card__category {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.service-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.service-card__price-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--brand-accent);
+}
+
+.service-card__book-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--brand-accent);
+    color: #000;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Cairo', sans-serif;
+}
+
+.service-card__book-btn:hover {
+    background: var(--brand-accent-dark);
+    transform: scale(1.05);
+}
+
+/* ============================================
+🆕 بطاقة التقييم (جديد)
+============================================ */
+.review-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.review-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.review-card__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.review-card__avatar-wrapper {
+    flex-shrink: 0;
+}
+
+.review-card__avatar-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #000;
+}
+
+.review-card__avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.review-card__info {
+    flex: 1;
+}
+
+.review-card__name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+}
+
+.review-card__rating {
+    display: flex;
+    gap: 2px;
+    color: var(--brand-accent);
+    font-size: 0.85rem;
+}
+
+.review-card__date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.review-card__content {
+    margin-bottom: 15px;
+}
+
+.review-card__comment {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.review-card__reply {
+    padding: 12px;
+    background: rgba(212, 175, 55, 0.05);
+    border-radius: var(--radius-md);
+    border-right: 3px solid var(--brand-accent);
+}
+
+.review-card__reply-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--brand-accent);
+    margin-bottom: 8px;
+}
+
+.review-card__reply-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ============================================
+🆕 بطاقة الحجز (جديد)
+============================================ */
+.booking-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.booking-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.booking-card__status {
+    padding: 10px 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.booking-card__status[data-status="pending"] {
+    background: rgba(232, 89, 12, 0.1);
+    color: var(--brand-warning);
+}
+
+.booking-card__status[data-status="confirmed"] {
+    background: rgba(43, 138, 62, 0.1);
+    color: var(--brand-success);
+}
+
+.booking-card__status[data-status="completed"] {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--brand-accent);
+}
+
+.booking-card__status[data-status="cancelled"] {
+    background: rgba(201, 42, 42, 0.1);
+    color: var(--brand-danger);
+}
+
+.booking-card__content {
+    padding: 20px;
+}
+
+.booking-card__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.booking-card__service-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #000;
+    flex-shrink: 0;
+}
+
+.booking-card__info {
+    flex: 1;
+}
+
+.booking-card__service-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+}
+
+.booking-card__salon-name {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.booking-card__details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+}
+
+.booking-card__detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.booking-card__detail i {
+    color: var(--brand-accent);
+    width: 16px;
+}
+
+.booking-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.booking-card__price-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--brand-accent);
+}
+
+.booking-card__actions {
+    display: flex;
+    gap: 8px;
+}
+
+.booking-card__cancel-btn,
+.booking-card__details-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Cairo', sans-serif;
+}
+
+.booking-card__cancel-btn {
+    background: rgba(201, 42, 42, 0.1);
+    color: var(--brand-danger);
+}
+
+.booking-card__cancel-btn:hover {
+    background: var(--brand-danger);
+    color: #fff;
+}
+
+.booking-card__details-btn {
+    background: var(--brand-accent);
+    color: #000;
+}
+
+.booking-card__details-btn:hover {
+    background: var(--brand-accent-dark);
+}
+
+/* ============================================
 تنبيه إضافة للسلة
 ============================================ */
 .add-to-cart-feedback {
@@ -715,10 +1237,30 @@ Responsive
     .store-card__image-wrapper {
         height: 180px;
     }
-    
+
     .offer-card,
     .concierge-card {
         padding: 20px;
+    }
+
+    .service-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .service-card__details {
+        justify-content: center;
+    }
+
+    .booking-card__footer {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .booking-card__actions {
+        justify-content: center;
     }
 }
 
@@ -729,87 +1271,42 @@ Responsive
         gap: 10px;
         align-items: stretch;
     }
-    
+
     .salon-card__cta,
     .concierge-card__cta {
+        justify-content: center;
+    }
+
+    .staff-card__avatar-placeholder,
+    .staff-card__avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+
+    .service-card__book-btn {
+        width: 100%;
         justify-content: center;
     }
 }
 
 /* ============================================
-تحسينات للشاشات الكبيرة (جديد)
+تحسينات للشاشات الكبيرة
 ============================================ */
 @media (min-width: 1200px) {
     .salon-card__image-wrapper,
     .store-card__image-wrapper {
         height: 240px;
     }
-    
+
     .salon-card__name,
     .store-card__name {
         font-size: 1.2rem;
     }
-    
+
     .offer-card,
     .concierge-card {
         padding: 40px;
     }
-}
-/* ============================================
-زر المفضلة في بطاقة المنتج (جديد)
-============================================ */
-.store-card__favorite {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    z-index: 2;
-}
-
-.store-card__favorite:hover {
-    transform: scale(1.1);
-}
-
-.store-card__favorite.active i {
-    color: var(--brand-danger);
-}
-
-.store-card__favorite i {
-    color: #666;
-    font-size: 1rem;
-}
-
-/* تعديل موضع quick-view ليتناسب مع وجود favorite */
-.store-card__quick-view {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-    z-index: 2;
-}
-
-.store-card:hover .store-card__quick-view {
-    opacity: 1;
-    transform: translateY(0);
 }
 

@@ -1,34 +1,38 @@
 /**
-middleware/routing/profile-route.js
-التوجيه الذكي لملفات المستخدمين حسب أدوارهم
-*/
-import { auth, db } from '../../config/firebase-init.js'; // ✅ تم التصحيح
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+ * middleware/routing/profile-route.js
+ * التوجيه الذكي لملفات المستخدمين حسب أدوارهم
+ */
+import { supabase } from '../../config/supabase-init.js';
 import { getCurrentUser } from '../auth/auth-state.js';
-import { PATHS } from '../../shared/utils/paths.js'; // ✅ تم التصحيح
+import { PATHS } from '../../shared/utils/paths.js';
 
 /**
-توجيه المستخدم لصفحة ملفه الشخصي حسب دوره
-@param {string} uid - معرف المستخدم (اختياري)
-*/
-export const navigateToUserDashboard = async (uid = null) => {
+ * توجيه المستخدم لصفحة ملفه الشخصي حسب دوره
+ * @param {string} userId - معرف المستخدم (اختياري)
+ */
+export const navigateToUserDashboard = async (userId = null) => {
     try {
-        const user = uid ? { uid } : auth.currentUser;
+        const { data: { session } } = await supabase.auth.getSession();
+        const user = userId ? { id: userId } : session?.user;
+
         if (!user) {
             window.location.href = PATHS.LOGIN;
             return;
         }
 
-        const userDocRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userDocRef);
-        if (!userDoc.exists()) {
-            console.warn("User document not found, redirecting to login");
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+
+        if (error || !profile) {
+            console.warn("User profile not found, redirecting to login");
             window.location.href = PATHS.LOGIN;
             return;
         }
 
-        const userData = userDoc.data();
-        const role = userData.role || 'customer';
+        const role = profile.role || 'customer';
         const routes = {
             "salon": PATHS.PROFILE_SALON,
             "store": PATHS.PROFILE_STORE,
@@ -45,10 +49,10 @@ export const navigateToUserDashboard = async (uid = null) => {
 };
 
 /**
-الحصول على رابط الملف الشخصي للمستخدم
-@param {string} role
-@returns {string}
-*/
+ * الحصول على رابط الملف الشخصي للمستخدم
+ * @param {string} role
+ * @returns {string}
+ */
 export const getProfileRoute = (role) => {
     const routes = {
         "salon": PATHS.PROFILE_SALON,
@@ -59,9 +63,9 @@ export const getProfileRoute = (role) => {
 };
 
 /**
-التحقق من أن المستخدم في صفحته الصحيحة حسب الدور
-@returns {Promise<boolean>}
-*/
+ * التحقق من أن المستخدم في صفحته الصحيحة حسب الدور
+ * @returns {Promise<boolean>}
+ */
 export const verifyProfileAccess = async () => {
     const user = await getCurrentUser();
     if (!user) return false;

@@ -1,12 +1,12 @@
 /**
-شريط التنقل العام
-المسار: shared/layout/global-navbar.js
-*/
-import { auth, db } from "../../config/firebase-init.js"; // ✅ تم تصحيح المسار
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { PATHS, resolvePath } from "../utils/paths.js"; // ✅ تم تصحيح المسار
-import { showNotification } from "../utils/notifications.js"; // ✅ استيراد التنبيهات الموحدة
+ * شريط التنقل العام
+ * المسار: shared/layout/global-navbar.js
+ * ⚠️ تم التحديث: Supabase + الثيم الفاتح افتراضي
+ */
+import { supabase } from "../../config/supabase-init.js";
+import { PATHS, resolvePath } from "../utils/paths.js";
+import { showNotification } from "../utils/notifications.js";
+import { getCurrentTheme, toggleTheme as toggleStoredTheme } from "../utils/user-preferences.js";
 
 // ============================================
 // التحميل الأولي
@@ -14,15 +14,14 @@ import { showNotification } from "../utils/notifications.js"; // ✅ استير�
 document.addEventListener("DOMContentLoaded", async () => {
     const container = document.getElementById("global-navbar-container");
     if (!container) return;
-    
+
     try {
         const currentScriptUrl = new URL(import.meta.url);
         const navbarPath = new URL('./global-navbar.html', currentScriptUrl).href;
         const response = await fetch(navbarPath);
         if (!response.ok) throw new Error("Navbar HTML not found");
-        
+
         container.innerHTML = await response.text();
-        
         updateAllPaths();
         setupNavigationLogic();
         setupSettingsDropdown();
@@ -45,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 function updateAllPaths() {
     const container = document.getElementById('global-navbar-container');
     if (!container) return;
-    
+
     const links = container.querySelectorAll('[data-path]');
     links.forEach(link => {
         const key = link.getAttribute('data-path');
@@ -62,7 +61,7 @@ function setupNavigationLogic() {
     const closeBtn = document.getElementById("closeMenuBtn");
     const drawer = document.getElementById("sideDrawer");
     const overlay = document.getElementById("drawerOverlay");
-    
+
     if (!menuBtn || !drawer || !overlay) return;
 
     const open = () => {
@@ -70,7 +69,7 @@ function setupNavigationLogic() {
         overlay.classList.add("active");
         document.body.style.overflow = 'hidden';
     };
-    
+
     const close = () => {
         drawer.classList.remove("open");
         overlay.classList.remove("active");
@@ -80,11 +79,11 @@ function setupNavigationLogic() {
     menuBtn.onclick = open;
     closeBtn.onclick = close;
     overlay.onclick = close;
-    
+
     drawer.querySelectorAll('.drawer-link').forEach(link => {
         link.onclick = close;
     });
-    
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && drawer.classList.contains('open')) close();
     });
@@ -96,7 +95,7 @@ function setupNavigationLogic() {
 function setupSettingsDropdown() {
     const settingsBtn = document.getElementById('settingsBtn');
     const dropdown = document.getElementById('settingsDropdown');
-    
+
     if (!settingsBtn || !dropdown) return;
 
     settingsBtn.addEventListener('click', (e) => {
@@ -124,7 +123,7 @@ function setupSettingsDropdown() {
 }
 
 // ============================================
-// تبديل الثيم
+// تبديل الثيم (الثيم الفاتح افتراضي)
 // ============================================
 function setupThemeToggle() {
     const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -132,36 +131,50 @@ function setupThemeToggle() {
     const themeText = document.getElementById('themeText');
     const drawerThemeBtn = document.getElementById('drawerThemeToggle');
     const drawerThemeText = document.getElementById('drawerThemeText');
-    
-    const savedTheme = localStorage.getItem('bf-theme') || 'dark';
-    applyTheme(savedTheme);
+
+    // ✅ الثيم الفاتح هو الافتراضي
+    const currentTheme = getCurrentTheme();
+    applyThemeUI(currentTheme);
 
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', () => {
-            toggleTheme();
+            const newTheme = toggleStoredTheme();
+            applyThemeUI(newTheme);
             document.getElementById('settingsDropdown').classList.remove('show');
         });
     }
-    
+
     if (drawerThemeBtn) {
-        drawerThemeBtn.addEventListener('click', toggleTheme);
+        drawerThemeBtn.addEventListener('click', () => {
+            const newTheme = toggleStoredTheme();
+            applyThemeUI(newTheme);
+        });
     }
 
-    function toggleTheme() {
-        const current = document.documentElement.getAttribute('data-theme') || 'dark';
-        const newTheme = current === 'dark' ? 'light' : 'dark';
-        applyTheme(newTheme);
-        localStorage.setItem('bf-theme', newTheme);
-    }
+    function applyThemeUI(theme) {
+        // ✅ الثيم الفاتح = إزالة data-theme، الداكن = إضافته
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.body.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            document.body.removeAttribute('data-theme');
+        }
 
-    function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        document.body.setAttribute('data-theme', theme);
-        if (themeIcon) themeIcon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
-        if (themeText) themeText.textContent = theme === 'dark' ? 'الوضع الداكن' : 'الوضع الفاتح';
-        if (drawerThemeText) drawerThemeText.textContent = theme === 'dark' ? 'الوضع الداكن' : 'الوضع الفاتح';
+        // تحديث الأيقونات والنصوص
+        if (themeIcon) {
+            themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        if (themeText) {
+            themeText.textContent = theme === 'dark' ? 'الوضع الفاتح' : 'الوضع الداكن';
+        }
+        if (drawerThemeText) {
+            drawerThemeText.textContent = theme === 'dark' ? 'الوضع الفاتح' : 'الوضع الداكن';
+        }
         const drawerIcon = drawerThemeBtn?.querySelector('i');
-        if (drawerIcon) drawerIcon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        if (drawerIcon) {
+            drawerIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
     }
 }
 
@@ -170,16 +183,16 @@ function setupThemeToggle() {
 // ============================================
 function setupLanguageSelector() {
     const langItems = document.querySelectorAll('.submenu-item[data-lang]');
-    const savedLang = localStorage.getItem('bf-language') || 'ar';
+    const savedLang = localStorage.getItem('barberflow_lang') || 'ar';
     updateLanguageUI(savedLang);
 
     langItems.forEach(item => {
         item.onclick = () => {
             const lang = item.getAttribute('data-lang');
-            localStorage.setItem('bf-language', lang);
+            localStorage.setItem('barberflow_lang', lang);
             updateLanguageUI(lang);
             const langNames = { 'ar': 'العربية', 'fr': 'Français', 'en': 'English' };
-            showNotification(`تم تغيير اللغة إلى ${langNames[lang]}`, "info"); // ✅ تم استبدال alert
+            showNotification(`تم تغيير اللغة إلى ${langNames[lang]}`, "info");
             document.getElementById('settingsDropdown').classList.remove('show');
         };
     });
@@ -206,14 +219,15 @@ function setupNotificationsToggle() {
     const notifToggleBtn = document.getElementById('notificationsToggleBtn');
     const notifIcon = document.getElementById('notifIcon');
     const notifText = document.getElementById('notifText');
-    
-    const notificationsEnabled = localStorage.getItem('bf-notifications') !== 'false';
+
+    const notificationsEnabled = localStorage.getItem('barberflow_notifications') !== 'false';
     updateNotificationsUI(notificationsEnabled);
 
     if (notifToggleBtn) {
         notifToggleBtn.onclick = () => {
-            const newState = !notificationsEnabled;
-            localStorage.setItem('bf-notifications', newState);
+            const currentState = localStorage.getItem('barberflow_notifications') !== 'false';
+            const newState = !currentState;
+            localStorage.setItem('barberflow_notifications', newState);
             updateNotificationsUI(newState);
             document.getElementById('settingsDropdown').classList.remove('show');
         };
@@ -232,7 +246,7 @@ function setupPrivacyButton() {
     const privacyBtn = document.getElementById('privacyBtn');
     if (privacyBtn) {
         privacyBtn.onclick = () => {
-            showNotification('صفحة إعدادات الخصوصية قيد التطوير', "info"); // ✅ تم استبدال alert
+            showNotification('صفحة إعدادات الخصوصية قيد التطوير', "info");
             document.getElementById('settingsDropdown').classList.remove('show');
         };
     }
@@ -245,14 +259,14 @@ function setupHelpButton() {
     const helpBtn = document.getElementById('helpBtn');
     if (helpBtn) {
         helpBtn.onclick = () => {
-            showNotification('صفحة المساعدة والدعم قيد التطوير', "info"); // ✅ تم استبدال alert
+            showNotification('صفحة المساعدة والدعم قيد التطوير', "info");
             document.getElementById('settingsDropdown').classList.remove('show');
         };
     }
 }
 
 // ============================================
-// حالة المستخدم
+// حالة المستخدم (Supabase)
 // ============================================
 function setupUserState() {
     const userBtn = document.getElementById('userBtn');
@@ -267,61 +281,86 @@ function setupUserState() {
 
     if (!userBtn) return;
 
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            userBtn.href = resolvePath('PROFILE_CUSTOMER');
-            try {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const data = userDoc.data();
-                    // ✅ توحيد اسم الحقل: fullName
-                    const userName = data.fullName || 'مستخدم'; 
-                    const role = data.role || 'customer';
-                    
-                    if (drawerUserInfo) drawerUserInfo.style.display = 'flex';
-                    if (drawerUserName) drawerUserName.textContent = `مرحباً، ${userName}`;
-                    
-                    const roleNames = { customer: 'زبون', salon: 'صاحب صالون', store: 'صاحب متجر' };
-                    if (drawerUserRole) drawerUserRole.textContent = roleNames[role] || 'زبون';
-                    
-                    const profileMap = {
-                        customer: 'PROFILE_CUSTOMER',
-                        salon: 'PROFILE_SALON',
-                        store: 'PROFILE_STORE'
-                    };
-                    if (drawerProfileLink) drawerProfileLink.href = resolvePath(profileMap[role] || 'PROFILE_CUSTOMER');
-                    
-                    if (role === 'salon' || role === 'store') {
-                        if (drawerDashboardLink) {
-                            drawerDashboardLink.style.display = 'flex';
-                            drawerDashboardLink.href = resolvePath('DASHBOARD');
+    // ✅ استخدام Supabase Auth بدلاً من Firebase
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+            const user = session?.user;
+
+            if (user) {
+                userBtn.href = resolvePath('PROFILE_CUSTOMER');
+                
+                try {
+                    // ✅ جلب بيانات المستخدم من جدول profiles
+                    const { data: profile, error } = await supabase
+                        .from('profiles')
+                        .select('full_name, role, onboarding_status')
+                        .eq('id', user.id)
+                        .single();
+
+                    if (!error && profile) {
+                        const userName = profile.full_name || 'مستخدم';
+                        const role = profile.role || 'customer';
+
+                        if (drawerUserInfo) drawerUserInfo.style.display = 'flex';
+                        if (drawerUserName) drawerUserName.textContent = `مرحباً، ${userName}`;
+
+                        const roleNames = { 
+                            customer: 'زبون', 
+                            salon: 'صاحب صالون', 
+                            store: 'صاحب متجر' 
+                        };
+                        if (drawerUserRole) drawerUserRole.textContent = roleNames[role] || 'زبون';
+
+                        const profileMap = {
+                            customer: 'PROFILE_CUSTOMER',
+                            salon: 'PROFILE_SALON',
+                            store: 'PROFILE_STORE'
+                        };
+                        if (drawerProfileLink) {
+                            drawerProfileLink.href = resolvePath(profileMap[role] || 'PROFILE_CUSTOMER');
                         }
-                        if (drawerSettingsLink) {
-                            drawerSettingsLink.style.display = 'flex';
-                            drawerSettingsLink.href = resolvePath('SETTINGS_GENERAL'); // ✅ تم التصحيح
+
+                        // إظهار لوحة التحكم والإعدادات لأصحاب الصالونات والمتاجر
+                        if (role === 'salon' || role === 'store') {
+                            if (drawerDashboardLink) {
+                                drawerDashboardLink.style.display = 'flex';
+                                drawerDashboardLink.href = resolvePath('DASHBOARD');
+                            }
+                            if (drawerSettingsLink) {
+                                drawerSettingsLink.style.display = 'flex';
+                                drawerSettingsLink.href = resolvePath('SETTINGS_GENERAL');
+                            }
+                        } else {
+                            if (drawerDashboardLink) drawerDashboardLink.style.display = 'none';
+                            if (drawerSettingsLink) drawerSettingsLink.style.display = 'none';
                         }
                     }
+                } catch (error) {
+                    console.error('خطأ في جلب بيانات المستخدم:', error);
                 }
-            } catch (error) {
-                console.error('خطأ في جلب بيانات المستخدم:', error);
+
+                if (drawerLoginLink) drawerLoginLink.style.display = 'none';
+                if (drawerLogoutLink) {
+                    drawerLogoutLink.style.display = 'flex';
+                    drawerLogoutLink.onclick = async (e) => {
+                        e.preventDefault();
+                        const { error } = await supabase.auth.signOut();
+                        if (!error) {
+                            showNotification("تم تسجيل الخروج بنجاح", "success");
+                            window.location.href = resolvePath('INDEX');
+                        } else {
+                            showNotification("حدث خطأ أثناء تسجيل الخروج", "error");
+                        }
+                    };
+                }
+            } else {
+                userBtn.href = resolvePath('LOGIN');
+                if (drawerUserInfo) drawerUserInfo.style.display = 'none';
+                if (drawerDashboardLink) drawerDashboardLink.style.display = 'none';
+                if (drawerSettingsLink) drawerSettingsLink.style.display = 'none';
+                if (drawerLoginLink) drawerLoginLink.style.display = 'flex';
+                if (drawerLogoutLink) drawerLogoutLink.style.display = 'none';
             }
-            
-            if (drawerLoginLink) drawerLoginLink.style.display = 'none';
-            if (drawerLogoutLink) {
-                drawerLogoutLink.style.display = 'flex';
-                drawerLogoutLink.onclick = async (e) => {
-                    e.preventDefault();
-                    await signOut(auth);
-                    window.location.href = resolvePath('INDEX');
-                };
-            }
-        } else {
-            userBtn.href = resolvePath('LOGIN');
-            if (drawerUserInfo) drawerUserInfo.style.display = 'none';
-            if (drawerDashboardLink) drawerDashboardLink.style.display = 'none';
-            if (drawerSettingsLink) drawerSettingsLink.style.display = 'none';
-            if (drawerLoginLink) drawerLoginLink.style.display = 'flex';
-            if (drawerLogoutLink) drawerLogoutLink.style.display = 'none';
         }
     });
 }
@@ -332,16 +371,15 @@ function setupUserState() {
 function setupCartBadge() {
     const badge = document.getElementById('cartBadge');
     if (!badge) return;
-    
+
     const updateBadge = () => {
-        // ✅ تم توحيد متغير السلة ليكون bf-cart
         const cart = JSON.parse(localStorage.getItem('bf-cart') || '[]');
         badge.textContent = cart.length;
         badge.style.display = cart.length > 0 ? 'flex' : 'none';
     };
-    
+
     updateBadge();
-    window.addEventListener('bf-cart-updated', updateBadge); // ✅ تم توحيد اسم الحدث
+    window.addEventListener('bf-cart-updated', updateBadge);
 }
 
 // ============================================
@@ -350,6 +388,7 @@ function setupCartBadge() {
 function highlightActivePage() {
     const path = window.location.pathname;
     const navLinks = document.querySelectorAll('.nav-link');
+
     const pageMap = [
         { key: 'salons.html', page: 'salons' },
         { key: 'shop.html', page: 'shop' },
@@ -358,7 +397,7 @@ function highlightActivePage() {
         { key: 'about.html', page: 'about' },
         { key: 'contact.html', page: 'contact' }
     ];
-    
+
     let activePage = 'home';
     for (const item of pageMap) {
         if (path.includes(item.key)) {
@@ -366,7 +405,7 @@ function highlightActivePage() {
             break;
         }
     }
-    
+
     navLinks.forEach(link => {
         link.classList.toggle('active', link.dataset.page === activePage);
     });

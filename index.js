@@ -1,25 +1,23 @@
 /**
  * BarberFlow Pro - المنطق الرئيسي للصفحة الرئيسية
- * المسار: home-controller.js
+ * المسار: index.js
+ * ⚠️ تم التحديث: Supabase + المكونات المشتركة + تحسينات الأداء
  */
-
-import { db } from "./config/firebase-init.js";
-import {
-    collection,
-    getDocs,
-    query,
-    where,
-    limit,
-    orderBy
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { PATHS, resolvePath } from "./shared/utils/paths.js";
-import { showNotification } from "./shared/js/notifications.js";
+import { supabase } from './config/supabase-init.js';
+import { PATHS, resolvePath } from './shared/utils/paths.js';
+import { showNotification } from './shared/utils/notifications.js';
+import { Analytics } from './shared/utils/analytics.js';
+import { cacheFetch } from './shared/utils/cache.js';
+import { safeExecute } from './shared/utils/error-handler.js';
+import { createSalonCards } from './shared/components/card-salon.js';
+import { createStoreCards } from './shared/components/card-store.js';
+import { createOfferCards } from './shared/components/card-offer.js';
 
 // ============================================
 // المتغيرات العامة
 // ============================================
 let allSalons = [];
-let allStores = [];
+let allProducts = [];
 let currentSalonFilter = 'all';
 let currentStoreFilter = 'all';
 
@@ -28,40 +26,40 @@ let currentStoreFilter = 'all';
 // ============================================
 const OFFERS_DATA = [
     {
-        id: 1,
-        discount: "خصم 20%",
-        title: "أول حجز لك معنا",
-        description: "احجز موعدك الأول في أي صالون VIP واحصل على خصم فوري ومباشر.",
-        ctaText: "احجز الآن",
+        id: 'offer_1',
+        discount: '20%',
+        title: 'أول حجز لك معنا',
+        description: 'احجز موعدك الأول في أي صالون VIP واحصل على خصم فوري ومباشر.',
+        ctaText: 'احجز الآن',
         ctaLink: PATHS.SALONS,
-        icon: "fa-cut"
+        icon: 'fa-cut'
     },
     {
-        id: 2,
-        discount: "شحن مجاني",
-        title: "باقة العناية المتكاملة",
-        description: "اطلب منتجات بقيمة 300 درهم أو أكثر واحصل على توصيل مجاني.",
-        ctaText: "تصفح المتجر",
+        id: 'offer_2',
+        discount: 'شحن مجاني',
+        title: 'باقة العناية المتكاملة',
+        description: 'اطلب منتجات بقيمة 300 درهم أو أكثر واحصل على توصيل مجاني.',
+        ctaText: 'تصفح المتجر',
         ctaLink: PATHS.SHOP,
-        icon: "fa-truck"
+        icon: 'fa-truck'
     },
     {
-        id: 3,
-        discount: "خصم 35%",
-        title: "باقة العروس",
-        description: "خصومات حصرية تصل إلى 35% على خدمات تصفيف الشعر والمكياج المتكامل.",
-        ctaText: "اكتشفي العروض",
+        id: 'offer_3',
+        discount: '35%',
+        title: 'باقة العروس',
+        description: 'خصومات حصرية تصل إلى 35% على خدمات تصفيف الشعر والمكياج المتكامل.',
+        ctaText: 'اكتشفي العروض',
         ctaLink: `${PATHS.SALONS}?type=women`,
-        icon: "fa-gem"
+        icon: 'fa-gem'
     },
     {
-        id: 4,
-        discount: "هدية مجانية",
-        title: "كوبون متجدد",
-        description: "احصل على مستحضر مجاني للعناية بالبشرة عند حجز خدمات تزيد عن 200 درهم.",
-        ctaText: "استخدم الكوبون",
+        id: 'offer_4',
+        discount: 'هدية مجانية',
+        title: 'كوبون متجدد',
+        description: 'احصل على مستحضر مجاني للعناية بالبشرة عند حجز خدمات تزيد عن 200 درهم.',
+        ctaText: 'استخدم الكوبون',
         ctaLink: `${PATHS.SHOP}?category=cosmetics`,
-        icon: "fa-gift"
+        icon: 'fa-gift'
     }
 ];
 
@@ -72,15 +70,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeHeaderScroll();
     initializeSearch();
     initializeFilters();
+    initializeScrollReveal();
+    updateAllPaths();
     
-    // تحميل البيانات بالتوازي
+    // تحميل البيانات بالتوازي مع الكاش
     await Promise.all([
         loadSalons(),
-        loadStores(),
+        loadProducts(),
         renderOffers(),
         loadStatistics()
     ]);
+    
+    // تتبع الزيارة
+    Analytics.trackPageView('home');
 });
+
+// ============================================
+// ✅ تحديث جميع المسارات (data-path)
+// ============================================
+function updateAllPaths() {
+    const links = document.querySelectorAll('[data-path]');
+    links.forEach(link => {
+        const key = link.getAttribute('data-path');
+        const fullPath = resolvePath(key);
+        link.setAttribute('href', fullPath);
+    });
+}
 
 // ============================================
 // تأثير التمرير على الهيدر
@@ -99,7 +114,28 @@ function initializeHeaderScroll() {
 }
 
 // ============================================
-// البحث
+// ✅ Scroll Reveal Animation
+// ============================================
+function initializeScrollReveal() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+    
+    document.querySelectorAll('[data-scroll-reveal]').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// ============================================
+// البحث المحسّن
 // ============================================
 function initializeSearch() {
     const searchInput = document.getElementById('heroSearchInput');
@@ -111,7 +147,7 @@ function initializeSearch() {
     searchBtn.addEventListener('click', () => {
         const query = searchInput.value.trim();
         if (query) {
-            // توجيه إلى صفحة البحث
+            Analytics.trackSearch(query);
             window.location.href = `${PATHS.SALONS}?search=${encodeURIComponent(query)}`;
         }
     });
@@ -122,23 +158,24 @@ function initializeSearch() {
         }
     });
     
-    // اقتراحات البحث
+    // اقتراحات البحث الديناميكية
     searchInput.addEventListener('input', async () => {
         const query = searchInput.value.trim().toLowerCase();
+        
         if (query.length < 2) {
             suggestions.classList.remove('active');
             return;
         }
         
-        // عرض الاقتراحات من الصالونات
+        // البحث في الصالونات المحملة
         const filteredSalons = allSalons.filter(salon => 
-            salon.name.toLowerCase().includes(query) ||
+            salon.name?.toLowerCase().includes(query) ||
             salon.city?.toLowerCase().includes(query)
         ).slice(0, 5);
         
         if (filteredSalons.length > 0) {
             suggestions.innerHTML = filteredSalons.map(salon => `
-                <a href="${PATHS.SALONS}?id=${salon.id}" class="suggestion-item">
+                <a href="${PATHS.DETAILS_SALON}?id=${salon.id}" class="suggestion-item">
                     <i class="fas fa-cut"></i>
                     <div>
                         <div class="suggestion-title">${salon.name}</div>
@@ -175,6 +212,7 @@ function initializeFilters() {
                 e.target.classList.add('active');
                 currentSalonFilter = e.target.dataset.filter;
                 renderSalons();
+                Analytics.trackClick('salon_filter', { filter: currentSalonFilter });
             }
         });
     }
@@ -190,56 +228,101 @@ function initializeFilters() {
                 e.target.classList.add('active');
                 currentStoreFilter = e.target.dataset.filter;
                 renderStores();
+                Analytics.trackClick('store_filter', { filter: currentStoreFilter });
             }
         });
     }
 }
 
 // ============================================
-// تحميل الصالونات
+// ✅ تحميل الصالونات (Supabase + Cache)
 // ============================================
 async function loadSalons() {
-    try {
-        const salonsRef = collection(db, "salons");
-        const q = query(salonsRef, where("status", "==", "active"), limit(8));
-        const querySnapshot = await getDocs(q);
-        
-        allSalons = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-        
-        renderSalons();
+    const result = await safeExecute(async () => {
+        return await cacheFetch('home_salons', async () => {
+            const { data, error } = await supabase
+                .from('businesses')
+                .select(`
+                    id,
+                    name,
+                    type,
+                    city,
+                    cover_url,
+                    logo_url,
+                    rating,
+                    reviews_count,
+                    working_hours,
+                    is_verified
+                `)
+                .eq('type', 'salon')
+                .eq('status', 'active')
+                .order('rating', { ascending: false })
+                .limit(8);
+            
+            if (error) throw error;
+            return data || [];
+        }, 10 * 60 * 1000); // كاش 10 دقائق
+    }, 'تحميل الصالونات');
+    
+    if (result.success) {
+        allSalons = result.data;
+        await renderSalons();
         updateSalonCounts();
-    } catch (error) {
-        console.error("Error loading salons:", error);
+    } else {
+        document.getElementById('salonsGrid').innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-exclamation-circle"></i>
+                <h3>حدث خطأ في تحميل الصالونات</h3>
+                <p>يرجى المحاولة لاحقاً</p>
+            </div>
+        `;
     }
 }
 
 // ============================================
-// تحميل المتاجر
+// ✅ تحميل المنتجات (Supabase + Cache)
 // ============================================
-async function loadStores() {
-    try {
-        const storesRef = collection(db, "stores");
-        const q = query(storesRef, where("status", "==", "active"), limit(8));
-        const querySnapshot = await getDocs(q);
-        
-        allStores = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-        
-        renderStores();
-    } catch (error) {
-        console.error("Error loading stores:", error);
+async function loadProducts() {
+    const result = await safeExecute(async () => {
+        return await cacheFetch('home_products', async () => {
+            const { data, error } = await supabase
+                .from('products')
+                .select(`
+                    id,
+                    name,
+                    price,
+                    image_url,
+                    category,
+                    rating,
+                    is_available
+                `)
+                .eq('is_available', true)
+                .order('rating', { ascending: false })
+                .limit(8);
+            
+            if (error) throw error;
+            return data || [];
+        }, 10 * 60 * 1000); // كاش 10 دقائق
+    }, 'تحميل المنتجات');
+    
+    if (result.success) {
+        allProducts = result.data;
+        await renderStores();
+    } else {
+        document.getElementById('storesGrid').innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-exclamation-circle"></i>
+                <h3>حدث خطأ في تحميل المنتجات</h3>
+                <p>يرجى المحاولة لاحقاً</p>
+            </div>
+        `;
     }
 }
 
 // ============================================
-// عرض الصالونات
+// ✅ عرض الصالونات (باستخدام card-salon.js)
 // ============================================
-function renderSalons() {
+async function renderSalons() {
     const grid = document.getElementById('salonsGrid');
     if (!grid) return;
     
@@ -260,38 +343,26 @@ function renderSalons() {
         return;
     }
     
-    grid.innerHTML = filteredSalons.map(salon => `
-        <a href="${PATHS.SALONS}?id=${salon.id}" class="salon-card">
-            <div class="salon-card-image">
-                <img src="${salon.image || 'assets/images/placeholder-salon.jpg'}" alt="${salon.name}">
-                ${salon.rating ? `<div class="salon-rating"><i class="fas fa-star"></i> ${salon.rating}</div>` : ''}
-            </div>
-            <div class="salon-card-content">
-                <h3>${salon.name}</h3>
-                <p class="salon-location"><i class="fas fa-map-marker-alt"></i> ${salon.city || 'المغرب'}</p>
-                <div class="salon-card-footer">
-                    <span class="salon-price">يبدأ من ${salon.price || '100'} درهم</span>
-                    <button class="salon-book-btn">احجز الآن</button>
-                </div>
-            </div>
-        </a>
-    `).join('');
+    // ✅ استخدام المكون المشترك
+    const cards = await createSalonCards(filteredSalons);
+    grid.innerHTML = '';
+    cards.forEach(card => grid.appendChild(card));
 }
 
 // ============================================
-// عرض المتاجر
+// ✅ عرض المنتجات (باستخدام card-store.js)
 // ============================================
-function renderStores() {
+async function renderStores() {
     const grid = document.getElementById('storesGrid');
     if (!grid) return;
     
-    let filteredStores = allStores;
+    let filteredProducts = allProducts;
     
     if (currentStoreFilter !== 'all') {
-        filteredStores = allStores.filter(store => store.category === currentStoreFilter);
+        filteredProducts = allProducts.filter(product => product.category === currentStoreFilter);
     }
     
-    if (filteredStores.length === 0) {
+    if (filteredProducts.length === 0) {
         grid.innerHTML = `
             <div class="empty-state">
                 <i class="fas fa-store"></i>
@@ -302,69 +373,71 @@ function renderStores() {
         return;
     }
     
-    grid.innerHTML = filteredStores.map(store => `
-        <a href="${PATHS.SHOP}?id=${store.id}" class="store-card">
-            <div class="store-card-image">
-                <img src="${store.image || 'assets/images/placeholder-product.jpg'}" alt="${store.name}">
-                ${store.discount ? `<div class="store-discount">${store.discount}</div>` : ''}
-            </div>
-            <div class="store-card-content">
-                <h3>${store.name}</h3>
-                <p class="store-category">${store.categoryName || 'منتج'}</p>
-                <div class="store-card-footer">
-                    <span class="store-price">${store.price || '0'} درهم</span>
-                    <button class="store-add-btn"><i class="fas fa-cart-plus"></i></button>
-                </div>
-            </div>
-        </a>
-    `).join('');
+    // ✅ استخدام المكون المشترك
+    const cards = await createStoreCards(filteredProducts);
+    grid.innerHTML = '';
+    cards.forEach(card => grid.appendChild(card));
 }
 
 // ============================================
-// عرض العروض
+// ✅ عرض العروض (باستخدام card-offer.js)
 // ============================================
-function renderOffers() {
+async function renderOffers() {
     const grid = document.getElementById('offersGrid');
     if (!grid) return;
     
-    grid.innerHTML = OFFERS_DATA.map(offer => `
-        <div class="offer-card">
-            <div class="offer-discount">${offer.discount}</div>
-            <h3>${offer.title}</h3>
-            <p>${offer.description}</p>
-            <a href="${offer.ctaLink}" class="offer-cta">
-                <span>${offer.ctaText}</span>
-                <i class="fas fa-arrow-left"></i>
-            </a>
-        </div>
-    `).join('');
+    const cards = await createOfferCards(OFFERS_DATA);
+    grid.innerHTML = '';
+    cards.forEach(card => grid.appendChild(card));
 }
 
 // ============================================
-// تحميل الإحصائيات
+// ✅ تحميل الإحصائيات (Supabase + Cache)
 // ============================================
 async function loadStatistics() {
-    try {
-        // عدد الصالونات
-        const salonsRef = collection(db, "salons");
-        const salonsSnapshot = await getDocs(salonsRef);
-        const salonsCount = salonsSnapshot.size;
-        
-        // عدد المتاجر
-        const storesRef = collection(db, "stores");
-        const storesSnapshot = await getDocs(storesRef);
-        const storesCount = storesSnapshot.size;
-        
-        // عدد الخدمات (تقريبي)
-        const servicesCount = salonsCount * 5; // متوسط 5 خدمات لكل صالون
-        
-        // تحديث العدادات
-        animateCounter('statSalons', salonsCount);
-        animateCounter('statStores', storesCount);
-        animateCounter('statServices', servicesCount);
-        
-    } catch (error) {
-        console.error("Error loading statistics:", error);
+    const result = await safeExecute(async () => {
+        return await cacheFetch('home_stats', async () => {
+            // جلب عدد الصالونات
+            const { count: salonsCount } = await supabase
+                .from('businesses')
+                .select('*', { count: 'exact', head: true })
+                .eq('type', 'salon')
+                .eq('status', 'active');
+            
+            // جلب عدد المتاجر
+            const { count: storesCount } = await supabase
+                .from('businesses')
+                .select('*', { count: 'exact', head: true })
+                .eq('type', 'store')
+                .eq('status', 'active');
+            
+            // جلب عدد الخدمات
+            const { count: servicesCount } = await supabase
+                .from('services')
+                .select('*', { count: 'exact', head: true })
+                .eq('is_available', true);
+            
+            // جلب عدد الزبائن
+            const { count: customersCount } = await supabase
+                .from('profiles')
+                .select('*', { count: 'exact', head: true })
+                .eq('role', 'customer');
+            
+            return {
+                salons: salonsCount || 0,
+                stores: storesCount || 0,
+                services: servicesCount || 0,
+                customers: customersCount || 0
+            };
+        }, 30 * 60 * 1000); // كاش 30 دقيقة
+    }, 'تحميل الإحصائيات');
+    
+    if (result.success) {
+        const { salons, stores, services, customers } = result.data;
+        animateCounter('statSalons', salons);
+        animateCounter('statStores', stores);
+        animateCounter('statServices', services);
+        animateCounter('statCustomers', customers);
     }
 }
 
@@ -380,22 +453,23 @@ function updateSalonCounts() {
     const countWomen = document.getElementById('countWomen');
     const countKids = document.getElementById('countKids');
     
-    if (countMen) countMen.textContent = menCount;
-    if (countWomen) countWomen.textContent = womenCount;
-    if (countKids) countKids.textContent = kidsCount;
+    if (countMen) countMen.textContent = `${menCount} صالون`;
+    if (countWomen) countWomen.textContent = `${womenCount} صالون`;
+    if (countKids) countKids.textContent = `${kidsCount} صالون`;
 }
 
 // ============================================
-// أنيميشن العداد
+// ✅ أنيميشن العداد المحسّن
 // ============================================
 function animateCounter(elementId, target) {
     const element = document.getElementById(elementId);
     if (!element) return;
     
     let current = 0;
-    const increment = target / 50;
     const duration = 2000;
-    const stepTime = duration / 50;
+    const steps = 50;
+    const increment = target / steps;
+    const stepTime = duration / steps;
     
     const timer = setInterval(() => {
         current += increment;
@@ -403,7 +477,7 @@ function animateCounter(elementId, target) {
             current = target;
             clearInterval(timer);
         }
-        element.textContent = Math.floor(current);
+        element.textContent = Math.floor(current).toLocaleString('ar-MA');
     }, stepTime);
 }
 

@@ -18,6 +18,8 @@ export const checkRole = (userData, requiredRole) => {
 
     const userRole = userData.role;
 
+    // الأدوار المسموحة: 'customer', 'salon', 'store'
+    // admin يمكن إضافته لاحقاً للصلاحيات الخاصة
     if (userRole === 'admin') {
         return true;
     }
@@ -30,16 +32,16 @@ export const checkRole = (userData, requiredRole) => {
 };
 
 /**
- * التحقق من حالة المستخدم (new, active, suspended...)
- * @param {Object} userData
- * @param {string} requiredStatus
+ * التحقق من حالة النشاط التجاري (لأصحاب الصالونات/المتاجر)
+ * @param {Object} businessData - بيانات النشاط التجاري من جدول businesses
+ * @param {string} requiredStatus - الحالة المطلوبة ('active', 'inactive', 'suspended')
  * @returns {boolean}
  */
-export const checkUserStatus = (userData, requiredStatus) => {
-    if (!userData || !userData.status) {
+export const checkBusinessStatus = (businessData, requiredStatus) => {
+    if (!businessData || !businessData.status) {
         return false;
     }
-    return userData.status === requiredStatus;
+    return businessData.status === requiredStatus;
 };
 
 /**
@@ -50,7 +52,6 @@ export const handleUnauthorizedAccess = (redirectPath = '../index.html') => {
     if (typeof showNotification === 'function') {
         showNotification("ليس لديك صلاحية الوصول لهذه الصفحة", "error");
     }
-    
     setTimeout(() => {
         window.location.href = redirectPath;
     }, 1500);
@@ -58,11 +59,11 @@ export const handleUnauthorizedAccess = (redirectPath = '../index.html') => {
 
 /**
  * التحقق من أن المستخدم أكمل الـ Onboarding
- * @param {Object} userData
+ * @param {Object} userData - بيانات المستخدم من جدول profiles
  * @returns {boolean}
  */
 export const hasCompletedOnboarding = (userData) => {
     if (!userData) return false;
-    return userData.onboardingStatus === 'completed' && userData.status === 'active';
+    return userData.onboarding_status === 'completed';
 };
 

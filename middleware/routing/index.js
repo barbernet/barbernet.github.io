@@ -1,7 +1,7 @@
 /**
-middleware/routing/index.js
-التصدير المركزي لدوال التوجيه
-*/
+ * middleware/routing/index.js
+ * التصدير المركزي لدوال التوجيه
+ */
 export {
     navigateToUserDashboard,
     getProfileRoute,

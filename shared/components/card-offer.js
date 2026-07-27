@@ -1,13 +1,13 @@
 /**
-BarberFlow Pro - مكون بطاقة العرض
-المسار: shared/components/card-offer.js
-الدور: إنشاء وعرض بطاقات العروض والخصومات
-*/
-import { PATHS, resolvePath } from "../utils/paths.js"; // ✅ تم تصحيح المسار
+ * BarberFlow Pro - مكون بطاقة العرض
+ * المسار: shared/components/card-offer.js
+ * الدور: إنشاء وعرض بطاقات العروض والخصومات
+ */
+import { PATHS, resolvePath } from "../utils/paths.js";
 
 /**
-HTML Template لبطاقة العرض
-*/
+ * HTML Template لبطاقة العرض
+ */
 const OFFER_CARD_TEMPLATE = `
 <article class="offer-card">
     <div class="offer-card__background">
@@ -48,10 +48,10 @@ const OFFER_CARD_TEMPLATE = `
 `;
 
 /**
-إنشاء بطاقة عرض
-@param {Object} offer - بيانات العرض
-@returns {HTMLElement|null}
-*/
+ * إنشاء بطاقة عرض
+ * @param {Object} offer - بيانات العرض
+ * @returns {HTMLElement|null}
+ */
 export async function createOfferCard(offer) {
     if (!offer?.id) {
         console.error('[OfferCard] ❌ معرف العرض غير مُعرّف!');
@@ -95,21 +95,21 @@ export async function createOfferCard(offer) {
         }
 
         // ===== المؤقت (Countdown) =====
-        if (offer.endDate) {
+        if (offer.end_date) {
             const timerContainer = card.querySelector('.offer-card__timer');
             if (timerContainer) {
                 timerContainer.style.display = 'flex';
-                startCountdown(timerContainer, offer.endDate);
+                startCountdown(timerContainer, offer.end_date);
             }
         }
 
         // ===== زر CTA =====
         const ctaBtn = card.querySelector('.offer-card__cta');
         if (ctaBtn) {
-            if (offer.ctaLink) {
-                ctaBtn.href = offer.ctaLink;
-            } else if (offer.ctaText) {
-                ctaBtn.querySelector('span').textContent = offer.ctaText;
+            if (offer.cta_link) {
+                ctaBtn.href = offer.cta_link;
+            } else if (offer.cta_text) {
+                ctaBtn.querySelector('span').textContent = offer.cta_text;
             }
         }
 
@@ -123,8 +123,8 @@ export async function createOfferCard(offer) {
 }
 
 /**
-بدء العد التنازلي
-*/
+ * بدء العد التنازلي
+ */
 function startCountdown(container, endDate) {
     const endTime = new Date(endDate).getTime();
     const updateTimer = () => {
@@ -150,12 +150,12 @@ function startCountdown(container, endDate) {
     };
 
     updateTimer();
-    setInterval(updateTimer, 60000); // تحديث كل دقيقة
+    setInterval(updateTimer, 60000);
 }
 
 /**
-إضافة تأثيرات التفاعل
-*/
+ * إضافة تأثيرات التفاعل
+ */
 function addInteractionEffects(card) {
     card.style.opacity = '0';
     card.style.transform = 'translateY(20px)';
@@ -167,8 +167,8 @@ function addInteractionEffects(card) {
 }
 
 /**
-إنشاء عدة بطاقات عروض
-*/
+ * إنشاء عدة بطاقات عروض
+ */
 export async function createOfferCards(offers) {
     const cards = [];
     for (const offer of offers) {

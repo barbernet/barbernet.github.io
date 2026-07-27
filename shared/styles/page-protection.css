@@ -4,7 +4,6 @@ BarberFlow Pro - نظام حماية الصفحات وإخفاء الومضة
 الدور: منع ظهور المحتوى قبل التحقق من الصلاحيات
 ========================================================================== */
 
-
 /* شاشة التحميل الاحترافية (تغطي الشاشة بالكامل) */
 .page-loader-overlay {
     position: fixed;
@@ -19,6 +18,7 @@ BarberFlow Pro - نظام حماية الصفحات وإخفاء الومضة
     justify-content: center;
     z-index: 999999;
     transition: opacity 0.4s ease;
+    overflow: hidden;
 }
 
 [data-theme="dark"] .page-loader-overlay {
@@ -31,71 +31,319 @@ BarberFlow Pro - نظام حماية الصفحات وإخفاء الومضة
     pointer-events: none;
 }
 
-/* شعار BarberFlow (كبير جداً) */
+/* ============================================
+حاوية اللوغو الرئيسية (مركز التصميم)
+============================================ */
+.loader-logo-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .loader-logo {
-    font-size: 6rem; /* كبير جداً */
+    position: relative;
+    width: 180px;
+    height: 180px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 30px;
-    animation: fadeInDown 0.6s ease;
+    justify-content: center;
+    margin-bottom: 40px;
+    animation: fadeInScale 0.6s ease;
 }
 
+/* ============================================
+اللوغو في المنتصف (ثابت مع نبض خفيف)
+============================================ */
 .loader-logo i {
-    font-size: 5rem;
+    font-size: 4rem;
     color: var(--brand-accent, #d4af37);
-    animation: rotate 3s linear infinite;
+    position: relative;
+    z-index: 3;
+    animation: logoPulse 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
 }
 
-.loader-logo span {
-    font-size: 3.5rem;
-    font-weight: 700;
-    color: var(--text-primary, #212529);
-    font-family: 'Cairo', sans-serif;
+@keyframes logoPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
+    }
+    50% {
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.7));
+    }
 }
 
-[data-theme="dark"] .loader-logo span {
-    color: var(--text-primary, #f8f9fa);
+/* ============================================
+الحلقة الرئيسية (تدور حول اللوغو)
+============================================ */
+.loader-logo::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 140px;
+    height: 140px;
+    margin-top: -70px;
+    margin-left: -70px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: var(--brand-accent, #d4af37);
+    border-right-color: var(--brand-accent, #d4af37);
+    box-shadow: 
+        0 0 20px rgba(212, 175, 55, 0.3),
+        inset 0 0 20px rgba(212, 175, 55, 0.1);
+    animation: orbitMain 1.5s linear infinite;
+    z-index: 2;
 }
 
-@keyframes rotate {
+/* ============================================
+الحلقة الثانوية (تدور بالاتجاه المعاكس)
+============================================ */
+.loader-logo::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 170px;
+    height: 170px;
+    margin-top: -85px;
+    margin-left: -85px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-bottom-color: var(--brand-accent-dark, #aa841b);
+    border-left-color: var(--brand-accent-light, #f4d03f);
+    opacity: 0.6;
+    animation: orbitSecondary 2.5s linear infinite reverse;
+    z-index: 1;
+}
+
+@keyframes orbitMain {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* دائرة التحميل (كبيرة) */
-.loader-spinner {
-    width: 80px;
-    height: 80px;
-    border: 6px solid rgba(212, 175, 55, 0.2);
-    border-top-color: var(--brand-accent, #d4af37);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-bottom: 30px;
-}
-
-@keyframes spin {
+@keyframes orbitSecondary {
+    from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
-/* نص التحميل (كبير وواضح) */
+/* ============================================
+توهج خلفي متحرك (Glow Effect)
+============================================ */
+.loader-logo-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    margin-top: -100px;
+    margin-left: -100px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(212, 175, 55, 0.15) 0%,
+        rgba(212, 175, 55, 0.05) 40%,
+        transparent 70%
+    );
+    animation: glowPulse 3s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.15);
+        opacity: 1;
+    }
+}
+
+/* ============================================
+اسم التطبيق (مع تأثير shimmer)
+============================================ */
+.loader-brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary, #212529);
+    font-family: 'Cairo', sans-serif;
+    margin-bottom: 30px;
+    position: relative;
+    background: linear-gradient(
+        90deg,
+        var(--text-primary, #212529) 0%,
+        var(--brand-accent, #d4af37) 50%,
+        var(--text-primary, #212529) 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
+}
+
+[data-theme="dark"] .loader-brand {
+    color: var(--text-primary, #f8f9fa);
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ============================================
+نص التحميل (مع نقاط متحركة)
+============================================ */
 .loader-text {
     color: var(--text-secondary, #495057);
-    font-size: 1.8rem;
+    font-size: 1.1rem;
     font-weight: 600;
     font-family: 'Cairo', sans-serif;
     text-align: center;
     max-width: 80%;
+    position: relative;
+    padding-left: 30px;
+}
+
+.loader-text::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top-color: var(--brand-accent, #d4af37);
+    border-radius: 50%;
+    animation: miniSpin 0.8s linear infinite;
+}
+
+@keyframes miniSpin {
+    from { transform: translateY(-50%) rotate(0deg); }
+    to { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* ============================================
+نقاط التحميل المتحركة
+============================================ */
+.loader-dots {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.loader-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--brand-accent, #d4af37);
+    animation: dotsBounce 1.4s ease-in-out infinite both;
+}
+
+.loader-dots span:nth-child(1) { animation-delay: -0.32s; }
+.loader-dots span:nth-child(2) { animation-delay: -0.16s; }
+.loader-dots span:nth-child(3) { animation-delay: 0s; }
+
+@keyframes dotsBounce {
+    0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ============================================
+Responsive - الشاشات الصغيرة
+============================================ */
+@media (max-width: 480px) {
+    .loader-logo {
+        width: 140px;
+        height: 140px;
+        margin-bottom: 30px;
+    }
+
+    .loader-logo i {
+        font-size: 3rem;
+    }
+
+    .loader-logo::before {
+        width: 110px;
+        height: 110px;
+        margin-top: -55px;
+        margin-left: -55px;
+    }
+
+    .loader-logo::after {
+        width: 130px;
+        height: 130px;
+        margin-top: -65px;
+        margin-left: -65px;
+    }
+
+    .loader-brand {
+        font-size: 1.4rem;
+    }
+
+    .loader-text {
+        font-size: 0.95rem;
+    }
+}
+
+/* ============================================
+Responsive - الشاشات الكبيرة
+============================================ */
+@media (min-width: 1200px) {
+    .loader-logo {
+        width: 220px;
+        height: 220px;
+        margin-bottom: 50px;
+    }
+
+    .loader-logo i {
+        font-size: 5rem;
+    }
+
+    .loader-logo::before {
+        width: 170px;
+        height: 170px;
+        margin-top: -85px;
+        margin-left: -85px;
+        border-width: 4px;
+    }
+
+    .loader-logo::after {
+        width: 210px;
+        height: 210px;
+        margin-top: -105px;
+        margin-left: -105px;
+    }
+
+    .loader-brand {
+        font-size: 2.2rem;
+    }
+
+    .loader-text {
+        font-size: 1.3rem;
+    }
 }
 
