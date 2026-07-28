@@ -1,21 +1,16 @@
 /**
  * BarberFlow Pro - صفحة تفاصيل الصالون
  * المسار: details-salon.js
- * المميزات:
- * - عرض جميع معلومات الصالون
- * - نظام تقييمات متقدم مع ردود وإبلاغ
- * - أزرار تواصل متعددة
- * - حجز موعد
+ * ✅ محدّث: Skeleton Loading - إظهار الصفحة فوراً مع دوائر تحميل في الأماكن المطلوبة
  */
 
-import { db, auth } from "./config/firebase-init.js";
-import {
-    doc, getDoc, updateDoc, collection, addDoc, getDocs,
-    query, orderBy, serverTimestamp, deleteDoc
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { showNotification } from "./shared/js/notifications.js";
-import { PATHS, resolvePath } from "./shared/utils/paths.js";
+import { supabase } from './config/supabase-init.js';
+import { showNotification } from './shared/utils/notifications.js';
+import { PATHS, resolvePath } from './shared/utils/paths.js';
+import { safeExecute } from './shared/utils/error-handler.js';
+import { createServiceCards } from './shared/components/card-service.js';
+import { createStaffCards } from './shared/components/card-staff.js';
+import { createReviewCards } from './shared/components/card-review.js';
 
 // ============================================
 // المتغيرات العامة
@@ -24,8 +19,11 @@ const urlParams = new URLSearchParams(window.location.search);
 const salonId = urlParams.get('id');
 let currentUser = null;
 let salonData = null;
-let currentReviewId = null;
+let allServices = [];
+let allReviews = [];
+let currentServiceFilter = 'all';
 let selectedRating = 0;
+let isFavorite = false;
 
 // ============================================
 // التحقق من معرف الصالون
@@ -33,17 +31,31 @@ let selectedRating = 0;
 if (!salonId) {
     showNotification("الرابط غير صالح، لم يتم تحديد الصالون", "error");
     setTimeout(() => {
-        window.location.replace(resolvePath('INDEX'));
+        window.location.replace(resolvePath('SALONS'));
     }, 2000);
+}
+
+// ============================================
+// زر العودة
+// ============================================
+const backBtn = document.getElementById('backBtn');
+if (backBtn) {
+    backBtn.addEventListener('click', () => {
+        if (document.referrer && document.referrer.includes(window.location.hostname)) {
+            window.history.back();
+        } else {
+            window.location.href = resolvePath('SALONS');
+        }
+    });
 }
 
 // ============================================
 // مراقبة حالة المصادقة
 // ============================================
-onAuthStateChanged(auth, (user) => {
-    currentUser = user;
+const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    currentUser = session?.user || null;
     if (salonId) {
-        loadSalonDetails();
+        await loadSalonDetails();
     }
 });
 
@@ -51,24 +63,34 @@ onAuthStateChanged(auth, (user) => {
 // تحميل تفاصيل الصالون
 // ============================================
 async function loadSalonDetails() {
-    try {
-        const snap = await getDoc(doc(db, "salons", salonId));
+    const result = await safeExecute(async () => {
+        const { data, error } = await supabase
+            .from('businesses')
+            .select('*')
+            .eq('id', salonId)
+            .eq('type', 'salon')
+            .single();
         
-        if (!snap.exists()) {
-            showNotification("هذا الصالون غير موجود أو تم حذفه", "error");
-            setTimeout(() => {
-                window.location.replace(resolvePath('INDEX'));
-            }, 2000);
-            return;
-        }
-        
-        salonData = { id: salonId, ...snap.data() };
+        if (error || !data) throw error;
+        return data;
+    }, 'تحميل تفاصيل الصالون');
+    
+    if (result.success) {
+        salonData = { id: salonId, ...result.data };
         renderSalonInfo(salonData);
-        await fetchReviews();
-        
-    } catch (error) {
-        console.error("خطأ في تحميل تفاصيل الصالون:", error);
-        showNotification("حدث خطأ في تحميل البيانات", "error");
+        updateSalonStatus(salonData.working_hours);
+        renderWorkingHours(salonData.working_hours);
+        await checkFavoriteStatus();
+        await loadServices();
+        await loadStaff();
+        await loadReviews();
+        setupEventListeners();
+        updateDynamicLinks();
+    } else {
+        showNotification("هذا الصالون غير موجود أو تم حذفه", "error");
+        setTimeout(() => {
+            window.location.replace(resolvePath('SALONS'));
+        }, 2000);
     }
 }
 
@@ -76,67 +98,50 @@ async function loadSalonDetails() {
 // عرض معلومات الصالون
 // ============================================
 function renderSalonInfo(data) {
-    // الصورة الرئيسية
+    // صورة الغلاف
     const heroImage = document.getElementById('heroImage');
     const heroPlaceholder = document.getElementById('heroPlaceholder');
-    if (data.coverImage) {
-        heroImage.src = data.coverImage;
+    if (data.cover_url) {
+        heroImage.src = data.cover_url;
         heroImage.style.display = 'block';
         heroPlaceholder.style.display = 'none';
+        heroImage.onerror = () => {
+            heroImage.style.display = 'none';
+            heroPlaceholder.style.display = 'flex';
+            heroImage.onerror = null;
+        };
     }
-    
-    // الاسم والمعلومات الأساسية
-    setText('salonName', data.salonName || "صالون غير مسمى");
-    setText('locationValue', data.location || "غير محدد");
-    setText('salonType', data.salonType || "عام");
-    
-    // التقييم
-    const rating = data.rating || 5.0;
-    const reviewsCount = data.reviewsCount || 0;
-    setText('ratingValue', rating.toFixed(1));
-    setText('reviewsCount', `(${reviewsCount} تقييم)`);
-    setText('bigRating', rating.toFixed(1));
-    setText('totalReviews', `${reviewsCount} تقييم`);
-    
+
+    // الشعار
+    const salonLogo = document.getElementById('salonLogo');
+    const logoPlaceholder = document.getElementById('logoPlaceholder');
+    if (data.logo_url) {
+        salonLogo.src = data.logo_url;
+        salonLogo.style.display = 'block';
+        logoPlaceholder.style.display = 'none';
+        salonLogo.onerror = () => {
+            salonLogo.style.display = 'none';
+            logoPlaceholder.style.display = 'flex';
+            salonLogo.onerror = null;
+        };
+    }
+
+    // المعلومات الأساسية
+    setText('salonName', data.name || "صالون غير مسمى");
+    setText('salonCity', data.city || "الموقع غير محدد");
+    setText('salonRating', (parseFloat(data.rating) || 0).toFixed(1));
+    setText('salonReviewsCount', `(${data.reviews_count || 0} تقييم)`);
+
     // الشارات
-    if (data.verified) showElement('verifiedBadge');
-    if (data.featured) showElement('featuredBadge');
-    
-    // حالة الصالون
-    updateSalonStatus(data.workingHours);
-    
-    // عن الصالون
-    setText('aboutText', data.description || data.about || "مرحباً بكم في صالوننا المميز.");
-    
-    // أوقات العمل
-    const days = Array.isArray(data.workDays) ? data.workDays.join(' - ') : 'غير محدد';
-    const openTime = data.workingHours?.open || '00:00';
-    const closeTime = data.workingHours?.close || '00:00';
-    setText('workingDays', `أيامنا: ${days}`);
-    setText('workingHours', `ساعاتنا: من ${openTime} إلى ${closeTime}`);
-    
-    // أزرار التواصل
-    setupContactButtons(data);
-    
-    // الخدمات
-    renderServices(data.services);
-    
-    // المعرض
-    renderGallery(data.portfolio || data.gallery);
-    
-    // الشهادات
-    renderCertificates(data.certificate);
-    
-    // المفضلة
-    setupFavoriteButton(data.isLiked);
-    
-    // معلومات المالك
-    if (data.ownerId) {
-        loadOwnerInfo(data.ownerId);
+    if (data.is_verified) {
+        showElement('verifiedBadge');
     }
-    
-    // تحديث عنوان الصفحة
-    document.title = `${data.salonName || 'صالون'} | BarberFlow Pro`;
+
+    // عن الصالون
+    setText('salonDescription', data.description || "مرحباً بكم في صالوننا المميز.");
+
+    // عنوان الصفحة
+    document.title = `${data.name || 'صالون'} | BarberFlow Pro`;
 }
 
 // ============================================
@@ -145,10 +150,10 @@ function renderSalonInfo(data) {
 function updateSalonStatus(hours) {
     const badge = document.getElementById('statusBadge');
     if (!hours?.open || !hours?.close) {
-        badge.innerHTML = '<i class="fas fa-clock"></i> غير محدد';
+        badge.innerHTML = '<i class="fas fa-clock"></i> <span>غير محدد</span>';
         return;
     }
-    
+
     const now = new Date();
     const curr = now.getHours() * 60 + now.getMinutes();
     const [oh, om] = hours.open.split(':').map(Number);
@@ -156,207 +161,239 @@ function updateSalonStatus(hours) {
     const ot = oh * 60 + om;
     const ct = ch * 60 + cm;
     const isOpen = ct > ot ? (curr >= ot && curr < ct) : (curr >= ot || curr < ct);
-    
-    badge.innerHTML = `<i class="fas fa-${isOpen ? 'check-circle' : 'times-circle'}"></i> ${isOpen ? 'مفتوح الآن' : 'مغلق حالياً'}`;
+
     badge.className = `badge status ${isOpen ? 'open' : 'closed'}`;
+    badge.innerHTML = `<i class="fas fa-${isOpen ? 'check-circle' : 'times-circle'}"></i> <span>${isOpen ? 'مفتوح الآن' : 'مغلق حالياً'}</span>`;
 }
 
 // ============================================
-// إعداد أزرار التواصل
+// عرض أوقات العمل
 // ============================================
-function setupContactButtons(data) {
-    const phone = data.phone || "";
-    
-    if (phone) {
-        const callBtn = document.getElementById('callBtn');
-        if (callBtn) callBtn.href = `tel:${phone}`;
-        
-        const whatsappBtn = document.getElementById('whatsappBtn');
-        if (whatsappBtn) {
-            const cleanPhone = phone.replace('+', '').replace(/\s/g, '');
-            whatsappBtn.href = `https://wa.me/${cleanPhone}`;
-        }
+function renderWorkingHours(hours) {
+    const container = document.getElementById('workingHoursList');
+    if (!container) return;
+
+    const days = [
+        { key: 'sun', name: 'الأحد' },
+        { key: 'mon', name: 'الإثنين' },
+        { key: 'tue', name: 'الثلاثاء' },
+        { key: 'wed', name: 'الأربعاء' },
+        { key: 'thu', name: 'الخميس' },
+        { key: 'fri', name: 'الجمعة' },
+        { key: 'sat', name: 'السبت' }
+    ];
+
+    if (!hours?.days || hours.days.length === 0) {
+        container.innerHTML = `
+            <div class="hours-row">
+                <i class="fas fa-clock"></i>
+                <span>أوقات العمل غير محددة</span>
+            </div>
+        `;
+        return;
     }
-    
-    const locationBtn = document.getElementById('locationBtn');
-    if (locationBtn && data.location) {
-        locationBtn.onclick = () => {
-            const addr = encodeURIComponent(data.location);
-            window.open(`https://www.google.com/maps/search/?api=1&query=${addr}`, '_blank');
-        };
+
+    container.innerHTML = days.map(day => {
+        const isWorking = hours.days.includes(day.key);
+        return `
+            <div class="hours-row ${isWorking ? '' : 'closed'}">
+                <i class="fas fa-calendar-day"></i>
+                <span class="day-name">${day.name}</span>
+                <span class="day-hours">${isWorking ? `${hours.open} - ${hours.close}` : 'مغلق'}</span>
+            </div>
+        `;
+    }).join('');
+}
+
+// ============================================
+// التحقق من حالة المفضلة
+// ============================================
+async function checkFavoriteStatus() {
+    if (!currentUser) {
+        updateFavoriteUI(false);
+        return;
     }
-    
-    if (data.email) {
-        const emailBtn = document.getElementById('emailBtn');
-        if (emailBtn) {
-            emailBtn.href = `mailto:${data.email}`;
-            emailBtn.style.display = 'flex';
-        }
+
+    try {
+        const { data, error } = await supabase
+            .from('favorites')
+            .select('id')
+            .eq('user_id', currentUser.id)
+            .eq('item_id', salonId)
+            .eq('item_type', 'salon')
+            .single();
+
+        isFavorite = !error && data;
+        updateFavoriteUI(isFavorite);
+    } catch (error) {
+        console.error("خطأ في التحقق من المفضلة:", error);
     }
-    
-    const shareBtn = document.getElementById('shareBtn');
-    if (shareBtn) {
-        shareBtn.onclick = () => {
-            if (navigator.share) {
-                navigator.share({
-                    title: data.salonName,
-                    text: data.description,
-                    url: window.location.href
+}
+
+// ============================================
+// تحديث واجهة المفضلة
+// ============================================
+function updateFavoriteUI(liked) {
+    const btn = document.getElementById('favoriteBtn');
+    const icon = btn?.querySelector('i');
+    if (!btn || !icon) return;
+
+    isFavorite = liked;
+    icon.className = liked ? 'fas fa-heart' : 'far fa-heart';
+    btn.classList.toggle('active', liked);
+}
+
+// ============================================
+// تبديل المفضلة
+// ============================================
+async function toggleFavorite() {
+    if (!currentUser) {
+        showNotification("يرجى تسجيل الدخول لإضافة الصالون للمفضلة", "warning");
+        setTimeout(() => {
+            window.location.href = resolvePath('LOGIN');
+        }, 1500);
+        return;
+    }
+
+    const newLikedState = !isFavorite;
+    updateFavoriteUI(newLikedState);
+
+    try {
+        if (newLikedState) {
+            const { error } = await supabase
+                .from('favorites')
+                .insert({
+                    user_id: currentUser.id,
+                    item_id: salonId,
+                    item_type: 'salon'
                 });
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                showNotification("تم نسخ رابط الصالون", "success");
-            }
-        };
+            if (error) throw error;
+            showNotification("تمت إضافة الصالون للمفضلة", "success");
+        } else {
+            const { error } = await supabase
+                .from('favorites')
+                .delete()
+                .eq('user_id', currentUser.id)
+                .eq('item_id', salonId)
+                .eq('item_type', 'salon');
+            if (error) throw error;
+            showNotification("تمت إزالة الصالون من المفضلة", "info");
+        }
+    } catch (error) {
+        console.error("خطأ في تحديث المفضلة:", error);
+        updateFavoriteUI(!newLikedState);
+        showNotification("حدث خطأ في تحديث المفضلة", "error");
+    }
+}
+
+// ============================================
+// تحميل الخدمات
+// ============================================
+async function loadServices() {
+    const result = await safeExecute(async () => {
+        const { data, error } = await supabase
+            .from('services')
+            .select('*')
+            .eq('business_id', salonId)
+            .eq('is_available', true)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+    }, 'تحميل الخدمات');
+
+    if (result.success) {
+        allServices = result.data;
+        setText('servicesCount', `${allServices.length} خدمة`);
+        renderServices();
+    } else {
+        // عرض رسالة خطأ في قسم الخدمات
+        const grid = document.getElementById('servicesGrid');
+        if (grid) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>حدث خطأ في تحميل الخدمات</p>
+                </div>
+            `;
+        }
     }
 }
 
 // ============================================
 // عرض الخدمات
 // ============================================
-function renderServices(services) {
-    const container = document.getElementById('servicesList');
-    if (!container) return;
-    
-    if (!services || services.length === 0) {
-        container.innerHTML = '<p class="empty-state">لا توجد خدمات مسجلة بعد</p>';
-        return;
-    }
-    
-    container.innerHTML = services.map(s => `
-        <div class="service-item">
-            <div class="service-info">
-                <i class="fas fa-check-circle"></i>
-                <span class="service-name">${s.name}</span>
-            </div>
-            <span class="service-price">${s.price} DH</span>
-        </div>
-    `).join('');
-}
+async function renderServices() {
+    const grid = document.getElementById('servicesGrid');
+    if (!grid) return;
 
-// ============================================
-// عرض المعرض
-// ============================================
-function renderGallery(images) {
-    const container = document.getElementById('gallerySlider');
-    const hint = document.getElementById('scrollHint');
-    
-    if (!container) return;
-    
-    if (images && images.length > 0) {
-        container.innerHTML = images.map(url => `
-            <div class="gallery-item">
-                <img src="${url}" alt="معرض الأعمال" loading="lazy">
-            </div>
-        `).join('');
-        if (hint && images.length > 3) hint.style.display = 'flex';
-    } else {
-        container.innerHTML = `
-            <div class="gallery-placeholder">
-                <i class="fas fa-images"></i>
-                <span>سيتم إضافة صور المعرض قريباً</span>
+    let filtered = [...allServices];
+    if (currentServiceFilter !== 'all') {
+        filtered = filtered.filter(s => s.category === currentServiceFilter);
+    }
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-cut"></i>
+                <p>لا توجد خدمات متاحة حالياً</p>
             </div>
         `;
+        return;
     }
+
+    const cards = await createServiceCards(filtered);
+    grid.innerHTML = '';
+    cards.forEach(card => grid.appendChild(card));
 }
 
 // ============================================
-// عرض الشهادات
+// تحميل فريق العمل
 // ============================================
-function renderCertificates(certData) {
-    const container = document.getElementById('certificatesContainer');
-    if (!container) return;
-    
-    const certs = certData?.photos || certData;
-    
-    if (certs && certs.length > 0) {
-        container.innerHTML = certs.map((url, index) => `
-            <div class="cert-item">
-                <img src="${url}" alt="شهادة ${index + 1}" loading="lazy">
-                ${certData?.title && index === 0 ? `<div class="cert-title">${certData.title}</div>` : ''}
-            </div>
-        `).join('');
+async function loadStaff() {
+    const grid = document.getElementById('staffGrid');
+    if (!grid) return;
+
+    // يمكن جلب الموظفين المرتبطين بالصالون من جدول profiles
+    // حالياً نعرض رسالة فارغة
+    grid.innerHTML = `
+        <div class="empty-state">
+            <i class="fas fa-users"></i>
+            <p>لم يتم إضافة فريق العمل بعد</p>
+        </div>
+    `;
+}
+
+// ============================================
+// تحميل التقييمات
+// ============================================
+async function loadReviews() {
+    const result = await safeExecute(async () => {
+        const { data, error } = await supabase
+            .from('reviews')
+            .select('*')
+            .eq('business_id', salonId)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+    }, 'تحميل التقييمات');
+
+    if (result.success) {
+        allReviews = result.data;
+        renderReviewsSummary(allReviews);
+        await renderReviewsList(allReviews);
     } else {
-        container.innerHTML = '<p class="empty-state">لا توجد شهادات معروضة</p>';
-    }
-}
-
-// ============================================
-// زر المفضلة
-// ============================================
-function setupFavoriteButton(isLiked) {
-    const btn = document.getElementById('favoriteBtn');
-    if (!btn) return;
-    
-    const icon = btn.querySelector('i');
-    updateHeartUI(isLiked);
-    
-    btn.onclick = async () => {
-        if (!currentUser) {
-            showNotification("يرجى تسجيل الدخول لإضافة الصالون للمفضلة", "warning");
-            setTimeout(() => {
-                window.location.href = resolvePath('LOGIN');
-            }, 1500);
-            return;
+        // عرض رسالة خطأ في قسم التقييمات
+        const container = document.getElementById('reviewsList');
+        if (container) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>حدث خطأ في تحميل التقييمات</p>
+                </div>
+            `;
         }
-        
-        isLiked = !isLiked;
-        updateHeartUI(isLiked);
-        
-        try {
-            await updateDoc(doc(db, "salons", salonId), { isLiked });
-            showNotification(isLiked ? "تمت إضافة الصالون للمفضلة" : "تم إزالة الصالون من المفضلة", "success");
-        } catch (err) {
-            console.error("خطأ في تحديث المفضلة:", err);
-            isLiked = !isLiked;
-            updateHeartUI(isLiked);
-        }
-    };
-    
-    function updateHeartUI(liked) {
-        icon.className = liked ? 'fas fa-heart' : 'far fa-heart';
-        btn.classList.toggle('active', liked);
-    }
-}
-
-// ============================================
-// معلومات المالك
-// ============================================
-async function loadOwnerInfo(ownerId) {
-    try {
-        const snap = await getDoc(doc(db, "users", ownerId));
-        if (snap.exists()) {
-            const data = snap.data();
-            setText('ownerName', data.fullName || "مستخدم");
-            if (data.createdAt) {
-                const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
-                setText('ownerSince', `عضو منذ ${date.getFullYear()}`);
-            }
-            showElement('ownerSection');
-        }
-    } catch (e) {
-        console.error("خطأ في جلب معلومات المالك:", e);
-    }
-}
-
-// ============================================
-// جلب التقييمات
-// ============================================
-async function fetchReviews() {
-    const container = document.getElementById('reviewsList');
-    if (!container) return;
-    
-    try {
-        const q = query(collection(db, "salons", salonId, "reviews"), orderBy("timestamp", "desc"));
-        const snap = await getDocs(q);
-        const reviews = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        renderReviewsSummary(reviews);
-        renderReviewsList(reviews);
-        
-    } catch (e) {
-        console.error("خطأ في جلب التقييمات:", e);
-        container.innerHTML = '<p class="empty-state">تعذر تحميل التقييمات</p>';
     }
 }
 
@@ -364,13 +401,21 @@ async function fetchReviews() {
 // ملخص التقييمات
 // ============================================
 function renderReviewsSummary(reviews) {
-    if (reviews.length === 0) return;
-    
-    // حساب متوسط التقييم
+    if (reviews.length === 0) {
+        document.getElementById('bigRating').textContent = '0.0';
+        document.getElementById('totalReviews').textContent = '0 تقييم';
+        document.getElementById('starsDisplay').innerHTML = '';
+        document.getElementById('ratingBars').innerHTML = '';
+        return;
+    }
+
     const totalRating = reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
     const avgRating = totalRating / reviews.length;
-    
-    // عدد التقييمات لكل نجمة
+
+    setText('bigRating', avgRating.toFixed(1));
+    setText('totalReviews', `${reviews.length} تقييم`);
+    document.getElementById('starsDisplay').innerHTML = generateStarsHTML(avgRating);
+
     const ratingCounts = [0, 0, 0, 0, 0];
     reviews.forEach(r => {
         const rating = Math.round(r.rating || 0);
@@ -378,96 +423,320 @@ function renderReviewsSummary(reviews) {
             ratingCounts[rating - 1]++;
         }
     });
-    
-    // عرض النجوم
-    const starsDisplay = document.getElementById('starsDisplay');
-    if (starsDisplay) {
-        starsDisplay.innerHTML = generateStarsHTML(avgRating);
-    }
-    
-    // أشرطة التقييم
+
     const barsContainer = document.getElementById('ratingBars');
-    if (barsContainer) {
-        barsContainer.innerHTML = ratingCounts.map((count, index) => {
-            const star = index + 1;
-            const percentage = (count / reviews.length) * 100;
-            return `
-                <div class="rating-bar-row">
-                    <span class="star-label">${star} <i class="fas fa-star"></i></span>
-                    <div class="rating-bar">
-                        <div class="rating-bar-fill" style="width: ${percentage}%"></div>
-                    </div>
-                    <span class="bar-count">${count}</span>
+    barsContainer.innerHTML = ratingCounts.map((count, index) => {
+        const star = index + 1;
+        const percentage = (count / reviews.length) * 100;
+        return `
+            <div class="rating-bar-row">
+                <span class="star-label">${star} <i class="fas fa-star"></i></span>
+                <div class="rating-bar">
+                    <div class="rating-bar-fill" style="width: ${percentage}%"></div>
                 </div>
-            `;
-        }).join('');
-    }
+                <span class="bar-count">${count}</span>
+            </div>
+        `;
+    }).join('');
 }
 
 // ============================================
 // عرض قائمة التقييمات
 // ============================================
-function renderReviewsList(reviews) {
+async function renderReviewsList(reviews) {
     const container = document.getElementById('reviewsList');
     if (!container) return;
-    
+
     if (reviews.length === 0) {
         container.innerHTML = `
-            <div class="empty-reviews">
+            <div class="empty-state">
                 <i class="fas fa-comment-slash"></i>
                 <p>لا توجد تقييمات بعد. كن أول من يقيّم!</p>
             </div>
         `;
         return;
     }
-    
-    container.innerHTML = reviews.map(review => {
-        const isOwner = currentUser && review.userId === currentUser.uid;
-        const date = review.timestamp?.toDate ? review.timestamp.toDate() : new Date();
-        const formattedDate = date.toLocaleDateString('ar-MA', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
+
+    // جلب بيانات المقيّمين
+    const reviewsWithNames = await Promise.all(reviews.map(async (review) => {
+        try {
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('full_name, avatar_url')
+                .eq('id', review.reviewer_id)
+                .single();
+            
+            return {
+                ...review,
+                reviewer_name: profile?.full_name || 'زبون',
+                reviewer_avatar: profile?.avatar_url || null
+            };
+        } catch (error) {
+            return { ...review, reviewer_name: 'زبون', reviewer_avatar: null };
+        }
+    }));
+
+    const cards = await createReviewCards(reviewsWithNames);
+    container.innerHTML = '';
+    cards.forEach(card => container.appendChild(card));
+}
+
+// ============================================
+// إضافة تقييم جديد
+// ============================================
+async function submitReview() {
+    if (!currentUser) {
+        showNotification("يرجى تسجيل الدخول لإضافة تقييم", "warning");
+        setTimeout(() => {
+            window.location.href = resolvePath('LOGIN');
+        }, 1500);
+        return;
+    }
+
+    if (selectedRating === 0) {
+        showNotification("يرجى اختيار التقييم بالنجوم", "error");
+        return;
+    }
+
+    const text = document.getElementById('reviewText').value.trim();
+    if (!text) {
+        showNotification("يرجى كتابة تقييمك", "error");
+        return;
+    }
+
+    const result = await safeExecute(async () => {
+        const { error } = await supabase
+            .from('reviews')
+            .insert({
+                reviewer_id: currentUser.id,
+                business_id: salonId,
+                rating: selectedRating,
+                comment: text
+            });
+
+        if (error) throw error;
+    }, 'إضافة التقييم');
+
+    if (result.success) {
+        showNotification("تم إضافة تقييمك بنجاح، شكراً لمشاركتك", "success");
+        document.getElementById('reviewModal').classList.remove('active');
+        document.getElementById('reviewText').value = '';
+        selectedRating = 0;
+        updateStarsInput(0);
+        await loadReviews();
+    } else {
+        showNotification("حدث خطأ في إضافة التقييم", "error");
+    }
+}
+
+// ============================================
+// إرسال بلاغ
+// ============================================
+async function submitReport() {
+    if (!currentUser) {
+        showNotification("يرجى تسجيل الدخول للإبلاغ", "warning");
+        return;
+    }
+
+    const reason = document.getElementById('reportReason').value;
+    const details = document.getElementById('reportDetails').value.trim();
+
+    try {
+        const reports = JSON.parse(localStorage.getItem('bf-reports') || '[]');
+        reports.push({
+            id: 'RPT-' + Date.now(),
+            salonId: salonId,
+            userId: currentUser.id,
+            reason: reason,
+            details: details,
+            timestamp: new Date().toISOString()
         });
-        
-        return `
-            <div class="review-card" data-review-id="${review.id}">
-                <div class="review-header">
-                    <div class="reviewer-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="reviewer-info">
-                        <strong>${review.userName || 'زائر'}</strong>
-                        <div class="review-meta">
-                            <div class="review-stars">${generateStarsHTML(review.rating || 0)}</div>
-                            <span class="review-date">${formattedDate}</span>
-                        </div>
-                    </div>
-                    <button class="review-options-btn" data-review-id="${review.id}">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
-                </div>
-                <p class="review-text">${review.comment || ''}</p>
-                ${review.reply ? `
-                    <div class="review-reply">
-                        <div class="reply-header">
-                            <i class="fas fa-reply"></i>
-                            <span>رد صاحب الصالون</span>
-                        </div>
-                        <p>${review.reply}</p>
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    }).join('');
-    
-    // إضافة أحداث أزرار الخيارات
-    container.querySelectorAll('.review-options-btn').forEach(btn => {
-        btn.onclick = (e) => {
-            e.stopPropagation();
-            currentReviewId = btn.dataset.reviewId;
-            showReviewOptions();
-        };
+        localStorage.setItem('bf-reports', JSON.stringify(reports));
+
+        showNotification("تم إرسال البلاغ بنجاح، شكراً لمساعدتنا", "success");
+        document.getElementById('reportModal').classList.remove('active');
+        document.getElementById('reportDetails').value = '';
+    } catch (error) {
+        console.error("خطأ في إرسال البلاغ:", error);
+        showNotification("فشل إرسال البلاغ", "error");
+    }
+}
+
+// ============================================
+// إرسال رسالة تواصل
+// ============================================
+async function submitContact() {
+    const name = document.getElementById('contactName').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    const message = document.getElementById('contactMessage').value.trim();
+
+    if (!name || !email || !message) {
+        showNotification("يرجى ملء جميع الحقول المطلوبة", "error");
+        return;
+    }
+
+    try {
+        const messages = JSON.parse(localStorage.getItem('bf-messages') || '[]');
+        messages.push({
+            id: 'MSG-' + Date.now(),
+            salonId: salonId,
+            name: name,
+            email: email,
+            message: message,
+            timestamp: new Date().toISOString(),
+            status: 'pending'
+        });
+        localStorage.setItem('bf-messages', JSON.stringify(messages));
+
+        showNotification("تم إرسال رسالتك بنجاح! سيتم الرد عليك خلال 24 ساعة", "success");
+        document.getElementById('contactModal').classList.remove('active');
+        document.getElementById('contactForm').reset();
+    } catch (error) {
+        console.error("خطأ في إرسال الرسالة:", error);
+        showNotification("حدث خطأ في إرسال الرسالة", "error");
+    }
+}
+
+// ============================================
+// مشاركة الصالون
+// ============================================
+function shareSalon() {
+    if (navigator.share) {
+        navigator.share({
+            title: salonData?.name || 'صالون',
+            text: salonData?.description || '',
+            url: window.location.href
+        });
+    } else {
+        navigator.clipboard.writeText(window.location.href);
+        showNotification("تم نسخ رابط الصالون", "success");
+    }
+}
+
+// ============================================
+// إعداد مستمعي الأحداث
+// ============================================
+function setupEventListeners() {
+    // زر المفضلة
+    document.getElementById('favoriteBtn')?.addEventListener('click', toggleFavorite);
+
+    // زر المشاركة
+    document.getElementById('shareBtn')?.addEventListener('click', shareSalon);
+
+    // زر الحجز
+    document.getElementById('bookingBtn')?.addEventListener('click', () => {
+        if (!currentUser) {
+            showNotification("يرجى تسجيل الدخول للحجز", "warning");
+            setTimeout(() => {
+                window.location.href = resolvePath('LOGIN');
+            }, 1500);
+            return;
+        }
+        window.location.href = `${resolvePath('BOOKING')}?salon=${salonId}`;
+    });
+
+    // زر التواصل
+    document.getElementById('contactBtn')?.addEventListener('click', () => {
+        document.getElementById('contactModal').classList.add('active');
+    });
+
+    // زر الإبلاغ
+    document.getElementById('reportBtn')?.addEventListener('click', () => {
+        document.getElementById('reportModal').classList.add('active');
+    });
+
+    // إغلاق Modals
+    document.getElementById('closeContactModal')?.addEventListener('click', () => {
+        document.getElementById('contactModal').classList.remove('active');
+    });
+
+    document.getElementById('closeReviewModal')?.addEventListener('click', () => {
+        document.getElementById('reviewModal').classList.remove('active');
+        document.getElementById('reviewText').value = '';
+        selectedRating = 0;
+        updateStarsInput(0);
+    });
+
+    document.getElementById('closeReportModal')?.addEventListener('click', () => {
+        document.getElementById('reportModal').classList.remove('active');
+    });
+
+    // إرسال النماذج
+    document.getElementById('contactForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitContact();
+    });
+
+    document.getElementById('submitReview')?.addEventListener('click', submitReview);
+    document.getElementById('submitReport')?.addEventListener('click', submitReport);
+
+    // إضافة تقييم
+    document.getElementById('addReviewBtn')?.addEventListener('click', () => {
+        if (!currentUser) {
+            showNotification("يرجى تسجيل الدخول لإضافة تقييم", "warning");
+            return;
+        }
+        document.getElementById('reviewModal').classList.add('active');
+    });
+
+    // اختيار النجوم
+    document.querySelectorAll('#starsInput i').forEach(star => {
+        star.addEventListener('click', () => {
+            selectedRating = parseInt(star.dataset.rating);
+            updateStarsInput(selectedRating);
+        });
+
+        star.addEventListener('mouseenter', () => {
+            const rating = parseInt(star.dataset.rating);
+            highlightStars(rating);
+        });
+    });
+
+    document.getElementById('starsInput')?.addEventListener('mouseleave', () => {
+        updateStarsInput(selectedRating);
+    });
+
+    // فلاتر الخدمات
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentServiceFilter = btn.dataset.category;
+            renderServices();
+        });
+    });
+
+    // إغلاق Modals عند النقر خارجها
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    });
+
+    // مفتاح Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+    });
+}
+
+// ============================================
+// تحديث واجهة النجوم
+// ============================================
+function updateStarsInput(rating) {
+    document.querySelectorAll('#starsInput i').forEach((star, index) => {
+        star.className = index < rating ? 'fas fa-star active' : 'far fa-star';
+    });
+}
+
+function highlightStars(rating) {
+    document.querySelectorAll('#starsInput i').forEach((star, index) => {
+        star.className = index < rating ? 'fas fa-star' : 'far fa-star';
     });
 }
 
@@ -478,7 +747,6 @@ function generateStarsHTML(rating) {
     const fullStars = Math.floor(rating);
     const hasHalf = rating % 1 >= 0.5;
     let html = '';
-    
     for (let i = 0; i < 5; i++) {
         if (i < fullStars) {
             html += '<i class="fas fa-star"></i>';
@@ -488,249 +756,20 @@ function generateStarsHTML(rating) {
             html += '<i class="far fa-star"></i>';
         }
     }
-    
     return html;
 }
 
 // ============================================
-// نافذة خيارات التقييم
+// تحديث الروابط الديناميكية
 // ============================================
-function showReviewOptions() {
-    const modal = document.getElementById('reviewOptionsModal');
-    if (modal) modal.classList.add('active');
-}
-
-// ============================================
-// أحداث نافذة الخيارات
-// ============================================
-document.getElementById('replyBtn')?.addEventListener('click', () => {
-    closeReviewOptions();
-    showReplyModal();
-});
-
-document.getElementById('reportBtn')?.addEventListener('click', async () => {
-    closeReviewOptions();
-    if (!currentUser) {
-        showNotification("يرجى تسجيل الدخول للإبلاغ", "warning");
-        return;
-    }
-    
-    try {
-        await addDoc(collection(db, "reports"), {
-            reviewId: currentReviewId,
-            salonId: salonId,
-            userId: currentUser.uid,
-            reason: "محتوى غير لائق",
-            timestamp: serverTimestamp()
-        });
-        showNotification("تم إرسال البلاغ بنجاح، شكراً لمساعدتنا", "success");
-    } catch (e) {
-        console.error("خطأ في إرسال البلاغ:", e);
-        showNotification("فشل إرسال البلاغ", "error");
-    }
-});
-
-document.getElementById('copyBtn')?.addEventListener('click', () => {
-    const review = document.querySelector(`[data-review-id="${currentReviewId}"] .review-text`);
-    if (review) {
-        navigator.clipboard.writeText(review.textContent);
-        showNotification("تم نسخ النص", "success");
-    }
-    closeReviewOptions();
-});
-
-document.getElementById('hideBtn')?.addEventListener('click', () => {
-    const reviewCard = document.querySelector(`[data-review-id="${currentReviewId}"]`);
-    if (reviewCard) {
-        reviewCard.style.display = 'none';
-        showNotification("تم إخفاء التعليق", "info");
-    }
-    closeReviewOptions();
-});
-
-document.getElementById('closeOptionsModal')?.addEventListener('click', closeReviewOptions);
-
-function closeReviewOptions() {
-    const modal = document.getElementById('reviewOptionsModal');
-    if (modal) modal.classList.remove('active');
-    currentReviewId = null;
-}
-
-// ============================================
-// نافذة الرد
-// ============================================
-function showReplyModal() {
-    const modal = document.getElementById('replyModal');
-    if (modal) modal.classList.add('active');
-}
-
-document.getElementById('closeReplyModal')?.addEventListener('click', () => {
-    const modal = document.getElementById('replyModal');
-    if (modal) modal.classList.remove('active');
-    document.getElementById('replyText').value = '';
-});
-
-document.getElementById('submitReply')?.addEventListener('click', async () => {
-    const replyText = document.getElementById('replyText').value.trim();
-    if (!replyText) {
-        showNotification("يرجى كتابة الرد", "error");
-        return;
-    }
-    
-    if (!currentUser) {
-        showNotification("يرجى تسجيل الدخول للرد", "warning");
-        return;
-    }
-    
-    try {
-        await updateDoc(doc(db, "salons", salonId, "reviews", currentReviewId), {
-            reply: replyText,
-            replyAt: serverTimestamp()
-        });
-        showNotification("تم إرسال الرد بنجاح", "success");
-        document.getElementById('replyModal').classList.remove('active');
-        document.getElementById('replyText').value = '';
-        await fetchReviews();
-    } catch (e) {
-        console.error("خطأ في إرسال الرد:", e);
-        showNotification("فشل إرسال الرد", "error");
-    }
-});
-
-// ============================================
-// إضافة تقييم جديد
-// ============================================
-document.getElementById('addReviewBtn')?.addEventListener('click', () => {
-    if (!currentUser) {
-        showNotification("يرجى تسجيل الدخول لإضافة تقييم", "warning");
-        setTimeout(() => {
-            window.location.href = resolvePath('LOGIN');
-        }, 1500);
-        return;
-    }
-    
-    const modal = document.getElementById('reviewModal');
-    if (modal) modal.classList.add('active');
-});
-
-// اختيار النجوم
-document.querySelectorAll('#starsInput i').forEach(star => {
-    star.addEventListener('click', () => {
-        selectedRating = parseInt(star.dataset.rating);
-        updateStarsInput(selectedRating);
-    });
-});
-
-function updateStarsInput(rating) {
-    document.querySelectorAll('#starsInput i').forEach((star, index) => {
-        if (index < rating) {
-            star.className = 'fas fa-star';
-        } else {
-            star.className = 'far fa-star';
-        }
+function updateDynamicLinks() {
+    const links = document.querySelectorAll('[data-path]');
+    links.forEach(link => {
+        const key = link.getAttribute('data-path');
+        const fullPath = resolvePath(key);
+        link.setAttribute('href', fullPath);
     });
 }
-
-document.getElementById('submitReview')?.addEventListener('click', async () => {
-    const text = document.getElementById('reviewText').value.trim();
-    
-    if (selectedRating === 0) {
-        showNotification("يرجى اختيار التقييم بالنجوم", "error");
-        return;
-    }
-    
-    if (!text) {
-        showNotification("يرجى كتابة تقييمك", "error");
-        return;
-    }
-    
-    let userName = "زائر";
-    if (currentUser) {
-        try {
-            const snap = await getDoc(doc(db, "users", currentUser.uid));
-            if (snap.exists()) {
-                userName = snap.data().fullName || "مستخدم";
-            }
-        } catch (e) {}
-    }
-    
-    try {
-        await addDoc(collection(db, "salons", salonId, "reviews"), {
-            userId: currentUser.uid,
-            userName,
-            rating: selectedRating,
-            comment: text,
-            timestamp: serverTimestamp()
-        });
-        
-        // تحديث متوسط التقييم
-        await updateSalonRating();
-        
-        document.getElementById('reviewModal').classList.remove('active');
-        document.getElementById('reviewText').value = '';
-        selectedRating = 0;
-        updateStarsInput(0);
-        
-        showNotification("تم إضافة تقييمك بنجاح، شكراً لمشاركتك", "success");
-        await fetchReviews();
-        
-    } catch (e) {
-        console.error("خطأ في إضافة التقييم:", e);
-        showNotification("حدث خطأ في إضافة التقييم", "error");
-    }
-});
-
-document.getElementById('closeModal')?.addEventListener('click', () => {
-    document.getElementById('reviewModal').classList.remove('active');
-    document.getElementById('reviewText').value = '';
-    selectedRating = 0;
-    updateStarsInput(0);
-});
-
-// ============================================
-// تحديث متوسط التقييم
-// ============================================
-async function updateSalonRating() {
-    try {
-        const q = query(collection(db, "salons", salonId, "reviews"));
-        const snap = await getDocs(q);
-        const reviews = snap.docs.map(doc => doc.data());
-        
-        if (reviews.length > 0) {
-            const totalRating = reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
-            const avgRating = totalRating / reviews.length;
-            
-            await updateDoc(doc(db, "salons", salonId), {
-                rating: avgRating,
-                reviewsCount: reviews.length
-            });
-        }
-    } catch (e) {
-        console.error("خطأ في تحديث التقييم:", e);
-    }
-}
-
-// ============================================
-// زر الحجز
-// ============================================
-document.getElementById('bookingBtn')?.addEventListener('click', () => {
-    if (!currentUser) {
-        showNotification("يرجى تسجيل الدخول للحجز", "warning");
-        setTimeout(() => {
-            window.location.href = resolvePath('LOGIN');
-        }, 1500);
-        return;
-    }
-    
-    window.location.href = `${resolvePath('BOOKING')}?salon=${salonId}`;
-});
-
-// ============================================
-// زر العودة
-// ============================================
-document.getElementById('backBtn')?.addEventListener('click', () => {
-    window.history.back();
-});
 
 // ============================================
 // دوال مساعدة
@@ -744,13 +783,4 @@ function showElement(id) {
     const el = document.getElementById(id);
     if (el) el.style.display = 'flex';
 }
-
-// إغلاق النوافذ عند النقر خارجها
-document.querySelectorAll('.modal-overlay').forEach(modal => {
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.remove('active');
-        }
-    });
-});
 

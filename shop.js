@@ -1,14 +1,12 @@
 /**
- * BarberFlow Pro - صفحة المتجر
- * المسار: shop.js
- * ⚠️ التعديل: 
- *   - إزالة view === 'favorites' من التبويبات
- *   - نقل زر المفضلة داخل فلاتر التصنيفات والمتاجر
- *   - إخفاء الفلاتر افتراضياً وإظهارها حسب التبويب المختار
- */
+BarberFlow Pro - صفحة المتجر
+المسار: shop.js
+️ محدّث: استخدام createProductCards و createStoreCards
+*/
 import { supabase } from './config/supabase-init.js';
 import { PATHS, resolvePath } from './shared/utils/paths.js';
 import { createStoreCards } from './shared/components/card-store.js';
+import { createProductCards } from './shared/components/card-product.js';
 import { showNotification } from './shared/utils/notifications.js';
 import { Analytics } from './shared/utils/analytics.js';
 import { cacheFetch, cacheRemove } from './shared/utils/cache.js';
@@ -18,27 +16,25 @@ import { debounce } from './shared/utils/debounce.js';
 // ============================================
 // المتغيرات العامة
 // ============================================
-let currentView = 'all'; // ✅ all, stores, products فقط (بدون favorites)
+let currentView = 'all';
 let currentCategory = 'all';
 let currentStoreType = 'all';
 let currentSort = 'popular';
 let currentSearch = '';
-
 let allStores = [];
 let allProducts = [];
 let displayedProducts = [];
-
 const PRODUCTS_PER_PAGE = 8;
 let currentPage = 1;
 
 // ============================================
-// ✅ مفاتيح localStorage للمفضلة
+// مفاتيح localStorage للمفضلة
 // ============================================
 const FAVORITES_PRODUCTS_KEY = 'bf-favorites-products';
 const FAVORITES_STORES_KEY = 'bf-favorites-stores';
 
 // ============================================
-// ✅ دوال مساعدة للمفضلة
+// دوال مساعدة للمفضلة
 // ============================================
 function getFavoriteProducts() {
     try {
@@ -89,19 +85,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeRetryButtons();
     initializeLoadMore();
     initializeScrollReveal();
-
-    // قراءة URL parameters
+    
     readUrlParameters();
-
-    // تحميل البيانات
     await loadInitialData();
-
-    // تتبع الزيارة
+    
     Analytics.trackPageView('shop');
 });
 
 // ============================================
-// تحديث جميع المسارات (data-path)
+// تحديث جميع المسارات
 // ============================================
 function updateAllPaths() {
     const links = document.querySelectorAll('[data-path]');
@@ -113,16 +105,14 @@ function updateAllPaths() {
 }
 
 // ============================================
-// ✅ قراءة URL parameters
+// قراءة URL parameters
 // ============================================
 function readUrlParameters() {
     const urlParams = new URLSearchParams(window.location.search);
-    
     const search = urlParams.get('search');
     const category = urlParams.get('category');
-    const store = urlParams.get('store');
     const view = urlParams.get('view');
-
+    
     if (search) {
         currentSearch = search;
         const searchInput = document.getElementById('shopSearchInput');
@@ -130,7 +120,7 @@ function readUrlParameters() {
         if (searchInput) searchInput.value = search;
         if (clearBtn) clearBtn.style.display = 'flex';
     }
-
+    
     if (category) {
         currentCategory = category;
         const chip = document.querySelector(`.filter-chip[data-category="${category}"]`);
@@ -138,7 +128,6 @@ function readUrlParameters() {
             document.querySelectorAll('#categoryFilters .filter-chip').forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
         }
-        // ✅ إذا كان category محدد، نتحول تلقائياً لتبويب المنتجات
         currentView = 'products';
         const tab = document.querySelector(`.main-tab[data-view="products"]`);
         if (tab) {
@@ -146,7 +135,7 @@ function readUrlParameters() {
             tab.classList.add('active');
         }
     }
-
+    
     if (view && ['all', 'stores', 'products'].includes(view)) {
         currentView = view;
         const tab = document.querySelector(`.main-tab[data-view="${view}"]`);
@@ -158,11 +147,11 @@ function readUrlParameters() {
 }
 
 // ============================================
-// ✅ تحميل البيانات الأولية
+// تحميل البيانات الأولية
 // ============================================
 async function loadInitialData() {
     showLoading();
-
+    
     const [storesResult, productsResult] = await Promise.all([
         safeExecute(async () => {
             return await cacheFetch('shop_stores', async () => {
@@ -183,12 +172,11 @@ async function loadInitialData() {
                     .eq('type', 'store')
                     .eq('status', 'active')
                     .order('rating', { ascending: false });
-
                 if (error) throw error;
                 return data || [];
             }, 10 * 60 * 1000);
         }, 'تحميل المتاجر'),
-
+        
         safeExecute(async () => {
             return await cacheFetch('shop_products', async () => {
                 const { data, error } = await supabase
@@ -198,41 +186,40 @@ async function loadInitialData() {
                         name,
                         description,
                         price,
+                        old_price,
                         image_url,
                         category,
-                        rating,
                         stock_quantity,
-                        is_available
+                        is_available,
+                        is_new
                     `)
                     .eq('is_available', true)
-                    .order('rating', { ascending: false });
-
+                    .order('created_at', { ascending: false });
                 if (error) throw error;
                 return data || [];
             }, 10 * 60 * 1000);
         }, 'تحميل المنتجات')
     ]);
-
+    
     if (storesResult.success) {
         allStores = storesResult.data;
     }
-
     if (productsResult.success) {
         allProducts = productsResult.data;
     }
-
+    
     if (!storesResult.success && !productsResult.success) {
         showError();
         return;
     }
-
+    
     updateStats();
     applyFiltersAndRender();
     hideLoading();
 }
 
 // ============================================
-// ✅ تطبيق الفلاتر والعرض
+// تطبيق الفلاتر والعرض
 // ============================================
 function applyFiltersAndRender() {
     renderStores();
@@ -241,40 +228,31 @@ function applyFiltersAndRender() {
 }
 
 // ============================================
-// ✅ تحديث رؤية الأقسام (التعديل الرئيسي)
-// ⚠️ التعديل:
-//   - إزالة view === 'favorites'
-//   - إخفاء الفلاتر افتراضياً في view === 'all'
-//   - إظهار فلاتر المتاجر فقط عند view === 'stores'
-//   - إظهار فلاتر المنتجات فقط عند view === 'products'
+// تحديث رؤية الأقسام
 // ============================================
 function updateViewVisibility() {
     const storesView = document.getElementById('storesView');
     const productsView = document.getElementById('productsView');
     const categoryFiltersWrapper = document.getElementById('categoryFiltersWrapper');
     const storeFiltersWrapper = document.getElementById('storeFiltersWrapper');
-
+    
     if (!storesView || !productsView) return;
-
-    // إخفاء الكل أولاً
+    
     storesView.style.display = 'none';
     productsView.style.display = 'none';
     if (categoryFiltersWrapper) categoryFiltersWrapper.style.display = 'none';
     if (storeFiltersWrapper) storeFiltersWrapper.style.display = 'none';
-
+    
     switch (currentView) {
         case 'all':
-            // ✅ في الحالة الافتراضية: لا تظهر فلاتر إضافية
             storesView.style.display = 'block';
             productsView.style.display = 'block';
             break;
         case 'stores':
-            // ✅ إظهار فلاتر المتاجر (مع زر المفضلة)
             storesView.style.display = 'block';
             if (storeFiltersWrapper) storeFiltersWrapper.style.display = 'block';
             break;
         case 'products':
-            // ✅ إظهار فلاتر المنتجات (مع زر المفضلة)
             productsView.style.display = 'block';
             if (categoryFiltersWrapper) categoryFiltersWrapper.style.display = 'block';
             break;
@@ -282,21 +260,19 @@ function updateViewVisibility() {
 }
 
 // ============================================
-// ✅ عرض المتاجر (مع دعم المفضلة)
+// ✅ عرض المتاجر (باستخدام createStoreCards)
 // ============================================
 async function renderStores() {
     const grid = document.getElementById('storesGrid');
     const resultsCount = document.getElementById('storesResultsCount');
+    
     if (!grid) return;
-
+    
     let filtered = [...allStores];
-
-    // ✅ فلترة حسب النوع (مع دعم المفضلة)
+    
+    // فلترة حسب النوع
     if (currentStoreType === 'favorites') {
-        // ✅ عرض المتاجر المفضلة فقط من localStorage
         filtered = filtered.filter(s => isStoreFavorite(s.id));
-    } else if (currentStoreType === 'featured') {
-        filtered = filtered.filter(s => s.is_featured);
     } else if (currentStoreType === 'verified') {
         filtered = filtered.filter(s => s.is_verified);
     } else if (currentStoreType === 'new') {
@@ -304,7 +280,7 @@ async function renderStores() {
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
         filtered = filtered.filter(s => new Date(s.created_at) > thirtyDaysAgo);
     }
-
+    
     // فلترة حسب البحث
     if (currentSearch) {
         const search = currentSearch.toLowerCase();
@@ -314,40 +290,31 @@ async function renderStores() {
             return name.includes(search) || city.includes(search);
         });
     }
-
+    
     // الترتيب
     filtered = sortStores(filtered);
-
-    // تحديث العداد
+    
     if (resultsCount) {
         resultsCount.textContent = `${filtered.length} متجر`;
     }
-
-    // عرض النتائج
+    
     grid.innerHTML = '';
+    
     if (filtered.length === 0) {
         const emptyMessage = currentStoreType === 'favorites'
             ? 'لم تقم بإضافة أي متجر إلى المفضلة بعد'
             : 'لا توجد متاجر متاحة حالياً';
         grid.innerHTML = `
-            <div class="empty-state-inline" style="grid-column: 1/-1; text-align: center; padding: 40px 20px;">
-                <i class="fas ${currentStoreType === 'favorites' ? 'fa-heart' : 'fa-store'}" style="font-size: 2.5rem; color: var(--brand-accent); margin-bottom: 15px; display: block;"></i>
-                <p style="color: var(--text-muted);">${emptyMessage}</p>
+            <div class="empty-state" style="grid-column: 1/-1;">
+                <i class="fas ${currentStoreType === 'favorites' ? 'fa-heart' : 'fa-store'}"></i>
+                <h3>${emptyMessage}</h3>
             </div>
         `;
         return;
     }
-
-    // إنشاء البطاقات
-    const storesForCards = filtered.map(s => ({
-        ...s,
-        image_url: s.cover_url,
-        is_verified: s.is_verified,
-        is_featured: s.is_featured,
-        products_count: 0
-    }));
-
-    const cards = await createStoreCards(storesForCards);
+    
+    // ✅ استخدام createStoreCards
+    const cards = await createStoreCards(filtered);
     cards.forEach((card, index) => {
         grid.appendChild(card);
         setTimeout(() => {
@@ -357,24 +324,24 @@ async function renderStores() {
 }
 
 // ============================================
-// ✅ عرض المنتجات (مع دعم المفضلة)
+// ✅ عرض المنتجات (باستخدام createProductCards)
 // ============================================
 async function renderProducts() {
     const grid = document.getElementById('productsGrid');
     const resultsCount = document.getElementById('productsResultsCount');
     const loadMoreWrapper = document.getElementById('loadMoreWrapper');
+    
     if (!grid) return;
-
+    
     let filtered = [...allProducts];
-
-    // ✅ فلترة حسب التصنيف (مع دعم المفضلة)
+    
+    // فلترة حسب التصنيف
     if (currentCategory === 'favorites') {
-        // ✅ عرض المنتجات المفضلة فقط من localStorage
         filtered = filtered.filter(p => isProductFavorite(p.id));
     } else if (currentCategory !== 'all') {
         filtered = filtered.filter(p => p.category === currentCategory);
     }
-
+    
     // فلترة حسب البحث
     if (currentSearch) {
         const search = currentSearch.toLowerCase();
@@ -384,53 +351,44 @@ async function renderProducts() {
             return name.includes(search) || desc.includes(search);
         });
     }
-
+    
     // الترتيب
     filtered = sortProducts(filtered);
     displayedProducts = filtered;
     currentPage = 1;
-
-    // حساب العناصر المعروضة
+    
     const endIndex = currentPage * PRODUCTS_PER_PAGE;
     const productsToShow = displayedProducts.slice(0, endIndex);
-
-    // تحديث العداد
+    
     if (resultsCount) {
         resultsCount.textContent = `${filtered.length} منتج`;
     }
-
-    // عرض النتائج
+    
     grid.innerHTML = '';
+    
     if (productsToShow.length === 0) {
         const emptyMessage = currentCategory === 'favorites'
             ? 'لم تقم بإضافة أي منتج إلى المفضلة بعد'
             : 'لا توجد منتجات متاحة حالياً';
         grid.innerHTML = `
-            <div class="empty-state-inline" style="grid-column: 1/-1; text-align: center; padding: 40px 20px;">
-                <i class="fas ${currentCategory === 'favorites' ? 'fa-heart' : 'fa-box-open'}" style="font-size: 2.5rem; color: var(--brand-accent); margin-bottom: 15px; display: block;"></i>
-                <p style="color: var(--text-muted);">${emptyMessage}</p>
+            <div class="empty-state" style="grid-column: 1/-1;">
+                <i class="fas ${currentCategory === 'favorites' ? 'fa-heart' : 'fa-box-open'}"></i>
+                <h3>${emptyMessage}</h3>
             </div>
         `;
         if (loadMoreWrapper) loadMoreWrapper.style.display = 'none';
         return;
     }
-
-    // إنشاء البطاقات
-    const productsForCards = productsToShow.map(p => ({
-        ...p,
-        image_url: p.image_url,
-        old_price: null,
-        is_new: false
-    }));
-
-    const cards = await createStoreCards(productsForCards);
+    
+    // ✅ استخدام createProductCards
+    const cards = await createProductCards(productsToShow);
     cards.forEach((card, index) => {
         grid.appendChild(card);
         setTimeout(() => {
             card.classList.add('revealed');
         }, index * 60);
     });
-
+    
     // زر تحميل المزيد
     if (loadMoreWrapper) {
         if (endIndex < displayedProducts.length) {
@@ -484,7 +442,7 @@ function updateStats() {
     const storesCount = document.getElementById('storesCount');
     const productsCount = document.getElementById('productsCount');
     const categoriesCount = document.getElementById('categoriesCount');
-
+    
     if (storesCount) storesCount.textContent = allStores.length;
     if (productsCount) productsCount.textContent = allProducts.length;
     
@@ -493,7 +451,7 @@ function updateStats() {
 }
 
 // ============================================
-// ✅ تهيئة التبويبات الرئيسية (التعديل: إزالة 'favorites')
+// تهيئة التبويبات الرئيسية
 // ============================================
 function initializeMainTabs() {
     const tabs = document.querySelectorAll('.main-tab');
@@ -503,11 +461,7 @@ function initializeMainTabs() {
             tab.classList.add('active');
             currentView = tab.dataset.view;
             
-            // ✅ عند تغيير التبويب، نعيد تعيين الفلاتر الفرعية
-            // حتى لا تظهر المفضلة مثلاً في تبويب آخر
             if (currentView === 'stores') {
-                // إذا كان فلتر المتاجر الحالي هو 'favorites'، نتركه
-                // وإلا نعيده إلى 'all'
                 if (currentStoreType !== 'favorites' && currentStoreType !== 'all') {
                     currentStoreType = 'all';
                     resetStoreFiltersUI();
@@ -526,7 +480,7 @@ function initializeMainTabs() {
 }
 
 // ============================================
-// ✅ تهيئة فلاتر التصنيفات (مع دعم المفضلة)
+// تهيئة فلاتر التصنيفات
 // ============================================
 function initializeCategoryFilters() {
     const chips = document.querySelectorAll('#categoryFilters .filter-chip');
@@ -542,7 +496,7 @@ function initializeCategoryFilters() {
 }
 
 // ============================================
-// ✅ تهيئة فلاتر المتاجر (مع دعم المفضلة)
+// تهيئة فلاتر المتاجر
 // ============================================
 function initializeStoreFilters() {
     const chips = document.querySelectorAll('#storeFilters .filter-chip');
@@ -563,7 +517,7 @@ function initializeStoreFilters() {
 function initializeSort() {
     const sortSelect = document.getElementById('sortSelect');
     if (!sortSelect) return;
-
+    
     sortSelect.addEventListener('change', (e) => {
         currentSort = e.target.value;
         applyFiltersAndRender();
@@ -572,23 +526,22 @@ function initializeSort() {
 }
 
 // ============================================
-// تهيئة البحث (مع Debounce)
+// تهيئة البحث
 // ============================================
 function initializeSearch() {
     const searchInput = document.getElementById('shopSearchInput');
     const clearBtn = document.getElementById('clearSearchBtn');
-
+    
     if (!searchInput) return;
-
+    
     const debouncedSearch = debounce((value) => {
         currentSearch = value;
         applyFiltersAndRender();
-
         if (value.trim()) {
             Analytics.trackSearch(value, { page: 'shop' });
         }
     }, 400);
-
+    
     searchInput.addEventListener('input', (e) => {
         const value = e.target.value;
         if (clearBtn) {
@@ -596,7 +549,7 @@ function initializeSearch() {
         }
         debouncedSearch(value);
     });
-
+    
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
             searchInput.value = '';
@@ -614,17 +567,16 @@ function initializeSearch() {
 function initializeLoadMore() {
     const loadMoreBtn = document.getElementById('loadMoreBtn');
     if (!loadMoreBtn) return;
-
+    
     loadMoreBtn.addEventListener('click', async () => {
         loadMoreBtn.classList.add('loading');
         loadMoreBtn.querySelector('i').className = 'fas fa-spinner';
         loadMoreBtn.querySelector('span').textContent = 'جاري التحميل...';
-
+        
         currentPage++;
-
         await new Promise(resolve => setTimeout(resolve, 500));
         await renderProducts();
-
+        
         loadMoreBtn.classList.remove('loading');
         loadMoreBtn.querySelector('i').className = 'fas fa-plus-circle';
         loadMoreBtn.querySelector('span').textContent = 'تحميل المزيد';
@@ -637,7 +589,7 @@ function initializeLoadMore() {
 function initializeRetryButtons() {
     const retryBtn = document.getElementById('retryBtn');
     const resetBtn = document.getElementById('resetBtn');
-
+    
     if (retryBtn) {
         retryBtn.addEventListener('click', () => {
             cacheRemove('shop_stores');
@@ -645,7 +597,7 @@ function initializeRetryButtons() {
             loadInitialData();
         });
     }
-
+    
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
             resetFilters();
@@ -654,7 +606,7 @@ function initializeRetryButtons() {
 }
 
 // ============================================
-// ✅ إعادة تعيين الفلاتر (التعديل: إزالة favorites)
+// إعادة تعيين الفلاتر
 // ============================================
 function resetFilters() {
     currentSearch = '';
@@ -663,28 +615,27 @@ function resetFilters() {
     currentSort = 'popular';
     currentView = 'all';
     currentPage = 1;
-
-    // إعادة تعيين UI
+    
     const searchInput = document.getElementById('shopSearchInput');
     const clearBtn = document.getElementById('clearSearchBtn');
     const sortSelect = document.getElementById('sortSelect');
-
+    
     if (searchInput) searchInput.value = '';
     if (clearBtn) clearBtn.style.display = 'none';
     if (sortSelect) sortSelect.value = 'popular';
-
+    
     document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
     document.querySelector('.main-tab[data-view="all"]')?.classList.add('active');
-
+    
     resetCategoryFiltersUI();
     resetStoreFiltersUI();
-
+    
     applyFiltersAndRender();
     showNotification('تم إعادة تعيين الفلاتر', 'info');
 }
 
 // ============================================
-// ✅ دوال مساعدة لإعادة تعيين UI للفلاتر
+// دوال مساعدة لإعادة تعيين UI
 // ============================================
 function resetCategoryFiltersUI() {
     document.querySelectorAll('#categoryFilters .filter-chip').forEach(c => c.classList.remove('active'));
@@ -697,7 +648,7 @@ function resetStoreFiltersUI() {
 }
 
 // ============================================
-// ✅ Scroll Reveal Animation
+// Scroll Reveal Animation
 // ============================================
 function initializeScrollReveal() {
     const observer = new IntersectionObserver((entries) => {
@@ -711,8 +662,8 @@ function initializeScrollReveal() {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     });
-
-    document.querySelectorAll('.store-card-custom, .product-card-custom').forEach(el => {
+    
+    document.querySelectorAll('.store-card-v2, .store-card').forEach(el => {
         observer.observe(el);
     });
 }

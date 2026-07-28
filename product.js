@@ -1,12 +1,8 @@
 /**
  * BarberFlow Pro - صفحة تفاصيل المنتج
  * المسار: product.js
- * المميزات:
- * - معرض صور تفاعلي
- * - نظام تقييم
- * - إضافة للسلة
- * - منتجات مشابهة
- * - تحويل من Firebase إلى Supabase
+ * ✅ محدّث: استخدام card-product.js الجديد + جلب التقييم من reviews
+ * ✅ حذف breadcrumb + إضافة زر العودة للخلف
  */
 
 import { supabase } from './config/supabase-init.js';
@@ -32,6 +28,20 @@ const imagePlaceholder = document.getElementById('imagePlaceholder');
 const thumbnailList = document.getElementById('thumbnailList');
 
 // ============================================
+// زر العودة للخلف
+// ============================================
+const backBtn = document.getElementById('backBtn');
+if (backBtn) {
+    backBtn.addEventListener('click', () => {
+        if (document.referrer && document.referrer.includes(window.location.hostname)) {
+            window.history.back();
+        } else {
+            window.location.href = resolvePath('SHOP');
+        }
+    });
+}
+
+// ============================================
 // التحقق من معرف المنتج
 // ============================================
 if (!productId) {
@@ -50,6 +60,30 @@ const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event,
         await loadProductDetails();
     }
 });
+
+// ============================================
+// جلب متوسط تقييم المنتج من جدول reviews
+// ✅ محدّث حسب guide.md
+// ============================================
+async function fetchProductRating(productId) {
+    try {
+        const { data, error } = await supabase
+            .from('reviews')
+            .select('rating')
+            .eq('product_id', productId);
+
+        if (error || !data || data.length === 0) {
+            return { rating: 0, count: 0 };
+        }
+
+        const count = data.length;
+        const rating = data.reduce((sum, r) => sum + (r.rating || 0), 0) / count;
+        return { rating, count };
+    } catch (error) {
+        console.error("Error fetching product rating:", error);
+        return { rating: 0, count: 0 };
+    }
+}
 
 // ============================================
 // تحميل تفاصيل المنتج
@@ -72,7 +106,7 @@ async function loadProductDetails() {
 
         productData = { id: productId, ...product };
         renderProductInfo(productData);
-        renderGallery(productData.images || [productData.image_url]);
+        renderGallery(productData.image_url);
         await loadReviews();
         await loadRelatedProducts();
         setupEventListeners();
@@ -84,23 +118,23 @@ async function loadProductDetails() {
 
 // ============================================
 // عرض معلومات المنتج
+// ✅ محدّث: استخدام الحقول الصحيحة من guide.md
 // ============================================
 function renderProductInfo(data) {
     // العنوان
     document.title = `${data.name || 'منتج'} | BarberFlow Pro`;
-    setText('breadcrumbProduct', data.name || 'المنتج');
     setText('productName', data.name || "منتج غير مسمى");
     setText('productCategory', getCategoryName(data.category));
     setText('productDescription', data.description || "لا يوجد وصف متاح.");
-    setText('detailedDescription', data.detailed_description || data.description || "لا يوجد وصف تفصيلي.");
+    setText('detailedDescription', data.description || "لا يوجد وصف تفصيلي.");
     setText('productBrand', data.brand || "غير محدد");
 
     // السعر
     const price = parseFloat(data.price) || 0;
     const oldPrice = parseFloat(data.old_price) || 0;
-    setText('currentPrice', `${price} DH`);
+    setText('currentPrice', `${price.toFixed(2)} DH`);
     if (oldPrice > 0 && oldPrice > price) {
-        setText('oldPrice', `${oldPrice} DH`);
+        setText('oldPrice', `${oldPrice.toFixed(2)} DH`);
         document.getElementById('oldPrice').style.display = 'inline';
         const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
         setText('discountText', `-${discount}%`);
@@ -112,11 +146,11 @@ function renderProductInfo(data) {
         showElement('newBadge');
     }
 
-    // التقييم
-    const rating = parseFloat(data.rating) || 0;
-    const reviewsCount = data.reviews_count || 0;
-    renderStars('productStars', rating);
-    setText('ratingCount', `(${reviewsCount} تقييم)`);
+    // التقييم - ✅ جلب من جدول reviews
+    fetchProductRating(productId).then(({ rating, count }) => {
+        renderStars('productStars', rating);
+        setText('ratingCount', `(${count} تقييم)`);
+    });
 
     // المخزون
     const stockElement = document.getElementById('productStock');
@@ -157,9 +191,10 @@ function renderProductInfo(data) {
 
 // ============================================
 // عرض معرض الصور
+// ✅ محدّث: استخدام image_url مباشرة (حقل واحد)
 // ============================================
-function renderGallery(images) {
-    if (!images || images.length === 0) {
+function renderGallery(imageUrl) {
+    if (!imageUrl) {
         mainImage.style.display = 'none';
         imagePlaceholder.style.display = 'flex';
         return;
@@ -167,39 +202,20 @@ function renderGallery(images) {
 
     mainImage.style.display = 'block';
     imagePlaceholder.style.display = 'none';
-    mainImage.src = images[0];
+    mainImage.src = imageUrl;
     currentImageIndex = 0;
 
-    // الصور المصغرة
-    if (images.length > 1) {
-        thumbnailList.innerHTML = images.map((img, index) => `
-            <div class="thumbnail-item ${index === 0 ? 'active' : ''}" data-index="${index}">
-                <img src="${img}" alt="صورة ${index + 1}">
-            </div>
-        `).join('');
-
-        thumbnailList.querySelectorAll('.thumbnail-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const index = parseInt(item.dataset.index);
-                changeMainImage(index);
-            });
-        });
+    // إخفاء قائمة الصور المصغرة (لأن لدينا صورة واحدة فقط)
+    if (thumbnailList) {
+        thumbnailList.style.display = 'none';
     }
-}
 
-// ============================================
-// تغيير الصورة الرئيسية
-// ============================================
-function changeMainImage(index) {
-    const images = productData.images || [productData.image_url];
-    if (!images[index]) return;
-
-    currentImageIndex = index;
-    mainImage.src = images[index];
-
-    thumbnailList.querySelectorAll('.thumbnail-item').forEach((item, i) => {
-        item.classList.toggle('active', i === index);
-    });
+    // معالجة خطأ تحميل الصورة
+    mainImage.onerror = () => {
+        mainImage.style.display = 'none';
+        imagePlaceholder.style.display = 'flex';
+        mainImage.onerror = null;
+    };
 }
 
 // ============================================

@@ -1,8 +1,9 @@
 /**
- * BarberFlow Pro - المنطق الرئيسي للصفحة الرئيسية
- * المسار: index.js
- * ⚠️ تم التحديث: Supabase + المكونات المشتركة + تحسينات الأداء
- */
+BarberFlow Pro - المنطق الرئيسي للصفحة الرئيسية
+المسار: index.js
+⚠️ تم التحديث: Supabase + المكونات المشتركة + تحسينات الأداء
+✅ تحديث 2026: فصل بطاقات المتاجر عن بطاقات المنتجات
+*/
 import { supabase } from './config/supabase-init.js';
 import { PATHS, resolvePath } from './shared/utils/paths.js';
 import { showNotification } from './shared/utils/notifications.js';
@@ -11,6 +12,7 @@ import { cacheFetch } from './shared/utils/cache.js';
 import { safeExecute } from './shared/utils/error-handler.js';
 import { createSalonCards } from './shared/components/card-salon.js';
 import { createStoreCards } from './shared/components/card-store.js';
+import { createProductCards } from './shared/components/card-product.js'; // ✅ إضافة استيراد بطاقة المنتج
 import { createOfferCards } from './shared/components/card-offer.js';
 
 // ============================================
@@ -72,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeFilters();
     initializeScrollReveal();
     updateAllPaths();
-    
+
     // تحميل البيانات بالتوازي مع الكاش
     await Promise.all([
         loadSalons(),
@@ -80,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderOffers(),
         loadStatistics()
     ]);
-    
+
     // تتبع الزيارة
     Analytics.trackPageView('home');
 });
@@ -103,7 +105,7 @@ function updateAllPaths() {
 function initializeHeaderScroll() {
     const header = document.querySelector('.main-header');
     if (!header) return;
-    
+
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
@@ -128,7 +130,7 @@ function initializeScrollReveal() {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     });
-    
+
     document.querySelectorAll('[data-scroll-reveal]').forEach(el => {
         observer.observe(el);
     });
@@ -141,9 +143,9 @@ function initializeSearch() {
     const searchInput = document.getElementById('heroSearchInput');
     const searchBtn = document.getElementById('heroSearchBtn');
     const suggestions = document.getElementById('searchSuggestions');
-    
+
     if (!searchInput || !searchBtn) return;
-    
+
     searchBtn.addEventListener('click', () => {
         const query = searchInput.value.trim();
         if (query) {
@@ -151,28 +153,27 @@ function initializeSearch() {
             window.location.href = `${PATHS.SALONS}?search=${encodeURIComponent(query)}`;
         }
     });
-    
+
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             searchBtn.click();
         }
     });
-    
+
     // اقتراحات البحث الديناميكية
     searchInput.addEventListener('input', async () => {
         const query = searchInput.value.trim().toLowerCase();
-        
         if (query.length < 2) {
             suggestions.classList.remove('active');
             return;
         }
-        
+
         // البحث في الصالونات المحملة
         const filteredSalons = allSalons.filter(salon => 
             salon.name?.toLowerCase().includes(query) ||
             salon.city?.toLowerCase().includes(query)
         ).slice(0, 5);
-        
+
         if (filteredSalons.length > 0) {
             suggestions.innerHTML = filteredSalons.map(salon => `
                 <a href="${PATHS.DETAILS_SALON}?id=${salon.id}" class="suggestion-item">
@@ -188,7 +189,7 @@ function initializeSearch() {
             suggestions.classList.remove('active');
         }
     });
-    
+
     // إخفاء الاقتراحات عند النقر خارجاً
     document.addEventListener('click', (e) => {
         if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) {
@@ -216,8 +217,8 @@ function initializeFilters() {
             }
         });
     }
-    
-    // فلاتر المتاجر
+
+    // فلاتر المتاجر/المنتجات
     const storeFilters = document.getElementById('storeFilters');
     if (storeFilters) {
         storeFilters.addEventListener('click', (e) => {
@@ -227,7 +228,7 @@ function initializeFilters() {
                 });
                 e.target.classList.add('active');
                 currentStoreFilter = e.target.dataset.filter;
-                renderStores();
+                renderStores(); // ✅ يعرض المنتجات الآن
                 Analytics.trackClick('store_filter', { filter: currentStoreFilter });
             }
         });
@@ -242,80 +243,67 @@ async function loadSalons() {
         return await cacheFetch('home_salons', async () => {
             const { data, error } = await supabase
                 .from('businesses')
-                .select(`
-                    id,
-                    name,
-                    type,
-                    city,
-                    cover_url,
-                    logo_url,
-                    rating,
-                    reviews_count,
-                    working_hours,
-                    is_verified
-                `)
+                .select(`id, name, type, city, cover_url, logo_url, rating, reviews_count, working_hours, is_verified`)
                 .eq('type', 'salon')
                 .eq('status', 'active')
                 .order('rating', { ascending: false })
                 .limit(8);
-            
+
             if (error) throw error;
             return data || [];
         }, 10 * 60 * 1000); // كاش 10 دقائق
     }, 'تحميل الصالونات');
-    
+
     if (result.success) {
         allSalons = result.data;
         await renderSalons();
         updateSalonCounts();
     } else {
-        document.getElementById('salonsGrid').innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-exclamation-circle"></i>
-                <h3>حدث خطأ في تحميل الصالونات</h3>
-                <p>يرجى المحاولة لاحقاً</p>
-            </div>
-        `;
+        const grid = document.getElementById('salonsGrid');
+        if (grid) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h3>حدث خطأ في تحميل الصالونات</h3>
+                    <p>يرجى المحاولة لاحقاً</p>
+                </div>
+            `;
+        }
     }
 }
 
 // ============================================
-// ✅ تحميل المنتجات (Supabase + Cache)
+// ✅ تحميل المنتجات (Supabase + Cache) - محدث
 // ============================================
 async function loadProducts() {
     const result = await safeExecute(async () => {
         return await cacheFetch('home_products', async () => {
             const { data, error } = await supabase
                 .from('products')
-                .select(`
-                    id,
-                    name,
-                    price,
-                    image_url,
-                    category,
-                    rating,
-                    is_available
-                `)
+                .select(`id, name, price, old_price, image_url, category, is_available, is_new, stock_quantity`) // ✅ إزالة rating، إضافة الحقول الجديدة
                 .eq('is_available', true)
-                .order('rating', { ascending: false })
+                .order('created_at', { ascending: false }) // ✅ ترتيب حسب الأحدث بدلاً من rating
                 .limit(8);
-            
+
             if (error) throw error;
             return data || [];
         }, 10 * 60 * 1000); // كاش 10 دقائق
     }, 'تحميل المنتجات');
-    
+
     if (result.success) {
         allProducts = result.data;
-        await renderStores();
+        await renderStores(); // ✅ يعرض المنتجات باستخدام createProductCards
     } else {
-        document.getElementById('storesGrid').innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-exclamation-circle"></i>
-                <h3>حدث خطأ في تحميل المنتجات</h3>
-                <p>يرجى المحاولة لاحقاً</p>
-            </div>
-        `;
+        const grid = document.getElementById('storesGrid');
+        if (grid) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h3>حدث خطأ في تحميل المنتجات</h3>
+                    <p>يرجى المحاولة لاحقاً</p>
+                </div>
+            `;
+        }
     }
 }
 
@@ -325,13 +313,13 @@ async function loadProducts() {
 async function renderSalons() {
     const grid = document.getElementById('salonsGrid');
     if (!grid) return;
-    
+
     let filteredSalons = allSalons;
-    
+
     if (currentSalonFilter !== 'all') {
         filteredSalons = allSalons.filter(salon => salon.type === currentSalonFilter);
     }
-    
+
     if (filteredSalons.length === 0) {
         grid.innerHTML = `
             <div class="empty-state">
@@ -342,7 +330,7 @@ async function renderSalons() {
         `;
         return;
     }
-    
+
     // ✅ استخدام المكون المشترك
     const cards = await createSalonCards(filteredSalons);
     grid.innerHTML = '';
@@ -350,31 +338,31 @@ async function renderSalons() {
 }
 
 // ============================================
-// ✅ عرض المنتجات (باستخدام card-store.js)
+// ✅ عرض المنتجات (باستخدام card-product.js) - محدث
 // ============================================
 async function renderStores() {
     const grid = document.getElementById('storesGrid');
     if (!grid) return;
-    
+
     let filteredProducts = allProducts;
-    
+
     if (currentStoreFilter !== 'all') {
         filteredProducts = allProducts.filter(product => product.category === currentStoreFilter);
     }
-    
+
     if (filteredProducts.length === 0) {
         grid.innerHTML = `
             <div class="empty-state">
-                <i class="fas fa-store"></i>
+                <i class="fas fa-box-open"></i>
                 <h3>لا توجد منتجات متاحة حالياً</h3>
                 <p>يرجى التحقق لاحقاً أو تغيير الفلتر</p>
             </div>
         `;
         return;
     }
-    
-    // ✅ استخدام المكون المشترك
-    const cards = await createStoreCards(filteredProducts);
+
+    // ✅ استخدام مكون بطاقة المنتج (وليس بطاقة المتجر)
+    const cards = await createProductCards(filteredProducts);
     grid.innerHTML = '';
     cards.forEach(card => grid.appendChild(card));
 }
@@ -385,7 +373,7 @@ async function renderStores() {
 async function renderOffers() {
     const grid = document.getElementById('offersGrid');
     if (!grid) return;
-    
+
     const cards = await createOfferCards(OFFERS_DATA);
     grid.innerHTML = '';
     cards.forEach(card => grid.appendChild(card));
@@ -403,26 +391,26 @@ async function loadStatistics() {
                 .select('*', { count: 'exact', head: true })
                 .eq('type', 'salon')
                 .eq('status', 'active');
-            
+
             // جلب عدد المتاجر
             const { count: storesCount } = await supabase
                 .from('businesses')
                 .select('*', { count: 'exact', head: true })
                 .eq('type', 'store')
                 .eq('status', 'active');
-            
+
             // جلب عدد الخدمات
             const { count: servicesCount } = await supabase
                 .from('services')
                 .select('*', { count: 'exact', head: true })
                 .eq('is_available', true);
-            
+
             // جلب عدد الزبائن
             const { count: customersCount } = await supabase
                 .from('profiles')
                 .select('*', { count: 'exact', head: true })
                 .eq('role', 'customer');
-            
+
             return {
                 salons: salonsCount || 0,
                 stores: storesCount || 0,
@@ -431,7 +419,7 @@ async function loadStatistics() {
             };
         }, 30 * 60 * 1000); // كاش 30 دقيقة
     }, 'تحميل الإحصائيات');
-    
+
     if (result.success) {
         const { salons, stores, services, customers } = result.data;
         animateCounter('statSalons', salons);
@@ -448,11 +436,11 @@ function updateSalonCounts() {
     const menCount = allSalons.filter(s => s.type === 'men').length;
     const womenCount = allSalons.filter(s => s.type === 'women').length;
     const kidsCount = allSalons.filter(s => s.type === 'kids').length;
-    
+
     const countMen = document.getElementById('countMen');
     const countWomen = document.getElementById('countWomen');
     const countKids = document.getElementById('countKids');
-    
+
     if (countMen) countMen.textContent = `${menCount} صالون`;
     if (countWomen) countWomen.textContent = `${womenCount} صالون`;
     if (countKids) countKids.textContent = `${kidsCount} صالون`;
@@ -464,13 +452,13 @@ function updateSalonCounts() {
 function animateCounter(elementId, target) {
     const element = document.getElementById(elementId);
     if (!element) return;
-    
+
     let current = 0;
     const duration = 2000;
     const steps = 50;
     const increment = target / steps;
     const stepTime = duration / steps;
-    
+
     const timer = setInterval(() => {
         current += increment;
         if (current >= target) {

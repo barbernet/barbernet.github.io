@@ -23,13 +23,10 @@
     <link rel="stylesheet" href="shared/styles/notifications.css">
     <link rel="stylesheet" href="shared/styles/cards.css">
     
-    <!-- Page Protection (منع الومضة) -->
-    <link rel="stylesheet" href="shared/styles/page-protection.css">
-    
     <!-- Page Specific Styles -->
     <link rel="stylesheet" href="product.css">
 </head>
-<body class="page-protected">
+<body>
     <!-- Global Navbar Container -->
     <div id="global-navbar-container"></div>
     
@@ -38,16 +35,13 @@
     
     <!-- Main Content -->
     <main class="product-page">
-        <!-- Breadcrumb -->
-        <nav class="breadcrumb">
-            <div class="container">
-                <a href="#" data-path="INDEX"><i class="fas fa-home"></i> الرئيسية</a>
-                <i class="fas fa-chevron-left"></i>
-                <a href="#" data-path="SHOP">المتجر</a>
-                <i class="fas fa-chevron-left"></i>
-                <span id="breadcrumbProduct">المنتج</span>
-            </div>
-        </nav>
+        <!-- Back Button (زر العودة الوحيد) -->
+        <div class="back-button-container">
+            <button id="backBtn" class="back-btn" aria-label="العودة للخلف">
+                <i class="fas fa-arrow-right"></i>
+                <span>العودة</span>
+            </button>
+        </div>
 
         <!-- Product Details Section -->
         <section class="product-details-section">
@@ -266,7 +260,6 @@
     </footer>
 
     <!-- Scripts -->
-    <script type="module" src="middleware/routing/page-guard.js"></script>
     <script type="module" src="shared/layout/global-navbar.js"></script>
     <script type="module" src="product.js"></script>
 </body>

@@ -1,366 +1,269 @@
 /**
- * BarberFlow Pro - مكون بطاقة المنتج/المتجر
+ * BarberFlow Pro - مكون بطاقة المتجر
  * المسار: shared/components/card-store.js
- * الدور: إنشاء وعرض بطاقات المنتجات بشكل احترافي
+ * الدور: إنشاء وعرض بطاقات المتاجر بشكل مختصر (بدون معلومات تواصل مباشرة)
+ * ⚠️ ملاحظة: لا نعرض الهاتف/الإيميل لمنع تجاوز المنصة
  */
 import { supabase } from "../../config/supabase-init.js";
 import { PATHS, resolvePath } from "../utils/paths.js";
 
 /**
- * HTML Template لبطاقة المنتج
+ * HTML Template لبطاقة المتجر
  */
 const STORE_CARD_TEMPLATE = `
-<article class="store-card">
-    <div class="store-card__image-wrapper">
-        <div class="store-card__placeholder">
-            <i class="fas fa-box-open"></i>
-        </div>
-        <img class="store-card__image" alt="صورة المنتج" style="display:none;" />
-        <div class="store-card__badges">
-            <span class="store-card__discount" style="display:none;">-0%</span>
-            <span class="store-card__new" style="display:none;">جديد</span>
-        </div>
-        <button class="store-card__favorite" aria-label="إضافة للمفضلة">
-            <i class="far fa-heart"></i>
-        </button>
-        <button class="store-card__quick-view" aria-label="عرض سريع">
-            <i class="fas fa-eye"></i>
-        </button>
+<article class="store-card-v2">
+  <div class="store-card-v2__header">
+    <div class="store-card-v2__logo-wrapper">
+      <div class="store-card-v2__logo-placeholder">
+        <i class="fas fa-store"></i>
+      </div>
+      <img class="store-card-v2__logo" alt="شعار المتجر" style="display:none;" />
     </div>
-    <div class="store-card__content">
-        <div class="store-card__category">
-            <i class="fas fa-tag"></i>
-            <span>فئة المنتج</span>
-        </div>
-        <h3 class="store-card__name">اسم المنتج</h3>
-        <div class="store-card__rating">
-            <div class="store-card__stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
-            </div>
-            <span class="store-card__rating-value">4.0</span>
-        </div>
-        <div class="store-card__price-wrapper">
-            <div class="store-card__price">
-                <span class="store-card__price-current">0 DH</span>
-                <span class="store-card__price-old" style="display:none;">0 DH</span>
-            </div>
-            <button class="store-card__add-cart" aria-label="أضف إلى السلة">
-                <i class="fas fa-cart-plus"></i>
-            </button>
-        </div>
-        <a class="store-card__cta" href="#">
-            <span>عرض التفاصيل</span>
-            <i class="fas fa-arrow-left"></i>
-        </a>
+    <div class="store-card-v2__badges">
+      <span class="store-card-v2__verified" style="display:none;">
+        <i class="fas fa-check-circle"></i>
+        <span>موثق</span>
+      </span>
     </div>
+  </div>
+  <div class="store-card-v2__content">
+    <h3 class="store-card-v2__name">اسم المتجر</h3>
+    <div class="store-card-v2__location">
+      <i class="fas fa-map-marker-alt"></i>
+      <span>المدينة</span>
+    </div>
+    <div class="store-card-v2__rating">
+      <div class="store-card-v2__stars">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="far fa-star"></i>
+      </div>
+      <span class="store-card-v2__rating-value">4.0</span>
+      <span class="store-card-v2__rating-count">(0)</span>
+    </div>
+    <div class="store-card-v2__stats">
+      <div class="store-card-v2__stat">
+        <i class="fas fa-box"></i>
+        <span class="store-card-v2__stat-value">0</span>
+        <span class="store-card-v2__stat-label">منتج</span>
+      </div>
+    </div>
+    <a class="store-card-v2__cta" href="#">
+      <span>عرض المتجر</span>
+      <i class="fas fa-arrow-left"></i>
+    </a>
+  </div>
 </article>
 `;
 
 /**
- * التحقق من حالة المفضلة للمنتج
+ * التحقق من حالة المفضلة للمتجر
  */
-async function checkProductFavorite(productId) {
-    try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) return false;
+async function checkStoreFavorite(storeId) {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return false;
 
-        const { data, error } = await supabase
-            .from('favorites')
-            .select('id')
-            .eq('user_id', session.user.id)
-            .eq('item_id', productId)
-            .eq('item_type', 'product')
-            .single();
+    const { data, error } = await supabase
+      .from('favorites')
+      .select('id')
+      .eq('user_id', session.user.id)
+      .eq('item_id', storeId)
+      .eq('item_type', 'store')
+      .single();
 
-        return !error && data;
-    } catch (error) {
-        console.error("Error checking product favorite:", error);
-        return false;
-    }
+    return !error && data;
+  } catch (error) {
+    console.error("Error checking store favorite:", error);
+    return false;
+  }
 }
 
 /**
- * تبديل حالة المفضلة للمنتج
+ * تبديل حالة المفضلة للمتجر
  */
-async function toggleProductFavorite(productId, isLiked) {
-    try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) return false;
+async function toggleStoreFavorite(storeId, isLiked) {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return false;
 
-        if (isLiked) {
-            const { error } = await supabase
-                .from('favorites')
-                .insert({
-                    user_id: session.user.id,
-                    item_id: productId,
-                    item_type: 'product'
-                });
-            return !error;
-        } else {
-            const { error } = await supabase
-                .from('favorites')
-                .delete()
-                .eq('user_id', session.user.id)
-                .eq('item_id', productId)
-                .eq('item_type', 'product');
-            return !error;
-        }
-    } catch (error) {
-        console.error("Error toggling product favorite:", error);
-        return false;
+    if (isLiked) {
+      const { error } = await supabase
+        .from('favorites')
+        .insert({
+          user_id: session.user.id,
+          item_id: storeId,
+          item_type: 'store'
+        });
+      return !error;
+    } else {
+      const { error } = await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', session.user.id)
+        .eq('item_id', storeId)
+        .eq('item_type', 'store');
+      return !error;
     }
+  } catch (error) {
+    console.error("Error toggling store favorite:", error);
+    return false;
+  }
 }
 
 /**
- * إنشاء بطاقة منتج
- * @param {Object} product - بيانات المنتج من جدول products
- * @param {string} id - معرف المنتج
+ * إنشاء بطاقة متجر
+ * @param {Object} store - بيانات المتجر من جدول businesses (حيث type='store')
+ * @param {string} id - معرف المتجر
  * @returns {HTMLElement|null}
  */
-export async function createStoreCard(product, id) {
-    const productId = id || product?.id;
-    if (!productId) {
-        console.error('[StoreCard] ❌ المعرف (id) غير مُعرّف!');
-        return null;
-    }
+export async function createStoreCard(store, id) {
+  const storeId = id || store?.id;
+  if (!storeId) {
+    console.error('[StoreCard] ❌ المعرف (id) غير مُعرّف!');
+    return null;
+  }
 
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(STORE_CARD_TEMPLATE, 'text/html');
-    const card = doc.querySelector('.store-card');
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(STORE_CARD_TEMPLATE, 'text/html');
+  const card = doc.querySelector('.store-card-v2');
 
-    try {
-        // ===== صورة المنتج =====
-        const img = card.querySelector('.store-card__image');
-        const placeholder = card.querySelector('.store-card__placeholder');
-        if (img && placeholder) {
-            if (product.image_url) {
-                img.src = product.image_url;
-                img.style.display = 'block';
-                placeholder.style.display = 'none';
-                img.onerror = () => {
-                    img.style.display = 'none';
-                    placeholder.style.display = 'flex';
-                    img.onerror = null;
-                };
-            } else {
-                img.style.display = 'none';
-                placeholder.style.display = 'flex';
-            }
-        }
-
-        // ===== اسم المنتج =====
-        const nameElement = card.querySelector('.store-card__name');
-        if (nameElement) {
-            nameElement.textContent = product.name || "منتج غير مسمى";
-        }
-
-        // ===== الفئة =====
-        const categoryElement = card.querySelector('.store-card__category span');
-        if (categoryElement) {
-            categoryElement.textContent = product.category || "عام";
-        }
-
-        // ===== التقييم =====
-        const ratingElement = card.querySelector('.store-card__rating-value');
-        const starsContainer = card.querySelector('.store-card__stars');
-        if (ratingElement) {
-            const rating = parseFloat(product.rating) || 4.0;
-            ratingElement.textContent = rating.toFixed(1);
-            if (starsContainer) {
-                const fullStars = Math.floor(rating);
-                const hasHalf = rating % 1 >= 0.5;
-                const stars = starsContainer.querySelectorAll('i');
-                stars.forEach((star, index) => {
-                    star.className = 'fas fa-star';
-                    if (index >= fullStars) {
-                        if (index === fullStars && hasHalf) {
-                            star.className = 'fas fa-star-half-alt';
-                        } else {
-                            star.className = 'far fa-star';
-                        }
-                    }
-                });
-            }
-        }
-
-        // ===== السعر =====
-        const priceCurrent = card.querySelector('.store-card__price-current');
-        const priceOld = card.querySelector('.store-card__price-old');
-        const discountBadge = card.querySelector('.store-card__discount');
-        if (priceCurrent) {
-            const price = parseFloat(product.price) || 0;
-            priceCurrent.textContent = `${price} DH`;
-        }
-
-        if (product.old_price) {
-            const oldPrice = parseFloat(product.old_price);
-            if (priceOld) {
-                priceOld.textContent = `${oldPrice} DH`;
-                priceOld.style.display = 'block';
-            }
-            if (discountBadge && priceCurrent) {
-                const current = parseFloat(product.price) || 0;
-                const discount = Math.round(((oldPrice - current) / oldPrice) * 100);
-                if (discount > 0) {
-                    discountBadge.textContent = `-${discount}%`;
-                    discountBadge.style.display = 'block';
-                }
-            }
-        }
-
-        // ===== Badge جديد =====
-        const newBadge = card.querySelector('.store-card__new');
-        if (newBadge && product.is_new) {
-            newBadge.style.display = 'block';
-        }
-
-        // ===== زر المفضلة =====
-        const favoriteBtn = card.querySelector('.store-card__favorite');
-        const favoriteIcon = favoriteBtn?.querySelector('i');
-        
-        let isLiked = await checkProductFavorite(productId);
-        
-        const updateFavoriteUI = (liked) => {
-            if (favoriteIcon) {
-                favoriteIcon.classList.toggle('fas', liked);
-                favoriteIcon.classList.toggle('far', !liked);
-            }
-            if (favoriteBtn) {
-                favoriteBtn.classList.toggle('active', liked);
-            }
+  try {
+    // ===== شعار المتجر =====
+    const logo = card.querySelector('.store-card-v2__logo');
+    const placeholder = card.querySelector('.store-card-v2__logo-placeholder');
+    if (logo && placeholder) {
+      if (store.logo_url) {
+        logo.src = store.logo_url;
+        logo.style.display = 'block';
+        placeholder.style.display = 'none';
+        logo.onerror = () => {
+          logo.style.display = 'none';
+          placeholder.style.display = 'flex';
+          logo.onerror = null;
         };
-
-        updateFavoriteUI(isLiked);
-
-        if (favoriteBtn) {
-            favoriteBtn.onclick = async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const { data: { session } } = await supabase.auth.getSession();
-                if (!session) {
-                    window.location.href = resolvePath('LOGIN');
-                    return;
-                }
-
-                const newLikedState = !isLiked;
-                updateFavoriteUI(newLikedState);
-
-                const success = await toggleProductFavorite(productId, newLikedState);
-                if (success) {
-                    isLiked = newLikedState;
-                } else {
-                    isLiked = !newLikedState;
-                    updateFavoriteUI(isLiked);
-                }
-            };
-        }
-
-        // ===== زر إضافة للسلة =====
-        const addToCartBtn = card.querySelector('.store-card__add-cart');
-        if (addToCartBtn) {
-            addToCartBtn.onclick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                addToCart(product);
-            };
-        }
-
-        // ===== زر العرض السريع =====
-        const quickViewBtn = card.querySelector('.store-card__quick-view');
-        if (quickViewBtn) {
-            quickViewBtn.onclick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                showQuickView(product);
-            };
-        }
-
-        // ===== رابط التفاصيل =====
-        const ctaBtn = card.querySelector('.store-card__cta');
-        if (ctaBtn) {
-            ctaBtn.href = `${resolvePath('PRODUCT')}?id=${productId}`;
-        }
-
-        // ===== تأثيرات التفاعل =====
-        addInteractionEffects(card);
-        return card;
-    } catch (error) {
-        console.error("[StoreCard] Critical Processing Error:", error);
-        return null;
+      } else {
+        logo.style.display = 'none';
+        placeholder.style.display = 'flex';
+      }
     }
-}
 
-/**
- * إضافة المنتج إلى السلة
- */
-function addToCart(product) {
-    const cart = JSON.parse(localStorage.getItem('bf-cart') || '[]');
-    const existingItem = cart.find(item => item.id === product.id);
-    if (existingItem) {
-        existingItem.quantity = (existingItem.quantity || 1) + 1;
-    } else {
-        cart.push({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.image_url,
-            quantity: 1
+    // ===== اسم المتجر =====
+    const nameElement = card.querySelector('.store-card-v2__name');
+    if (nameElement) {
+      nameElement.textContent = store.name || "متجر غير مسمى";
+    }
+
+    // ===== المدينة =====
+    const locationElement = card.querySelector('.store-card-v2__location span');
+    if (locationElement) {
+      locationElement.textContent = store.city || "الموقع غير محدد";
+    }
+
+    // ===== التقييم =====
+    const ratingElement = card.querySelector('.store-card-v2__rating-value');
+    const ratingCount = card.querySelector('.store-card-v2__rating-count');
+    const starsContainer = card.querySelector('.store-card-v2__stars');
+    if (ratingElement) {
+      const rating = parseFloat(store.rating) || 4.0;
+      ratingElement.textContent = rating.toFixed(1);
+      if (starsContainer) {
+        const fullStars = Math.floor(rating);
+        const hasHalf = rating % 1 >= 0.5;
+        const stars = starsContainer.querySelectorAll('i');
+        stars.forEach((star, index) => {
+          star.className = 'fas fa-star';
+          if (index >= fullStars) {
+            if (index === fullStars && hasHalf) {
+              star.className = 'fas fa-star-half-alt';
+            } else {
+              star.className = 'far fa-star';
+            }
+          }
         });
+      }
     }
-    localStorage.setItem('bf-cart', JSON.stringify(cart));
-    window.dispatchEvent(new CustomEvent('bf-cart-updated'));
-    showAddToCartFeedback();
-}
+    if (ratingCount) {
+      const count = store.reviews_count || 0;
+      ratingCount.textContent = `(${count})`;
+    }
 
-/**
- * عرض تنبيه إضافة للسلة
- */
-function showAddToCartFeedback() {
-    const notification = document.createElement('div');
-    notification.className = 'add-to-cart-feedback';
-    notification.innerHTML = `<i class="fas fa-check-circle"></i> <span>تمت إضافة المنتج إلى السلة</span>`;
-    document.body.appendChild(notification);
-    setTimeout(() => notification.classList.add('show'), 10);
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 2000);
-}
+    // ===== عدد المنتجات (جلب من جدول products) =====
+    const statValue = card.querySelector('.store-card-v2__stat-value');
+    if (statValue) {
+      const { data: products, error } = await supabase
+        .from('products')
+        .select('id')
+        .eq('seller_id', storeId)
+        .eq('is_available', true);
+      const count = products?.length || 0;
+      statValue.textContent = count;
+    }
 
-/**
- * عرض نافذة العرض السريع
- */
-function showQuickView(product) {
-    console.log('Quick view for:', product);
+    // ===== Badge موثق =====
+    const verifiedBadge = card.querySelector('.store-card-v2__verified');
+    if (verifiedBadge && store.is_verified) {
+      verifiedBadge.style.display = 'flex';
+    }
+
+    // ===== رابط عرض المتجر =====
+    const ctaBtn = card.querySelector('.store-card-v2__cta');
+    if (ctaBtn) {
+      ctaBtn.href = `${resolvePath('DETAILS_STORE')}?id=${storeId}`;
+      ctaBtn.onclick = (e) => {
+        e.stopPropagation();
+      };
+    }
+
+    // ===== تأثيرات التفاعل =====
+    addInteractionEffects(card);
+    return card;
+  } catch (error) {
+    console.error("[StoreCard] Critical Processing Error:", error);
+    return null;
+  }
 }
 
 /**
  * إضافة تأثيرات التفاعل
  */
 function addInteractionEffects(card) {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(20px)';
-    requestAnimationFrame(() => {
-        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        card.style.opacity = '1';
-        card.style.transform = 'translateY(0)';
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(20px)';
+  requestAnimationFrame(() => {
+    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    card.style.opacity = '1';
+    card.style.transform = 'translateY(0)';
+  });
+
+  if (window.matchMedia('(hover: hover)').matches) {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / 20;
+      const rotateY = (centerX - x) / 20;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
     });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+    });
+  }
 }
 
 /**
- * إنشاء عدة بطاقات منتجات
+ * إنشاء عدة بطاقات متاجر
  */
-export async function createStoreCards(products) {
-    const cards = [];
-    for (const product of products) {
-        const card = await createStoreCard(product, product.id);
-        if (card) cards.push(card);
-    }
-    return cards;
+export async function createStoreCards(stores) {
+  const cards = [];
+  for (const store of stores) {
+    const card = await createStoreCard(store, store.id);
+    if (card) cards.push(card);
+  }
+  return cards;
 }
 

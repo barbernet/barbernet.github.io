@@ -3,300 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="تفاصيل الصالون - BarberFlow Pro">
     <title>تفاصيل الصالون | BarberFlow Pro</title>
-    <meta name="description" content="اعرف كل شيء عن هذا الصالون، خدماته، تقييماته، واحجز موعدك الآن">
     
-    <!-- CSS المركزي -->
-    <link rel="stylesheet" href="shared/styles/global.css">
-    <link rel="stylesheet" href="shared/styles/global-navbar.css">
-    <link rel="stylesheet" href="shared/styles/notifications.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="public/assets/favicon.png">
     
-    <!-- CSS الخاص بالصفحة -->
-    <link rel="stylesheet" href="details-salon.css">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="shared/styles/global.css">
+    <link rel="stylesheet" href="shared/styles/global-navbar.css">
+    <link rel="stylesheet" href="shared/styles/notifications.css">
+    <link rel="stylesheet" href="shared/styles/cards.css">
+    
+    <!-- Page Specific Styles -->
+    <link rel="stylesheet" href="details-salon.css">
 </head>
-<body data-theme="dark">
-    <!-- حاوية الشريط العلوي -->
+<body>
+    <!-- Global Navbar Container -->
     <div id="global-navbar-container"></div>
+    
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+    
+    <!-- Main Content -->
+    <main class="salon-details-page">
+        <!-- زر العودة العائم -->
+        <button id="backBtn" class="floating-back-btn" aria-label="العودة">
+            <i class="fas fa-arrow-right"></i>
+        </button>
 
-    <!-- زر العودة العائم -->
-    <button class="floating-back-btn" id="backBtn" aria-label="العودة">
-        <i class="fas fa-arrow-right"></i>
-    </button>
+        <!-- Hero Section -->
+        <section class="salon-hero">
+            <div class="hero-image-container">
+                <div id="heroPlaceholder" class="hero-placeholder">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <img id="heroImage" class="hero-image" src="" alt="صورة الغلاف" style="display: none;">
+                <div class="hero-overlay"></div>
+                
+                <!-- Badges -->
+                <div class="hero-badges">
+                    <span id="verifiedBadge" class="badge verified" style="display: none;">
+                        <i class="fas fa-check-circle"></i>
+                        <span>موثق</span>
+                    </span>
+                    <span id="statusBadge" class="badge status">
+                        <i class="fas fa-clock"></i>
+                        <span>جاري التحميل...</span>
+                    </span>
+                </div>
+                
+                <!-- زر المفضلة -->
+                <button id="favoriteBtn" class="hero-favorite-btn" aria-label="إضافة للمفضلة">
+                    <i class="far fa-heart"></i>
+                </button>
+                
+                <!-- محتوى Hero -->
+                <div class="hero-content">
+                    <div class="salon-logo-wrapper">
+                        <div id="logoPlaceholder" class="logo-placeholder">
+                            <i class="fas fa-cut"></i>
+                        </div>
+                        <img id="salonLogo" class="salon-logo" src="" alt="شعار الصالون" style="display: none;">
+                    </div>
+                    <h1 id="salonName" class="salon-name">اسم الصالون</h1>
+                    <div class="salon-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span id="salonCity">المدينة</span>
+                        </div>
+                        <div class="meta-divider"></div>
+                        <div class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <span id="salonRating">0.0</span>
+                            <span id="salonReviewsCount" class="meta-label">(0 تقييم)</span>
+                        </div>
+                        <div class="meta-divider"></div>
+                        <div class="meta-item">
+                            <i class="fas fa-concierge-bell"></i>
+                            <span id="servicesCount">0 خدمة</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- قسم البطل (Hero) -->
-    <section class="details-hero">
-        <div class="hero-image-container">
-            <div class="hero-placeholder" id="heroPlaceholder">
-                <i class="fas fa-cut"></i>
-            </div>
-            <img id="heroImage" class="hero-image" style="display: none;" alt="صورة الصالون">
-            
-            <div class="hero-overlay"></div>
-            
-            <div class="hero-badges">
-                <span class="badge verified" id="verifiedBadge" style="display: none;">
-                    <i class="fas fa-check-circle"></i>
-                    موثق
-                </span>
-                <span class="badge featured" id="featuredBadge" style="display: none;">
-                    <i class="fas fa-crown"></i>
-                    مميز
-                </span>
-                <span class="badge status" id="statusBadge">
-                    <i class="fas fa-clock"></i>
-                    جاري التحميل...
-                </span>
-            </div>
-            
-            <button class="hero-favorite-btn" id="favoriteBtn" aria-label="إضافة للمفضلة">
-                <i class="far fa-heart"></i>
-            </button>
-        </div>
-        
-        <div class="hero-content">
+        <!-- Quick Actions -->
+        <section class="quick-actions">
             <div class="container">
-                <h1 class="salon-name" id="salonName">جاري التحميل...</h1>
-                <div class="salon-meta">
-                    <div class="meta-item">
-                        <i class="fas fa-star"></i>
-                        <span id="ratingValue">5.0</span>
-                        <span class="meta-label" id="reviewsCount">(0 تقييم)</span>
-                    </div>
-                    <div class="meta-divider"></div>
-                    <div class="meta-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span id="locationValue">الموقع</span>
-                    </div>
-                    <div class="meta-divider"></div>
-                    <div class="meta-item">
-                        <i class="fas fa-tag"></i>
-                        <span id="salonType">نوع الصالون</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- أزرار التواصل السريع -->
-    <section class="quick-actions">
-        <div class="container">
-            <div class="actions-grid">
-                <a href="#" class="action-btn" id="callBtn">
-                    <i class="fas fa-phone"></i>
-                    <span>اتصال</span>
-                </a>
-                <a href="#" class="action-btn whatsapp" id="whatsappBtn">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>واتساب</span>
-                </a>
-                <button class="action-btn" id="locationBtn">
-                    <i class="fas fa-map"></i>
-                    <span>الخريطة</span>
-                </button>
-                <a href="#" class="action-btn" id="emailBtn" style="display: none;">
-                    <i class="fas fa-envelope"></i>
-                    <span>بريد</span>
-                </a>
-                <button class="action-btn" id="shareBtn">
-                    <i class="fas fa-share-alt"></i>
-                    <span>مشاركة</span>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- بطاقة صاحب الصالون -->
-    <section class="owner-section" id="ownerSection" style="display: none;">
-        <div class="container">
-            <div class="owner-card">
-                <div class="owner-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="owner-info">
-                    <h4>صاحب الصالون</h4>
-                    <p id="ownerName">-</p>
-                    <small id="ownerSince">عضو منذ -</small>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- المحتوى الرئيسي -->
-    <main class="details-content">
-        <div class="container">
-            <!-- عن الصالون -->
-            <section class="info-section">
-                <h2 class="section-title">
-                    <i class="fas fa-info-circle"></i>
-                    عن الصالون
-                </h2>
-                <p class="about-text" id="aboutText">مرحباً بكم في صالوننا المميز.</p>
-            </section>
-
-            <!-- أوقات العمل -->
-            <section class="info-section">
-                <h2 class="section-title">
-                    <i class="fas fa-clock"></i>
-                    أوقات العمل
-                </h2>
-                <div class="working-hours-card">
-                    <div class="hours-row">
-                        <i class="fas fa-calendar-day"></i>
-                        <span id="workingDays">أيامنا: -</span>
-                    </div>
-                    <div class="hours-row">
-                        <i class="fas fa-business-time"></i>
-                        <span id="workingHours">ساعاتنا: -</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- الخدمات والأسعار -->
-            <section class="info-section">
-                <h2 class="section-title">
-                    <i class="fas fa-list"></i>
-                    الخدمات والأسعار
-                </h2>
-                <div class="services-list" id="servicesList">
-                    <!-- سيتم ملؤها ديناميكياً -->
-                </div>
-            </section>
-
-            <!-- معرض الأعمال -->
-            <section class="info-section">
-                <h2 class="section-title">
-                    <i class="fas fa-images"></i>
-                    معرض الأعمال
-                </h2>
-                <div class="gallery-wrapper">
-                    <div class="gallery-slider" id="gallerySlider">
-                        <!-- سيتم ملؤها ديناميكياً -->
-                    </div>
-                    <div class="scroll-hint" id="scrollHint" style="display: none;">
-                        <i class="fas fa-arrows-alt-h"></i>
-                        <span>اسحب لليمين واليسار</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- الشهادات والاعتمادات -->
-            <section class="info-section">
-                <h2 class="section-title">
-                    <i class="fas fa-certificate"></i>
-                    الشهادات والاعتمادات
-                </h2>
-                <div class="certificates-container" id="certificatesContainer">
-                    <!-- سيتم ملؤها ديناميكياً -->
-                </div>
-            </section>
-
-            <!-- التقييمات -->
-            <section class="info-section">
-                <div class="reviews-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-star"></i>
-                        تقييمات الزبائن
-                    </h2>
-                    <button class="add-review-btn" id="addReviewBtn">
-                        <i class="fas fa-pen"></i>
-                        <span>إضافة تقييم</span>
+                <div class="actions-grid">
+                    <button id="bookingBtn" class="action-btn primary">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>حجز موعد</span>
+                    </button>
+                    <button id="contactBtn" class="action-btn">
+                        <i class="fas fa-envelope"></i>
+                        <span>تواصل عبر المنصة</span>
+                    </button>
+                    <button id="shareBtn" class="action-btn">
+                        <i class="fas fa-share-alt"></i>
+                        <span>مشاركة</span>
+                    </button>
+                    <button id="reportBtn" class="action-btn">
+                        <i class="fas fa-flag"></i>
+                        <span>إبلاغ</span>
                     </button>
                 </div>
-                
-                <!-- ملخص التقييمات -->
-                <div class="reviews-summary" id="reviewsSummary">
-                    <div class="summary-rating">
-                        <div class="big-rating" id="bigRating">5.0</div>
-                        <div class="stars-display" id="starsDisplay"></div>
-                        <div class="total-reviews" id="totalReviews">0 تقييم</div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <section class="salon-content">
+            <div class="container">
+                <!-- About Section -->
+                <div class="info-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        عن الصالون
+                    </h2>
+                    <p id="salonDescription" class="about-text">
+                        مرحباً بكم في صالوننا المميز.
+                    </p>
+                </div>
+
+                <!-- Working Hours -->
+                <div class="info-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-clock"></i>
+                        أوقات العمل
+                    </h2>
+                    <div class="working-hours-card">
+                        <div id="workingHoursList" class="hours-list">
+                            <div class="hours-row">
+                                <i class="fas fa-clock"></i>
+                                <span>جاري التحميل...</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="rating-bars" id="ratingBars"></div>
                 </div>
-                
-                <!-- قائمة التقييمات -->
-                <div class="reviews-list" id="reviewsList">
-                    <!-- سيتم ملؤها ديناميكياً -->
+
+                <!-- Services Section -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-cut"></i>
+                            الخدمات والأسعار
+                        </h2>
+                        <div class="services-filter">
+                            <button class="filter-btn active" data-category="all">الكل</button>
+                            <button class="filter-btn" data-category="hair">شعر</button>
+                            <button class="filter-btn" data-category="beard">لحية</button>
+                            <button class="filter-btn" data-category="skin">بشرة</button>
+                            <button class="filter-btn" data-category="kids">أطفال</button>
+                        </div>
+                    </div>
+                    <div id="servicesGrid" class="services-grid">
+                        <div class="loading-state">
+                            <div class="loading-spinner">
+                                <i class="fas fa-cut"></i>
+                            </div>
+                            <p>جاري تحميل الخدمات...</p>
+                        </div>
+                    </div>
                 </div>
-            </section>
+
+                <!-- Staff Section -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-users"></i>
+                            فريق العمل
+                        </h2>
+                    </div>
+                    <div id="staffGrid" class="staff-grid">
+                        <div class="loading-state">
+                            <div class="loading-spinner">
+                                <i class="fas fa-cut"></i>
+                            </div>
+                            <p>جاري تحميل الفريق...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews Section -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-star"></i>
+                            تقييمات الزبائن
+                        </h2>
+                        <button id="addReviewBtn" class="add-review-btn">
+                            <i class="fas fa-pen"></i>
+                            <span>إضافة تقييم</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Reviews Summary -->
+                    <div id="reviewsSummary" class="reviews-summary">
+                        <div class="summary-rating">
+                            <div id="bigRating" class="big-rating">0.0</div>
+                            <div id="starsDisplay" class="stars-display"></div>
+                            <div id="totalReviews" class="total-reviews">0 تقييم</div>
+                        </div>
+                        <div id="ratingBars" class="rating-bars"></div>
+                    </div>
+                    
+                    <!-- Reviews List -->
+                    <div id="reviewsList" class="reviews-list">
+                        <div class="loading-state">
+                            <div class="loading-spinner">
+                                <i class="fas fa-cut"></i>
+                            </div>
+                            <p>جاري تحميل التقييمات...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal: Contact Salon -->
+        <div id="contactModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3><i class="fas fa-envelope"></i> تواصل مع الصالون</h3>
+                <p class="modal-subtitle">سيتم إرسال رسالتك عبر المنصة وسيتم الرد عليك خلال 24 ساعة</p>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label>الاسم الكامل</label>
+                        <input type="text" id="contactName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" id="contactEmail" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>رسالتك</label>
+                        <textarea id="contactMessage" class="form-input form-textarea" rows="5" required></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel" id="closeContactModal">إلغاء</button>
+                        <button type="submit" class="btn-submit">إرسال الرسالة</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal: Add Review -->
+        <div id="reviewModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3><i class="fas fa-star"></i> أضف تقييمك</h3>
+                <div class="rating-input">
+                    <div id="starsInput" class="stars-input">
+                        <i class="far fa-star" data-rating="1"></i>
+                        <i class="far fa-star" data-rating="2"></i>
+                        <i class="far fa-star" data-rating="3"></i>
+                        <i class="far fa-star" data-rating="4"></i>
+                        <i class="far fa-star" data-rating="5"></i>
+                    </div>
+                </div>
+                <textarea id="reviewText" class="form-input form-textarea" placeholder="شاركنا تجربتك مع هذا الصالون..." rows="4"></textarea>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" id="closeReviewModal">إلغاء</button>
+                    <button type="button" class="btn-submit" id="submitReview">إرسال التقييم</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Report -->
+        <div id="reportModal" class="modal-overlay">
+            <div class="modal-content small-modal">
+                <h3><i class="fas fa-flag"></i> إبلاغ عن الصالون</h3>
+                <p class="modal-subtitle">سيتم مراجعة بلاغك خلال 24 ساعة</p>
+                <div class="form-group">
+                    <label>سبب الإبلاغ</label>
+                    <select id="reportReason" class="form-input form-select">
+                        <option value="inappropriate">محتوى غير لائق</option>
+                        <option value="fake">معلومات مضللة</option>
+                        <option value="spam">إعلانات مزعجة</option>
+                        <option value="other">أخرى</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>تفاصيل إضافية (اختياري)</label>
+                    <textarea id="reportDetails" class="form-input form-textarea" rows="3"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" id="closeReportModal">إلغاء</button>
+                    <button type="button" class="btn-submit" id="submitReport">إرسال البلاغ</button>
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- زر الحجز العائم -->
-    <button class="floating-booking-btn" id="bookingBtn">
-        <i class="fas fa-calendar-check"></i>
-        <span>حجز موعد الآن</span>
-    </button>
-
-    <!-- نافذة إضافة تقييم -->
-    <div class="modal-overlay" id="reviewModal">
-        <div class="modal-content">
-            <h3>شاركنا تجربتك</h3>
-            <div class="rating-input">
-                <div class="stars-input" id="starsInput">
-                    <i class="far fa-star" data-rating="1"></i>
-                    <i class="far fa-star" data-rating="2"></i>
-                    <i class="far fa-star" data-rating="3"></i>
-                    <i class="far fa-star" data-rating="4"></i>
-                    <i class="far fa-star" data-rating="5"></i>
-                </div>
-            </div>
-            <textarea id="reviewText" placeholder="اكتب تقييمك هنا..." rows="4"></textarea>
-            <div class="modal-actions">
-                <button class="btn-cancel" id="closeModal">إلغاء</button>
-                <button class="btn-submit" id="submitReview">إرسال</button>
+    <!-- Footer -->
+    <footer class="salon-footer">
+        <div class="container">
+            <p>&copy; 2026 BarberFlow Pro. جميع الحقوق محفوظة.</p>
+            <div class="footer-legal">
+                <a href="#" data-path="PRIVACY">سياسة الخصوصية</a>
+                <a href="#" data-path="TERMS">شروط الاستخدام</a>
             </div>
         </div>
-    </div>
+    </footer>
 
-    <!-- نافذة خيارات التقييم -->
-    <div class="modal-overlay" id="reviewOptionsModal">
-        <div class="modal-content small-modal">
-            <div class="review-options-list">
-                <button class="option-btn" id="replyBtn">
-                    <i class="fas fa-reply"></i>
-                    <span>الرد على التعليق</span>
-                </button>
-                <button class="option-btn" id="reportBtn">
-                    <i class="fas fa-flag"></i>
-                    <span>إبلاغ عن محتوى</span>
-                </button>
-                <button class="option-btn" id="copyBtn">
-                    <i class="fas fa-copy"></i>
-                    <span>نسخ النص</span>
-                </button>
-                <button class="option-btn danger" id="hideBtn">
-                    <i class="fas fa-eye-slash"></i>
-                    <span>إخفاء التعليق</span>
-                </button>
-            </div>
-            <button class="close-options-btn" id="closeOptionsModal">إلغاء</button>
-        </div>
-    </div>
-
-    <!-- نافذة الرد -->
-    <div class="modal-overlay" id="replyModal">
-        <div class="modal-content">
-            <h3>الرد على التقييم</h3>
-            <textarea id="replyText" placeholder="اكتب ردك هنا..." rows="3"></textarea>
-            <div class="modal-actions">
-                <button class="btn-cancel" id="closeReplyModal">إلغاء</button>
-                <button class="btn-submit" id="submitReply">إرسال الرد</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- حاوية التنبيهات -->
-    <div id="notification-container"></div>
-
-    <!-- السكريبتات -->
-    <script type="module" src="shared/utils/paths.js"></script>
-    <script type="module" src="shared/js/notifications.js"></script>
+    <!-- Scripts -->
     <script type="module" src="shared/layout/global-navbar.js"></script>
     <script type="module" src="details-salon.js"></script>
 </body>

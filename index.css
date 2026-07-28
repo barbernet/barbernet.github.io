@@ -1104,3 +1104,50 @@ Responsive
     }
 }
 
+
+/* ============================================
+تنسيقات التمرير الأفقي على الشاشات الصغيرة
+============================================ */
+@media (max-width: 768px) {
+
+    /* تحويل الحاويات إلى شريط تمرير أفقي */
+    .offers-grid,
+    .salons-grid,
+    .stores-grid,
+    .categories-grid {
+        display: flex !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 15px;
+        gap: 15px;
+        scrollbar-width: none;
+    }
+
+    /* إخفاء شريط التمرير لمتصفحات Chrome / Safari */
+    .offers-grid::-webkit-scrollbar,
+    .salons-grid::-webkit-scrollbar,
+    .stores-grid::-webkit-scrollbar,
+    .categories-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* ضبط حجم بطاقات العروض والصالونات والمتاجر */
+    .offers-grid > *,
+    .salons-grid > *,
+    .stores-grid > * {
+        flex: 0 0 75% !important;
+        width: 75% !important;
+        max-width: 75% !important;
+        min-width: 0 !important;
+        scroll-snap-align: start;
+    }
+
+    /* ضبط حجم بطاقات الفئات */
+    .categories-grid > * {
+        flex: 0 0 130px !important;
+        width: 130px !important;
+        max-width: 130px !important;
+        min-width: 0 !important;
+        scroll-snap-align: start;
+    }
+}
