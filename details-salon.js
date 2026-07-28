@@ -1,14 +1,13 @@
 /**
  * BarberFlow Pro - صفحة تفاصيل الصالون
  * المسار: details-salon.js
- * ✅ محدّث: Skeleton Loading - إظهار الصفحة فوراً مع دوائر تحميل في الأماكن المطلوبة
+ * ✅ محدّث: Supabase + البطاقات المشتركة
  */
 
 import { supabase } from './config/supabase-init.js';
 import { showNotification } from './shared/utils/notifications.js';
 import { PATHS, resolvePath } from './shared/utils/paths.js';
-import { safeExecute } from './shared/utils/error-handler.js';
-import { createServiceCards } from './shared/components/card-service.js';
+import { createServiceCards } from './shared/components/card-services.js';
 import { createStaffCards } from './shared/components/card-staff.js';
 import { createReviewCards } from './shared/components/card-review.js';
 
@@ -63,20 +62,23 @@ const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event,
 // تحميل تفاصيل الصالون
 // ============================================
 async function loadSalonDetails() {
-    const result = await safeExecute(async () => {
-        const { data, error } = await supabase
+    try {
+        const { data: salon, error } = await supabase
             .from('businesses')
             .select('*')
             .eq('id', salonId)
             .eq('type', 'salon')
             .single();
-        
-        if (error || !data) throw error;
-        return data;
-    }, 'تحميل تفاصيل الصالون');
-    
-    if (result.success) {
-        salonData = { id: salonId, ...result.data };
+
+        if (error || !salon) {
+            showNotification("هذا الصالون غير موجود أو تم حذفه", "error");
+            setTimeout(() => {
+                window.location.replace(resolvePath('SALONS'));
+            }, 2000);
+            return;
+        }
+
+        salonData = { id: salonId, ...salon };
         renderSalonInfo(salonData);
         updateSalonStatus(salonData.working_hours);
         renderWorkingHours(salonData.working_hours);
@@ -86,11 +88,9 @@ async function loadSalonDetails() {
         await loadReviews();
         setupEventListeners();
         updateDynamicLinks();
-    } else {
-        showNotification("هذا الصالون غير موجود أو تم حذفه", "error");
-        setTimeout(() => {
-            window.location.replace(resolvePath('SALONS'));
-        }, 2000);
+    } catch (error) {
+        console.error("خطأ في تحميل تفاصيل الصالون:", error);
+        showNotification("حدث خطأ في تحميل البيانات", "error");
     }
 }
 
@@ -290,8 +290,8 @@ async function toggleFavorite() {
 // تحميل الخدمات
 // ============================================
 async function loadServices() {
-    const result = await safeExecute(async () => {
-        const { data, error } = await supabase
+    try {
+        const { data: services, error } = await supabase
             .from('services')
             .select('*')
             .eq('business_id', salonId)
@@ -299,24 +299,12 @@ async function loadServices() {
             .order('created_at', { ascending: false });
 
         if (error) throw error;
-        return data || [];
-    }, 'تحميل الخدمات');
 
-    if (result.success) {
-        allServices = result.data;
+        allServices = services || [];
         setText('servicesCount', `${allServices.length} خدمة`);
         renderServices();
-    } else {
-        // عرض رسالة خطأ في قسم الخدمات
-        const grid = document.getElementById('servicesGrid');
-        if (grid) {
-            grid.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <p>حدث خطأ في تحميل الخدمات</p>
-                </div>
-            `;
-        }
+    } catch (error) {
+        console.error("خطأ في تحميل الخدمات:", error);
     }
 }
 
@@ -354,8 +342,7 @@ async function loadStaff() {
     const grid = document.getElementById('staffGrid');
     if (!grid) return;
 
-    // يمكن جلب الموظفين المرتبطين بالصالون من جدول profiles
-    // حالياً نعرض رسالة فارغة
+    // حالياً نعرض رسالة فارغة (يمكن جلب الموظفين من جدول profiles)
     grid.innerHTML = `
         <div class="empty-state">
             <i class="fas fa-users"></i>
@@ -368,32 +355,20 @@ async function loadStaff() {
 // تحميل التقييمات
 // ============================================
 async function loadReviews() {
-    const result = await safeExecute(async () => {
-        const { data, error } = await supabase
+    try {
+        const { data: reviews, error } = await supabase
             .from('reviews')
             .select('*')
             .eq('business_id', salonId)
             .order('created_at', { ascending: false });
 
         if (error) throw error;
-        return data || [];
-    }, 'تحميل التقييمات');
 
-    if (result.success) {
-        allReviews = result.data;
+        allReviews = reviews || [];
         renderReviewsSummary(allReviews);
         await renderReviewsList(allReviews);
-    } else {
-        // عرض رسالة خطأ في قسم التقييمات
-        const container = document.getElementById('reviewsList');
-        if (container) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <p>حدث خطأ في تحميل التقييمات</p>
-                </div>
-            `;
-        }
+    } catch (error) {
+        console.error("خطأ في تحميل التقييمات:", error);
     }
 }
 
@@ -504,7 +479,7 @@ async function submitReview() {
         return;
     }
 
-    const result = await safeExecute(async () => {
+    try {
         const { error } = await supabase
             .from('reviews')
             .insert({
@@ -515,16 +490,15 @@ async function submitReview() {
             });
 
         if (error) throw error;
-    }, 'إضافة التقييم');
 
-    if (result.success) {
         showNotification("تم إضافة تقييمك بنجاح، شكراً لمشاركتك", "success");
         document.getElementById('reviewModal').classList.remove('active');
         document.getElementById('reviewText').value = '';
         selectedRating = 0;
         updateStarsInput(0);
         await loadReviews();
-    } else {
+    } catch (error) {
+        console.error("خطأ في إضافة التقييم:", error);
         showNotification("حدث خطأ في إضافة التقييم", "error");
     }
 }
