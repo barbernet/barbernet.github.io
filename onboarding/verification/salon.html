@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توثيق الصالون | BarberFlow Pro</title>
+    <meta name="description" content="احصل على شارة التوثيق لصالونك وزد ثقة الزبائن">
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../../shared/styles/global.css">
+    <link rel="stylesheet" href="../../shared/styles/global-navbar.css">
+    <link rel="stylesheet" href="../../shared/styles/notifications.css">
+    <link rel="stylesheet" href="../../shared/styles/page-protection.css">
+    <link rel="stylesheet" href="../../shared/styles/loading.css">
+    
+    <!-- Page Specific -->
+    <link rel="stylesheet" href="salon.css">
+</head>
+<body class="page-protected">
+
+    <!-- شريط التنقل العام -->
+    <div id="global-navbar-container"></div>
+
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
+
+    <!-- Page Spinner Overlay -->
+    <div id="pageSpinnerOverlay" class="page-spinner-overlay" aria-hidden="true">
+        <div class="page-spinner-box">
+            <div class="spinner lg"></div>
+            <p id="pageSpinnerMessage">جاري التحميل...</p>
+        </div>
+    </div>
+
+    <main class="verification-container">
+        
+        <!-- Header Section -->
+        <header class="verification-header">
+            <div class="header-content">
+                <div class="header-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>برنامج التوثيق الرسمي</span>
+                </div>
+                <h1 class="header-title">
+                    توثيق صالونك
+                    <span class="gold-text">خطوة نحو الاحترافية</span>
+                </h1>
+                <p class="header-subtitle">
+                    احصل على شارة "موثق" وزد ثقة زبائنك بنسبة 300%
+                </p>
+            </div>
+        </header>
+
+        <!-- Benefits Section -->
+        <section class="benefits-section">
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>شارة ذهبية</h3>
+                    <p>تميز صالونك بشارة التوثيق الرسمية</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <h3>ظهور متقدم</h3>
+                    <p>ظهور في النتائج الأولى عند البحث</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>ثقة مضاعفة</h3>
+                    <p>زيادة معدل الحجز بنسبة 3x</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>حماية كاملة</h3>
+                    <p>دعم قانوني وحماية من الاحتيال</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Verification Status Alert (يظهر إذا كان هناك توثيق سابق) -->
+        <div id="statusAlert" class="status-alert" style="display: none;">
+            <div class="alert-content">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <h4>حالة التوثيق الحالية</h4>
+                    <p id="statusMessage"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Form Container -->
+        <div class="form-container">
+            
+            <!-- Stepper -->
+            <div class="stepper-container">
+                <div class="stepper">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">المعلومات الشخصية</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">بطاقة التعريف</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">الحساب البنكي</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">وثيقة الملكية</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form id="verificationForm" class="verification-form">
+                
+                <!-- Step 1: المعلومات الشخصية -->
+                <div class="form-step active" data-step="1">
+                    <div class="step-header">
+                        <h2><i class="fas fa-user"></i> المعلومات الشخصية</h2>
+                        <p>تأكد من صحة المعلومات الأساسية</p>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="ownerName">الاسم الكامل <span class="required">*</span></label>
+                            <input type="text" id="ownerName" class="form-input" readonly>
+                            <small class="form-hint">يُجلب من ملفك الشخصي</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ownerPhone">رقم الهاتف <span class="required">*</span></label>
+                            <input type="tel" id="ownerPhone" class="form-input" readonly>
+                            <small class="form-hint">يُجلب من ملفك الشخصي</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ownerEmail">البريد الإلكتروني <span class="required">*</span></label>
+                            <input type="email" id="ownerEmail" class="form-input" readonly>
+                            <small class="form-hint">يُجلب من ملفك الشخصي</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="salonName">اسم الصالون <span class="required">*</span></label>
+                            <input type="text" id="salonName" class="form-input" readonly>
+                            <small class="form-hint">يُجلب من بيانات الصالون</small>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <p>إذا كانت معلوماتك غير صحيحة، يرجى تحديثها من <a href="#" data-path="PROFILE_SALON">الملف الشخصي</a> أولاً</p>
+                    </div>
+                </div>
+
+                <!-- Step 2: بطاقة التعريف -->
+                <div class="form-step" data-step="2">
+                    <div class="step-header">
+                        <h2><i class="fas fa-id-card"></i> بطاقة التعريف الوطنية</h2>
+                        <p>ارفع صورة واضحة لبطاقة التعريف (وجه وظهر)</p>
+                    </div>
+
+                    <div class="upload-grid">
+                        <!-- وجه البطاقة -->
+                        <div class="upload-card">
+                            <div class="upload-header">
+                                <i class="fas fa-id-card"></i>
+                                <h3>وجه البطاقة</h3>
+                            </div>
+                            <div class="upload-area" id="idFrontUpload">
+                                <input type="file" id="idFrontInput" accept="image/*" hidden>
+                                <div class="upload-placeholder" id="idFrontPlaceholder">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>اضغط لرفع الصورة</p>
+                                    <small>PNG, JPG حتى 5MB</small>
+                                </div>
+                                <div class="upload-preview" id="idFrontPreview" style="display: none;">
+                                    <img src="" alt="وجه البطاقة" id="idFrontImage">
+                                    <button type="button" class="remove-btn" id="removeIdFront">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="upload-status" id="idFrontStatus"></div>
+                        </div>
+
+                        <!-- ظهر البطاقة -->
+                        <div class="upload-card">
+                            <div class="upload-header">
+                                <i class="fas fa-id-card"></i>
+                                <h3>ظهر البطاقة</h3>
+                            </div>
+                            <div class="upload-area" id="idBackUpload">
+                                <input type="file" id="idBackInput" accept="image/*" hidden>
+                                <div class="upload-placeholder" id="idBackPlaceholder">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>اضغط لرفع الصورة</p>
+                                    <small>PNG, JPG حتى 5MB</small>
+                                </div>
+                                <div class="upload-preview" id="idBackPreview" style="display: none;">
+                                    <img src="" alt="ظهر البطاقة" id="idBackImage">
+                                    <button type="button" class="remove-btn" id="removeIdBack">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="upload-status" id="idBackStatus"></div>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <h4>تنبيه مهم</h4>
+                            <p>تأكد من وضوح الصورة وقراءة جميع البيانات. الصور غير الواضحة ستُرفض تلقائياً.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: الحساب البنكي -->
+                <div class="form-step" data-step="3">
+                    <div class="step-header">
+                        <h2><i class="fas fa-university"></i> الحساب البنكي (RIB)</h2>
+                        <p>أدخل معلومات حسابك البنكي لتحويل الأرباح</p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="bankName">اسم البنك <span class="required">*</span></label>
+                            <select id="bankName" class="form-input form-select" required>
+                                <option value="">اختر البنك</option>
+                                <option value="attijariwafa">التجاري وفا بنك</option>
+                                <option value="banque_populaire">البنك الشعبي</option>
+                                <option value="bmce">بنك المغرب (BMCE)</option>
+                                <option value="credit_agricole">القرض الفلاحي</option>
+                                <option value="societe_generale">سوسيتيه جنيرال</option>
+                                <option value="cih">CIH Bank</option>
+                                <option value="other">بنك آخر</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="accountHolder">اسم صاحب الحساب <span class="required">*</span></label>
+                            <input type="text" id="accountHolder" class="form-input" placeholder="الاسم الكامل كما في البنك" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="ribCode">رمز RIB (24 رقم) <span class="required">*</span></label>
+                            <input type="text" id="ribCode" class="form-input" placeholder="0000 0000 0000 0000 0000 00" maxlength="24" required>
+                            <small class="form-hint">ستجده في كشف الحساب أو تطبيق البنك</small>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <i class="fas fa-shield-alt"></i>
+                        <p>بياناتك البنكية مشفرة ومحمية بالكامل. لن نشاركها مع أي طرف ثالث.</p>
+                    </div>
+                </div>
+
+                <!-- Step 4: وثيقة الملكية + الموافقة -->
+                <div class="form-step" data-step="4">
+                    <div class="step-header">
+                        <h2><i class="fas fa-file-contract"></i> وثيقة الملكية والموافقة</h2>
+                        <p>أثبت حقك في إدارة الصالون ووافق على الشروط</p>
+                    </div>
+
+                    <!-- نوع الوثيقة -->
+                    <div class="form-group">
+                        <label>نوع الوثيقة <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-card">
+                                <input type="radio" name="ownershipType" value="ownership" required>
+                                <div class="radio-content">
+                                    <i class="fas fa-home"></i>
+                                    <span>سند الملكية</span>
+                                </div>
+                            </label>
+                            <label class="radio-card">
+                                <input type="radio" name="ownershipType" value="rental" required>
+                                <div class="radio-content">
+                                    <i class="fas fa-file-signature"></i>
+                                    <span>عقد الإيجار</span>
+                                </div>
+                            </label>
+                            <label class="radio-card">
+                                <input type="radio" name="ownershipType" value="agency" required>
+                                <div class="radio-content">
+                                    <i class="fas fa-handshake"></i>
+                                    <span>وكالة رسمية</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- رفع الوثيقة -->
+                    <div class="upload-card full-width">
+                        <div class="upload-header">
+                            <i class="fas fa-file-upload"></i>
+                            <h3>رفع الوثيقة</h3>
+                        </div>
+                        <div class="upload-area" id="ownershipUpload">
+                            <input type="file" id="ownershipInput" accept="image/*,application/pdf" hidden>
+                            <div class="upload-placeholder" id="ownershipPlaceholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>اضغط لرفع الوثيقة</p>
+                                <small>PNG, JPG, PDF حتى 5MB</small>
+                            </div>
+                            <div class="upload-preview" id="ownershipPreview" style="display: none;">
+                                <div class="file-preview">
+                                    <i class="fas fa-file-alt"></i>
+                                    <div class="file-info">
+                                        <span class="file-name" id="ownershipFileName"></span>
+                                        <span class="file-size" id="ownershipFileSize"></span>
+                                    </div>
+                                </div>
+                                <button type="button" class="remove-btn" id="removeOwnership">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الموافقات -->
+                    <div class="agreements-section">
+                        <h3><i class="fas fa-check-circle"></i> الموافقات المطلوبة</h3>
+                        
+                        <label class="checkbox-card">
+                            <input type="checkbox" id="termsAccept" required>
+                            <div class="checkbox-content">
+                                <i class="fas fa-file-contract"></i>
+                                <div>
+                                    <strong>أوافق على شروط الاستخدام</strong>
+                                    <p>أقر بقراءة والموافقة على <a href="#" data-path="TERMS">شروط الاستخدام</a> بالكامل</p>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="checkbox-card">
+                            <input type="checkbox" id="refundAccept" required>
+                            <div class="checkbox-content">
+                                <i class="fas fa-undo"></i>
+                                <div>
+                                    <strong>أوافق على سياسة الإرجاع</strong>
+                                    <p>ألتزم بإرجاع أموال الزبون خلال 7 أيام في حال إلغاء الخدمة</p>
+                                </div>
+                            </label>
+
+                        <label class="checkbox-card">
+                            <input type="checkbox" id="privacyAccept" required>
+                            <div class="checkbox-content">
+                                <i class="fas fa-user-shield"></i>
+                                <div>
+                                    <strong>أوافق على سياسة الخصوصية</strong>
+                                    <p>أوافق على معالجة بياناتي حسب <a href="#" data-path="PRIVACY">سياسة الخصوصية</a></p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <button type="button" class="btn btn-outline" id="backBtn" style="display: none;">
+                        <i class="fas fa-arrow-right"></i>
+                        السابق
+                    </button>
+                    <button type="button" class="btn btn-primary" id="nextBtn">
+                        التالي
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button type="submit" class="btn btn-accent" id="submitBtn" style="display: none;">
+                        <i class="fas fa-paper-plane"></i>
+                        إرسال طلب التوثيق
+                    </button>
+                    <button type="button" class="btn btn-outline" id="skipBtn">
+                        تخطي لاحقاً
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Footer Note -->
+        <footer class="verification-footer">
+            <p>
+                <i class="fas fa-clock"></i>
+                مدة المراجعة: 24-48 ساعة عمل
+            </p>
+            <p>
+                <i class="fas fa-headset"></i>
+                للدعم: <a href="#" data-path="CONTACT">اتصل بنا</a>
+            </p>
+        </footer>
+
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="../../middleware/routing/page-guard.js"></script>
+    <script type="module" src="../../shared/layout/global-navbar.js"></script>
+    <script type="module" src="salon.js"></script>
+</body>
+</html>
+
