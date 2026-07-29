@@ -24,12 +24,12 @@ export const PATHS = {
     // ============================================
     // الإعداد الأولي (Onboarding Setup)
     // ============================================
-    ADD_SALON: '/onboarding/add-salon.html',
-    ADD_STORE: '/onboarding/add-store.html',
-    ADD_CUSTOMER: '/onboarding/add-customer.html',
-    SETUP_SALON: '/onboarding/setup-salon.html',
-    SETUP_STORE: '/onboarding/setup-store.html',
-    SETUP_CUSTOMER: '/onboarding/setup-customer.html',
+    ADD_SALON: '/onboarding/add/salon.html',
+    ADD_STORE: '/onboarding/add/store.html',
+    ADD_CUSTOMER: '/onboarding/add/customer.html',
+    SETUP_SALON: '/onboarding/setup/salon.html',
+    SETUP_STORE: '/onboarding/setup/store.html',
+    SETUP_CUSTOMER: '/onboarding/setup/customer.html',
 
     // ============================================
     // البروفايلات (Profiles)

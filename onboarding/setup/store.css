@@ -1,82 +1,77 @@
 /* ==========================================================================
-BarberFlow Pro - صفحة تخصيص تفضيلات الزبون (Wizard)
-المسار: onboarding/css/setup-customer.css
+BarberFlow Pro - إعداد الهوية البصرية للمتجر (Wizard)
+المسار: onboarding/css/setup/store.css
 ========================================================================== */
 
 /* ============================================
 الصفحة العامة
 ============================================ */
-.wizard-page {
+.setup-page {
     min-height: 100vh;
-    padding: 20px;
     background: var(--bg-primary);
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
 }
 
-.wizard-container {
+.setup-container {
     width: 100%;
     max-width: 700px;
-    padding: 20px 0;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-gold);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
 }
 
 /* ============================================
 رأس الصفحة
 ============================================ */
-.wizard-header {
+.page-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 30px;
     padding: 20px;
-    background: var(--bg-secondary);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-color);
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+    color: #000;
 }
 
-.wizard-title {
+.header-content {
     flex: 1;
     text-align: center;
 }
 
-.wizard-title h1 {
+.page-header h1 {
     font-size: 1.5rem;
-    color: var(--text-primary);
-    margin: 0 0 8px 0;
+    margin: 0 0 5px 0;
+    color: #000;
 }
 
-.wizard-title p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
+.page-subtitle {
+    font-size: 0.9rem;
     margin: 0;
+    opacity: 0.8;
 }
 
-.back-btn,
-.skip-btn {
-    width: 45px;
-    height: 45px;
+.icon-btn {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    border: 1px solid var(--border-color);
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
+    border: none;
+    background: rgba(0, 0, 0, 0.1);
+    color: #000;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all var(--transition-fast);
-    flex-shrink: 0;
+    font-size: 1rem;
 }
 
-.back-btn:hover {
-    background: var(--brand-accent);
-    color: #000;
-    border-color: var(--brand-accent);
-}
-
-.skip-btn:hover {
-    background: var(--bg-accent);
-    color: var(--brand-accent);
+.icon-btn:hover {
+    background: rgba(0, 0, 0, 0.2);
+    transform: scale(1.1);
 }
 
 /* ============================================
@@ -85,9 +80,7 @@ BarberFlow Pro - صفحة تخصيص تفضيلات الزبون (Wizard)
 .progress-bar-container {
     height: 4px;
     background: var(--bg-tertiary);
-    border-radius: 2px;
     overflow: hidden;
-    margin-bottom: 20px;
 }
 
 .progress-bar {
@@ -101,10 +94,7 @@ BarberFlow Pro - صفحة تخصيص تفضيلات الزبون (Wizard)
     display: flex;
     justify-content: space-between;
     padding: 20px;
-    background: var(--bg-secondary);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-color);
-    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
     overflow-x: auto;
     scrollbar-width: none;
 }
@@ -120,7 +110,6 @@ BarberFlow Pro - صفحة تخصيص تفضيلات الزبون (Wizard)
     gap: 8px;
     flex: 1;
     min-width: 80px;
-    position: relative;
 }
 
 .step-number {
@@ -175,19 +164,16 @@ BarberFlow Pro - صفحة تخصيص تفضيلات الزبون (Wizard)
 /* ============================================
 محتوى المراحل
 ============================================ */
-.wizard-form {
-    background: var(--bg-secondary);
-    border-radius: var(--radius-lg);
+.setup-form {
     padding: 30px;
-    border: 1px solid var(--border-color);
 }
 
-.wizard-step {
+.setup-step {
     display: none;
     animation: fadeIn 0.4s ease;
 }
 
-.wizard-step.active {
+.setup-step.active {
     display: block;
 }
 
@@ -226,202 +212,234 @@ BarberFlow Pro - صفحة تخصيص تفضيلات الزبون (Wizard)
 }
 
 /* ============================================
-شبكة الاهتمامات والخدمات
+رفع صورة الغلاف
 ============================================ */
-.interests-grid,
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
-.interest-card,
-.service-card {
+.cover-uploader {
     position: relative;
+    width: 100%;
+    height: 220px;
+    background: var(--bg-tertiary);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    transition: all var(--transition-fast);
+    overflow: hidden;
+    margin-bottom: 20px;
 }
 
-.interest-card input,
-.service-card input {
+.cover-uploader:hover {
+    border-color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.cover-uploader img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     position: absolute;
-    opacity: 0;
+    top: 0;
+    left: 0;
 }
 
-.interest-content,
-.service-content {
+.cover-placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    padding: 20px 15px;
-    background: var(--bg-tertiary);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
-    transition: all var(--transition-fast);
-    text-align: center;
-}
-
-.interest-content i,
-.service-content i {
-    font-size: 2rem;
-    color: var(--brand-accent);
-}
-
-.interest-content span,
-.service-content span {
-    font-size: 0.9rem;
-    color: var(--text-primary);
-    font-weight: 600;
-}
-
-.interest-card input:checked + .interest-content,
-.service-card input:checked + .service-content {
-    border-color: var(--brand-accent);
-    background: rgba(212, 175, 55, 0.1);
-    transform: translateY(-2px);
-}
-
-.interest-card:hover .interest-content,
-.service-card:hover .service-content {
-    border-color: var(--brand-accent);
-}
-
-/* ============================================
-قائمة الإشعارات
-============================================ */
-.notifications-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.notification-item {
-    position: relative;
-    cursor: pointer;
-}
-
-.notification-item input {
-    position: absolute;
-    opacity: 0;
-}
-
-.notification-content {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px;
-    background: var(--bg-tertiary);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
-    transition: all var(--transition-fast);
-}
-
-.notification-content > i {
-    font-size: 1.5rem;
-    color: var(--brand-accent);
-    width: 30px;
-    text-align: center;
-}
-
-.notification-content > div {
-    flex: 1;
-}
-
-.notification-title {
-    display: block;
-    font-size: 1rem;
-    color: var(--text-primary);
-    font-weight: 600;
-    margin-bottom: 3px;
-}
-
-.notification-desc {
-    display: block;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
-.notification-item input:checked + .notification-content {
-    border-color: var(--brand-accent);
-    background: rgba(212, 175, 55, 0.1);
-}
-
-.notification-item:hover .notification-content {
-    border-color: var(--brand-accent);
-}
-
-/* ============================================
-بطاقة الملخص
-============================================ */
-.summary-card {
-    background: var(--bg-tertiary);
-    border-radius: var(--radius-md);
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.summary-section {
-    margin-bottom: 20px;
-}
-
-.summary-section:last-child {
-    margin-bottom: 0;
-}
-
-.summary-section h3 {
-    font-size: 1.1rem;
-    color: var(--brand-accent);
-    margin: 0 0 12px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.summary-section h3 i {
-    font-size: 1rem;
-}
-
-.summary-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.summary-tag {
-    padding: 6px 12px;
-    background: var(--brand-accent);
-    color: #000;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-.empty-summary {
     color: var(--text-muted);
-    font-size: 0.9rem;
-    margin: 0;
 }
 
-.summary-note {
+.placeholder-icon {
+    font-size: 3rem;
+    color: var(--brand-accent);
+}
+
+.uploader-label {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.delete-cover-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: var(--brand-danger);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all var(--transition-fast);
+}
+
+.delete-cover-btn:hover {
+    transform: scale(1.1);
+    background: #a02020;
+}
+
+/* ============================================
+حقول الإدخال
+============================================ */
+.form-section {
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-family: 'Cairo', sans-serif;
+    outline: none;
+    transition: all var(--transition-fast);
+    resize: vertical;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: var(--brand-accent);
+    background: var(--bg-secondary);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.char-counter {
+    text-align: left;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 5px;
+}
+
+/* ============================================
+معرض الصور والشهادات
+============================================ */
+.photos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.add-photo-btn {
+    aspect-ratio: 1;
+    background: var(--bg-tertiary);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    color: var(--text-muted);
+    gap: 5px;
+}
+
+.add-photo-btn:hover {
+    border-color: var(--brand-accent);
+    color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.add-photo-btn i {
+    font-size: 1.8rem;
+}
+
+.add-photo-btn span {
+    font-size: 0.8rem;
+}
+
+.gallery-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    animation: fadeIn 0.3s ease;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-item .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--brand-danger);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: all var(--transition-fast);
+}
+
+.gallery-item .delete-btn:hover {
+    transform: scale(1.1);
+    background: #a02020;
+}
+
+/* ============================================
+نصائح
+============================================ */
+.step-hint {
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 15px;
     background: rgba(212, 175, 55, 0.1);
-    border-radius: var(--radius-md);
+    border-right: 3px solid var(--brand-accent);
+    border-radius: var(--radius-sm);
     color: var(--text-secondary);
     font-size: 0.9rem;
+    margin-top: 20px;
 }
 
-.summary-note i {
+.step-hint i {
     color: var(--brand-accent);
     font-size: 1.2rem;
 }
 
 /* ============================================
-أزرار التنقل
+أزرار التحكم
 ============================================ */
-.wizard-actions {
+.form-actions {
     display: flex;
     justify-content: space-between;
     gap: 15px;
@@ -475,36 +493,66 @@ BarberFlow Pro - صفحة تخصيص تفضيلات الزبون (Wizard)
 Responsive
 ============================================ */
 @media (max-width: 768px) {
-    .wizard-page {
+    .setup-page {
         padding: 10px;
     }
     
-    .wizard-form {
-        padding: 20px;
+    .setup-container {
+        border-radius: var(--radius-md);
     }
     
-    .interests-grid,
-    .services-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .interest-content i,
-    .service-content i {
-        font-size: 1.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .wizard-header {
+    .page-header {
         padding: 15px;
     }
     
-    .wizard-title h1 {
-        font-size: 1.3rem;
+    .page-header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .stepper {
+        padding: 15px;
     }
     
     .step-label {
         font-size: 0.7rem;
+    }
+    
+    .setup-form {
+        padding: 20px;
+    }
+    
+    .cover-uploader {
+        height: 180px;
+    }
+    
+    .photos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .nav-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .step-number {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+    
+    .step-label {
+        display: none;
+    }
+    
+    .photos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
     }
     
     .nav-btn {

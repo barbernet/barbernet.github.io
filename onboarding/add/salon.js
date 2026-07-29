@@ -1,6 +1,6 @@
 /**
  * BarberFlow Pro - صفحة إضافة الصالون (Wizard)
- * المسار: onboarding/add-salon.js
+ * المسار: onboarding/add/salon.js
  * المميزات:
  * - تقسيم إلى 5 مراحل
  * - حفظ تلقائي للبيانات
@@ -419,7 +419,7 @@ async function saveSalonData() {
         
         // حفظ حالة الجلسة
         sessionStorage.setItem('salonSetupCompleted', 'true');
-        sessionStorage.setItem('lastActivePage', 'add-salon');
+        sessionStorage.setItem('lastActivePage', 'add/salon');
         
         // الانتقال إلى صفحة setup
         setTimeout(() => {
@@ -593,7 +593,7 @@ form.addEventListener('submit', async (e) => {
 // ============================================
 window.addEventListener('beforeunload', () => {
     if (currentUser) {
-        sessionStorage.setItem('lastActivePage', 'add-salon');
+        sessionStorage.setItem('lastActivePage', 'add/salon');
         sessionStorage.setItem('sessionTimestamp', Date.now().toString());
         saveDraft();
     }

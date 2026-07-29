@@ -3,602 +3,596 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="BarberFlow Pro - المنصة المغربية الأولى لحجز الصالونات وشراء منتجات العناية">
-    <meta name="keywords" content="صالون, حلاقة, حجز, منتجات عناية, المغرب, barber, salon">
     <title>BarberFlow Pro - منصة حجز الصالونات الأولى في المغرب</title>
-    
-    <!-- ✅ تهيئة الثيم الفاتح فوراً (منع الومضة) -->
-    <script>
-        (function() {
-            const theme = localStorage.getItem('barberflow_theme') || 'light';
-            if (theme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
-    </script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- ملفات CSS المشتركة -->
+    <meta name="description" content="احجز صالونك المفضل واشترِ منتجات العناية بأعلى جودة في مكان واحد وبضغطة زر">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="shared/styles/global.css">
-    <link rel="stylesheet" href="shared/styles/page-protection.css">
-    <link rel="stylesheet" href="shared/styles/notifications.css">
     <link rel="stylesheet" href="shared/styles/global-navbar.css">
+    <link rel="stylesheet" href="shared/styles/notifications.css">
     <link rel="stylesheet" href="shared/styles/cards.css">
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
 
-<!-- حاوية شريط التنقل -->
-<div id="global-navbar-container"></div>
+    <!-- شريط التنقل العام -->
+    <div id="global-navbar-container"></div>
 
-<!-- ============================================
-قسم البطل (Hero) - محسّن
-============================================ -->
-<section class="hero-section">
-    <div class="hero-overlay"></div>
-    <div class="hero-pattern"></div>
-    
-    <!-- جسيمات متحركة (Particles) -->
-    <div class="hero-particles">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-    </div>
-    
-    <div class="hero-content">
-        <div class="hero-badge">
-            <i class="fas fa-crown"></i>
-            <span>المنصة الأولى في المغرب</span>
-        </div>
-        
-        <h1 class="hero-title">
-            منصة حجز <span class="gold-text">الصالونات</span>
-            <br>الأولى في المغرب
-        </h1>
-        
-        <p class="hero-subtitle">
-            احجز صالونك المفضل واشترِ منتجات العناية بأعلى جودة
-            <br>في مكان واحد وبضغطة زر
-        </p>
-        
-        <!-- شريط البحث المحسّن -->
-        <div class="hero-search">
-            <div class="search-box">
-                <i class="fas fa-search search-icon"></i>
-                <input 
-                    type="text" 
-                    id="heroSearchInput" 
-                    placeholder="ابحث عن صالون، خدمة، أو منتج..."
-                    autocomplete="off"
-                >
-                <button id="heroSearchBtn" class="search-btn" aria-label="بحث">
-                    <i class="fas fa-arrow-left"></i>
-                </button>
-            </div>
-            <div id="searchSuggestions" class="search-suggestions"></div>
-        </div>
-        
-        <!-- الإحصائيات -->
-        <div class="hero-stats">
-            <div class="stat-item">
-                <div class="stat-number" id="statSalons">0</div>
-                <div class="stat-label">صالون موثق</div>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <div class="stat-number" id="statStores">0</div>
-                <div class="stat-label">متجر احترافي</div>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <div class="stat-number" id="statServices">0</div>
-                <div class="stat-label">خدمة متاحة</div>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <div class="stat-number" id="statCustomers">0</div>
-                <div class="stat-label">زبون سعيد</div>
-            </div>
-        </div>
-        
-        <!-- أزرار CTA -->
-        <div class="hero-cta">
-            <a href="#" class="cta-btn primary" data-path="SALONS">
-                <i class="fas fa-cut"></i>
-                <span>استكشف الصالونات</span>
-            </a>
-            <a href="#" class="cta-btn secondary" data-path="SHOP">
-                <i class="fas fa-store"></i>
-                <span>تصفح المتجر</span>
-            </a>
-        </div>
-    </div>
-    
-    <!-- الموجة السفلية -->
-    <div class="hero-wave">
-        <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
-            <path d="M0,40 C360,80 720,0 1440,40 L1440,80 L0,80 Z"></path>
-        </svg>
-    </div>
-</section>
+    <!-- حاوية التنبيهات -->
+    <div id="notification-container"></div>
 
-<!-- ============================================
-🆕 قسم كيف يعمل (How it works)
-============================================ -->
-<section class="how-it-works-section" id="howItWorks">
-    <div class="container">
-        <div class="section-header">
-            <div class="section-title-wrapper">
-                <h2 class="section-title">
-                    <i class="fas fa-magic"></i>
-                    <span>كيف يعمل BarberFlow Pro؟</span>
-                </h2>
-            </div>
-            <p class="section-subtitle">ثلاث خطوات بسيطة للحصول على أفضل تجربة</p>
-        </div>
-        
-        <div class="steps-grid">
-            <div class="step-card" data-scroll-reveal>
-                <div class="step-number">01</div>
-                <div class="step-icon">
-                    <i class="fas fa-search"></i>
-                </div>
-                <h3>ابحث واختر</h3>
-                <p>تصفح مئات الصالونات والمنتجات، واختر ما يناسب احتياجاتك وميزانيتك</p>
-            </div>
-            
-            <div class="step-card" data-scroll-reveal>
-                <div class="step-number">02</div>
-                <div class="step-icon">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <h3>احجز بسهولة</h3>
-                <p>اختر الوقت المناسب واحجز موعدك بضغطة زر واحدة، بدون انتظار</p>
-            </div>
-            
-            <div class="step-card" data-scroll-reveal>
-                <div class="step-number">03</div>
-                <div class="step-icon">
-                    <i class="fas fa-star"></i>
-                </div>
-                <h3>استمتع وقيّم</h3>
-                <p>استمتع بالخدمة، ثم شارك تجربتك لمساعدة الآخرين في الاختيار</p>
-            </div>
+    <!-- 🆕 Page Spinner Overlay (للعمليات الثقيلة) -->
+    <div id="pageSpinnerOverlay" class="page-spinner-overlay" aria-hidden="true">
+        <div class="page-spinner-box">
+            <div class="spinner lg"></div>
+            <p id="pageSpinnerMessage">جاري التحميل...</p>
         </div>
     </div>
-</section>
 
-<!-- ============================================
-قسم الفئات (Categories)
-============================================ -->
-<section class="categories-section" id="categories">
-    <div class="container">
-        <div class="section-header">
-            <div class="section-title-wrapper">
-                <h2 class="section-title">
-                    <i class="fas fa-th-large"></i>
-                    <span>استكشف حسب الفئة</span>
-                </h2>
-            </div>
-            <p class="section-subtitle">اختر الفئة المناسبة لاحتياجاتك</p>
+    <!-- ============================================ -->
+    <!-- قسم البطل (Hero) - ثابت، يظهر فوراً -->
+    <!-- ============================================ -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-pattern"></div>
+        <div class="hero-particles">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
         </div>
-        
-        <div class="categories-grid">
-            <a href="#" class="category-card" data-path="SALONS" data-filter="men" data-scroll-reveal>
-                <div class="category-icon men">
-                    <i class="fas fa-male"></i>
-                </div>
-                <h3>صالونات رجالية</h3>
-                <span class="category-count" id="countMen">0 صالون</span>
-            </a>
-            
-            <a href="#" class="category-card" data-path="SALONS" data-filter="women" data-scroll-reveal>
-                <div class="category-icon women">
-                    <i class="fas fa-female"></i>
-                </div>
-                <h3>صالونات نسائية</h3>
-                <span class="category-count" id="countWomen">0 صالون</span>
-            </a>
-            
-            <a href="#" class="category-card" data-path="SALONS" data-filter="kids" data-scroll-reveal>
-                <div class="category-icon kids">
-                    <i class="fas fa-child"></i>
-                </div>
-                <h3>صالونات أطفال</h3>
-                <span class="category-count" id="countKids">0 صالون</span>
-            </a>
-            
-            <a href="#" class="category-card" data-path="SHOP" data-category="cosmetics" data-scroll-reveal>
-                <div class="category-icon cosmetics">
-                    <i class="fas fa-spa"></i>
-                </div>
-                <h3>مستحضرات تجميل</h3>
-                <span class="category-count">متعدد</span>
-            </a>
-            
-            <a href="#" class="category-card" data-path="SHOP" data-category="tools" data-scroll-reveal>
-                <div class="category-icon tools">
-                    <i class="fas fa-cut"></i>
-                </div>
-                <h3>أدوات ومعدات</h3>
-                <span class="category-count">متعدد</span>
-            </a>
-            
-            <a href="#" class="category-card" data-scroll-reveal>
-                <div class="category-icon home-service">
-                    <i class="fas fa-home"></i>
-                </div>
-                <h3>خدمة منزلية</h3>
-                <span class="category-count">جديد</span>
-            </a>
-        </div>
-    </div>
-</section>
 
-<!-- ============================================
-قسم العروض (Offers)
-============================================ -->
-<section class="offers-section" id="offers">
-    <div class="container">
-        <div class="section-header">
-            <div class="section-title-wrapper">
-                <span class="offers-badge">محدودة</span>
-                <h2 class="section-title">
-                    <i class="fas fa-gift"></i>
-                    <span>العروض والهدايا الحصرية</span>
-                </h2>
-            </div>
-            <p class="section-subtitle">استفد من أقوى العروض قبل انتهائها</p>
-        </div>
-        
-        <!-- ✅ حاوية ديناميكية للعروض -->
-        <div class="offers-grid" id="offersGrid"></div>
-    </div>
-</section>
-
-<!-- ============================================
-قسم الصالونات (Salons)
-============================================ -->
-<section class="salons-section" id="salons">
-    <div class="container">
-        <div class="section-header">
-            <div class="section-title-wrapper">
-                <h2 class="section-title">
-                    <i class="fas fa-cut"></i>
-                    <span>أبرز الصالونات المتاحة</span>
-                </h2>
-                <a href="#" class="view-all-link" data-path="SALONS">
-                    <span>عرض الكل</span>
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-            </div>
-        </div>
-        
-        <!-- الفلاتر -->
-        <div class="filter-chips" id="salonFilters">
-            <button class="filter-chip active" data-filter="all">الكل</button>
-            <button class="filter-chip" data-filter="men">رجالي</button>
-            <button class="filter-chip" data-filter="women">نسائي</button>
-            <button class="filter-chip" data-filter="kids">أطفال</button>
-            <button class="filter-chip" data-filter="mixed">مختلط</button>
-        </div>
-        
-        <!-- ✅ حاوية ديناميكية للصالونات -->
-        <div class="salons-grid" id="salonsGrid">
-            <div class="loading-skeleton">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p>جاري تحميل الصالونات...</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ============================================
-قسم المتاجر (Stores)
-============================================ -->
-<section class="stores-section" id="stores">
-    <div class="container">
-        <div class="section-header">
-            <div class="section-title-wrapper">
-                <h2 class="section-title">
-                    <i class="fas fa-store"></i>
-                    <span>أبرز المتاجر والمنتجات</span>
-                </h2>
-                <a href="#" class="view-all-link" data-path="SHOP">
-                    <span>عرض المتجر بالكامل</span>
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-            </div>
-        </div>
-        
-        <!-- الفلاتر -->
-        <div class="filter-chips" id="storeFilters">
-            <button class="filter-chip active" data-filter="all">الكل</button>
-            <button class="filter-chip" data-filter="cosmetics">مستحضرات</button>
-            <button class="filter-chip" data-filter="tools">أدوات</button>
-            <button class="filter-chip" data-filter="hair">العناية بالشعر</button>
-            <button class="filter-chip" data-filter="beard">العناية باللحية</button>
-        </div>
-        
-        <!-- ✅ حاوية ديناميكية للمنتجات -->
-        <div class="stores-grid" id="storesGrid">
-            <div class="loading-skeleton">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p>جاري تحميل المنتجات...</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ============================================
-🆕 قسم الشهادات (Testimonials)
-============================================ -->
-<section class="testimonials-section" id="testimonials">
-    <div class="container">
-        <div class="section-header light">
-            <div class="section-title-wrapper">
-                <h2 class="section-title">
-                    <i class="fas fa-quote-right"></i>
-                    <span>ماذا يقول عملاؤنا؟</span>
-                </h2>
-            </div>
-            <p class="section-subtitle">آراء حقيقية من مستخدمين حقيقيين</p>
-        </div>
-        
-        <div class="testimonials-grid">
-            <div class="testimonial-card" data-scroll-reveal>
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p class="testimonial-text">
-                    "تجربة رائعة! حجزت موعداً في أقل من دقيقة، والصالون كان ممتازاً. شكراً BarberFlow Pro!"
-                </p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="author-info">
-                        <h4>أحمد بن علي</h4>
-                        <span>زبون منذ 2025</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="testimonial-card" data-scroll-reveal>
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p class="testimonial-text">
-                    "كصاحب صالون، BarberFlow Pro غيّر طريقة عملي. الحجوزات زادت 40% في شهر واحد!"
-                </p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">
-                        <i class="fas fa-user-tie"></i>
-                    </div>
-                    <div class="author-info">
-                        <h4>يوسف المراكشي</h4>
-                        <span>صاحب صالون VIP</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="testimonial-card" data-scroll-reveal>
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                </div>
-                <p class="testimonial-text">
-                    "المنتجات الأصلية بأسعار منافسة، والتوصيل سريع. أنصح الجميع بالتجربة."
-                </p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                    <div class="author-info">
-                        <h4>فاطمة الزهراء</h4>
-                        <span>زبونة مميزة</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ============================================
-قسم الباقات المميزة (Pro)
-============================================ -->
-<section class="pro-section" id="pro">
-    <div class="container">
-        <div class="section-header light">
-            <div class="section-title-wrapper">
-                <span class="pro-badge">حصري</span>
-                <h2 class="section-title">
-                    <i class="fas fa-crown"></i>
-                    <span>انضم إلى برنامج BarberFlow Pro</span>
-                </h2>
-            </div>
-            <p class="section-subtitle">مزايا حصرية لأصحاب الصالونات والمحترفين</p>
-        </div>
-        
-        <div class="pro-features-grid">
-            <div class="pro-feature-card" data-scroll-reveal>
-                <div class="pro-feature-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <h3>إحصائيات متقدمة</h3>
-                <p>تحليلات مفصلة لأداء صالونك وعملائك</p>
-            </div>
-            
-            <div class="pro-feature-card" data-scroll-reveal>
-                <div class="pro-feature-icon">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <h3>ترويج مميز</h3>
-                <p>ظهور صالونك في النتائج الأولى</p>
-            </div>
-            
-            <div class="pro-feature-card" data-scroll-reveal>
-                <div class="pro-feature-icon">
-                    <i class="fas fa-calendar-alt"></i>
-                </div>
-                <h3>حجوزات غير محدودة</h3>
-                <p>بدون حدود على عدد الحجوزات</p>
-            </div>
-            
-            <div class="pro-feature-card" data-scroll-reveal>
-                <div class="pro-feature-icon">
-                    <i class="fas fa-headset"></i>
-                </div>
-                <h3>دعم فني 24/7</h3>
-                <p>فريق دعم مخصص على مدار الساعة</p>
-            </div>
-        </div>
-        
-        <div class="pro-cta">
-            <a href="#" class="cta-btn primary" data-path="PRO">
+        <div class="hero-content">
+            <div class="hero-badge">
                 <i class="fas fa-crown"></i>
-                <span>اكتشف باقات Pro</span>
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- ============================================
-قسم انضم إلينا (Join Us)
-============================================ -->
-<section class="join-section" id="join">
-    <div class="container">
-        <div class="section-header">
-            <div class="section-title-wrapper">
-                <h2 class="section-title">
-                    <i class="fas fa-users"></i>
-                    <span>انضم إلى آلاف المحترفين</span>
-                </h2>
+                المنصة الأولى في المغرب
             </div>
-            <p class="section-subtitle">
-                سواء كنت صاحب صالون، متجر، أو زبون، BarberFlow Pro هو مكانك
+
+            <h1 class="hero-title">
+                منصة حجز الصالونات<br>
+                <span class="gold-text">الأولى في المغرب</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                احجز صالونك المفضل واشترِ منتجات العناية بأعلى جودة
+                <br>في مكان واحد وبضغطة زر
             </p>
-        </div>
-        
-        <div class="join-grid">
-            <!-- ✅ إزالة ?role= من الرابط - الصفحة تختار الدور ذاتياً -->
-            <a href="#" class="join-card" data-path="REGISTER" data-scroll-reveal>
-                <div class="join-icon">
-                    <i class="fas fa-cut"></i>
-                </div>
-                <h3>سجل كصالون</h3>
-                <p>أدر مواعيدك واحصل على عملاء جدد</p>
-            </a>
-            
-            <a href="#" class="join-card" data-path="REGISTER" data-scroll-reveal>
-                <div class="join-icon">
-                    <i class="fas fa-store"></i>
-                </div>
-                <h3>سجل كمتجر</h3>
-                <p>اعرض منتجاتك لآلاف العملاء</p>
-            </a>
-            
-            <a href="#" class="join-card" data-path="REGISTER" data-scroll-reveal>
-                <div class="join-icon">
-                    <i class="fas fa-user"></i>
-                </div>
-                <h3>سجل كزبون</h3>
-                <p>احجز بسهولة واحصل على عروض حصرية</p>
-            </a>
-        </div>
-    </div>
-</section>
 
-<!-- ============================================
-التذييل (Footer)
-============================================ -->
-<footer class="main-footer">
-    <div class="container">
-        <div class="footer-grid">
-            <div class="footer-col">
-                <div class="footer-logo">
-                    <i class="fas fa-cut"></i>
-                    <span>BarberFlow Pro</span>
+            <!-- الإحصائيات -->
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="statSalons">0</div>
+                    <div class="stat-label">صالون موثق</div>
                 </div>
-                <p class="footer-desc">
-                    المنصة المغربية الأولى التي تجمع بين حجز الصالونات وشراء منتجات العناية في مكان واحد.
-                </p>
-                <div class="footer-social">
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statStores">0</div>
+                    <div class="stat-label">متجر احترافي</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statServices">0</div>
+                    <div class="stat-label">خدمة متاحة</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statCustomers">0</div>
+                    <div class="stat-label">زبون سعيد</div>
                 </div>
             </div>
-            
-            <div class="footer-col">
-                <h4>روابط سريعة</h4>
-                <ul class="footer-links">
-                    <li><a href="#" data-path="INDEX">الرئيسية</a></li>
-                    <li><a href="#" data-path="SALONS">الصالونات</a></li>
-                    <li><a href="#" data-path="SHOP">المتجر</a></li>
-                    <li><a href="#" data-path="PRO">باقات Pro</a></li>
-                </ul>
+
+            <!-- البحث -->
+            <div class="hero-search">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="heroSearchInput" placeholder="ابحث عن صالون، خدمة، أو منتج..." autocomplete="off">
+                    <button class="search-btn" id="heroSearchBtn" aria-label="بحث">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+                <div class="search-suggestions" id="searchSuggestions" role="listbox"></div>
             </div>
-            
-            <div class="footer-col">
-                <h4>الدعم</h4>
-                <ul class="footer-links">
-                    <li><a href="#" data-path="ABOUT">من نحن</a></li>
-                    <li><a href="#" data-path="CONTACT">اتصل بنا</a></li>
-                    <li><a href="#" data-path="SURVEY">استطلاع الرأي</a></li>
-                    <li><a href="#" data-path="FAQ">الأسئلة الشائعة</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-col">
-                <h4>تواصل معنا</h4>
-                <ul class="footer-contact">
-                    <li>
-                        <i class="fas fa-envelope"></i>
-                        <span>contact@barberflow.ma</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-phone"></i>
-                        <span>+212 5XX-XXXXXX</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>المغرب</span>
-                    </li>
-                </ul>
+
+            <!-- أزرار CTA -->
+            <div class="hero-cta">
+                <a href="#" data-path="SALONS" class="cta-btn primary">
+                    <i class="fas fa-cut"></i> استكشف الصالونات
+                </a>
+                <a href="#" data-path="SHOP" class="cta-btn secondary">
+                    <i class="fas fa-shopping-bag"></i> تصفح المتجر
+                </a>
             </div>
         </div>
-        
-        <div class="footer-bottom">
-            <p>© 2026 BarberFlow Pro. جميع الحقوق محفوظة.</p>
-            <div class="footer-bottom-links">
-                <a href="#" data-path="PRIVACY">سياسة الخصوصية</a>
-                <a href="#" data-path="TERMS">شروط الاستخدام</a>
+
+        <div class="hero-wave">
+            <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+                <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- كيف يعمل - ثابت -->
+    <!-- ============================================ -->
+    <section class="how-it-works-section" data-scroll-reveal>
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-lightbulb"></i> كيف يعمل BarberFlow Pro؟</h2>
+                <p class="section-subtitle">ثلاث خطوات بسيطة للحصول على أفضل تجربة</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <span class="step-number">01</span>
+                    <div class="step-icon"><i class="fas fa-search"></i></div>
+                    <h3>ابحث واختر</h3>
+                    <p>تصفح مئات الصالونات والمنتجات، واختر ما يناسب احتياجاتك وميزانيتك</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-number">02</span>
+                    <div class="step-icon"><i class="fas fa-calendar-check"></i></div>
+                    <h3>احجز بسهولة</h3>
+                    <p>اختر الوقت المناسب واحجز موعدك بضغطة زر واحدة، بدون انتظار</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-number">03</span>
+                    <div class="step-icon"><i class="fas fa-star"></i></div>
+                    <h3>استمتع وقيّم</h3>
+                    <p>استمتع بالخدمة، ثم شارك تجربتك لمساعدة الآخرين في الاختيار</p>
+                </div>
             </div>
         </div>
-    </div>
-</footer>
+    </section>
 
-<!-- حاوية التنبيهات -->
-<div id="notification-container"></div>
+    <!-- ============================================ -->
+    <!-- الفئات - ديناميكي (العدادات) -->
+    <!-- ============================================ -->
+    <section class="categories-section" data-scroll-reveal>
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-th-large"></i> استكشف حسب الفئة</h2>
+                <p class="section-subtitle">اختر الفئة المناسبة لاحتياجاتك</p>
+            </div>
+            <div class="categories-grid">
+                <a href="#" data-path="SALONS" class="category-card">
+                    <div class="category-icon men"><i class="fas fa-male"></i></div>
+                    <h3>صالونات رجالية</h3>
+                    <span class="category-count" id="countMen">-- صالون</span>
+                </a>
+                <a href="#" data-path="SALONS" class="category-card">
+                    <div class="category-icon women"><i class="fas fa-female"></i></div>
+                    <h3>صالونات نسائية</h3>
+                    <span class="category-count" id="countWomen">-- صالون</span>
+                </a>
+                <a href="#" data-path="SALONS" class="category-card">
+                    <div class="category-icon kids"><i class="fas fa-child"></i></div>
+                    <h3>صالونات أطفال</h3>
+                    <span class="category-count" id="countKids">-- صالون</span>
+                </a>
+                <a href="#" data-path="SHOP" class="category-card">
+                    <div class="category-icon cosmetics"><i class="fas fa-pump-soap"></i></div>
+                    <h3>مستحضرات تجميل</h3>
+                    <span class="category-count">متعدد</span>
+                </a>
+                <a href="#" data-path="SHOP" class="category-card">
+                    <div class="category-icon tools"><i class="fas fa-tools"></i></div>
+                    <h3>أدوات ومعدات</h3>
+                    <span class="category-count">متعدد</span>
+                </a>
+                <a href="#" data-path="SALONS" class="category-card">
+                    <div class="category-icon home-service"><i class="fas fa-home"></i></div>
+                    <h3>خدمة منزلية</h3>
+                    <span class="category-count">جديد</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
-<!-- JavaScript -->
-<script type="module" src="index.js"></script>
-<script type="module" src="shared/layout/global-navbar.js"></script>
+    <!-- ============================================ -->
+    <!-- العروض - ديناميكي -->
+    <!-- ============================================ -->
+    <section class="offers-section" data-scroll-reveal>
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title"><i class="fas fa-gift"></i> العروض والهدايا الحصرية</h2>
+                    <span class="offers-badge">محدودة</span>
+                </div>
+                <p class="section-subtitle">استفد من أقوى العروض قبل انتهائها</p>
+            </div>
+            <!-- 🆕 Skeleton يتم حقنه هنا تلقائياً -->
+            <div id="offersGrid" class="offers-grid" aria-live="polite" aria-busy="true">
+                <!-- 🆕 Skeleton placeholders للعروض -->
+                <div class="skeleton-offer" aria-hidden="true">
+                    <div class="skeleton-offer-icon"></div>
+                    <div class="skeleton-offer-content">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-line meta"></div>
+                    </div>
+                </div>
+                <div class="skeleton-offer" aria-hidden="true">
+                    <div class="skeleton-offer-icon"></div>
+                    <div class="skeleton-offer-content">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-line meta"></div>
+                    </div>
+                </div>
+                <div class="skeleton-offer" aria-hidden="true">
+                    <div class="skeleton-offer-icon"></div>
+                    <div class="skeleton-offer-content">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-line meta"></div>
+                    </div>
+                </div>
+                <div class="skeleton-offer" aria-hidden="true">
+                    <div class="skeleton-offer-icon"></div>
+                    <div class="skeleton-offer-content">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-line meta"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- ============================================ -->
+    <!-- الصالونات - ديناميكي -->
+    <!-- ============================================ -->
+    <section class="salons-section" data-scroll-reveal>
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title"><i class="fas fa-cut"></i> أبرز الصالونات المتاحة</h2>
+                </div>
+                <a href="#" data-path="SALONS" class="view-all-link">عرض الكل <i class="fas fa-arrow-left"></i></a>
+            </div>
+
+            <!-- الفلاتر -->
+            <div class="filter-chips" id="salonFilters">
+                <button class="filter-chip active" data-filter="all">الكل</button>
+                <button class="filter-chip" data-filter="men">رجالي</button>
+                <button class="filter-chip" data-filter="women">نسائي</button>
+                <button class="filter-chip" data-filter="kids">أطفال</button>
+                <button class="filter-chip" data-filter="mixed">مختلط</button>
+            </div>
+
+            <!-- 🆕 Skeleton placeholders للصالونات -->
+            <div id="salonsGrid" class="salons-grid" aria-live="polite" aria-busy="true">
+                <div class="skeleton-card" aria-hidden="true">
+                    <div class="skeleton-cover"></div>
+                    <div class="skeleton-logo"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-line meta"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-rating">
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                            </div>
+                            <div class="skeleton-price"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card" aria-hidden="true">
+                    <div class="skeleton-cover"></div>
+                    <div class="skeleton-logo"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-line meta"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-rating">
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                            </div>
+                            <div class="skeleton-price"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card" aria-hidden="true">
+                    <div class="skeleton-cover"></div>
+                    <div class="skeleton-logo"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-line meta"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-rating">
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                            </div>
+                            <div class="skeleton-price"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card" aria-hidden="true">
+                    <div class="skeleton-cover"></div>
+                    <div class="skeleton-logo"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-line meta"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-rating">
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                                <div class="skeleton-star"></div>
+                            </div>
+                            <div class="skeleton-price"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- المنتجات - ديناميكي -->
+    <!-- ============================================ -->
+    <section class="stores-section" data-scroll-reveal>
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title"><i class="fas fa-shopping-bag"></i> أبرز المتاجر والمنتجات</h2>
+                </div>
+                <a href="#" data-path="SHOP" class="view-all-link">عرض المتجر بالكامل <i class="fas fa-arrow-left"></i></a>
+            </div>
+
+            <!-- الفلاتر -->
+            <div class="filter-chips" id="storeFilters">
+                <button class="filter-chip active" data-filter="all">الكل</button>
+                <button class="filter-chip" data-filter="cosmetics">مستحضرات</button>
+                <button class="filter-chip" data-filter="tools">أدوات</button>
+                <button class="filter-chip" data-filter="hair-care">العناية بالشعر</button>
+                <button class="filter-chip" data-filter="beard-care">العناية باللحية</button>
+            </div>
+
+            <!-- 🆕 Skeleton placeholders للمنتجات -->
+            <div id="storesGrid" class="stores-grid" aria-live="polite" aria-busy="true">
+                <div class="skeleton-product" aria-hidden="true">
+                    <div class="skeleton-product-image"></div>
+                    <div class="skeleton-product-body">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-price"></div>
+                            <div class="skeleton-line meta" style="width:60px;margin:0"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-product" aria-hidden="true">
+                    <div class="skeleton-product-image"></div>
+                    <div class="skeleton-product-body">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-price"></div>
+                            <div class="skeleton-line meta" style="width:60px;margin:0"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-product" aria-hidden="true">
+                    <div class="skeleton-product-image"></div>
+                    <div class="skeleton-product-body">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-price"></div>
+                            <div class="skeleton-line meta" style="width:60px;margin:0"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-product" aria-hidden="true">
+                    <div class="skeleton-product-image"></div>
+                    <div class="skeleton-product-body">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line subtitle"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-price"></div>
+                            <div class="skeleton-line meta" style="width:60px;margin:0"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- الشهادات - ثابت -->
+    <!-- ============================================ -->
+    <section class="testimonials-section" data-scroll-reveal>
+        <div class="container">
+            <div class="section-header light">
+                <h2 class="section-title" style="color:#fff"><i class="fas fa-quote-right"></i> ماذا يقول عملاؤنا؟</h2>
+                <p class="section-subtitle" style="color:rgba(255,255,255,0.7)">آراء حقيقية من مستخدمين حقيقيين</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"تجربة رائعة! حجزت موعداً في أقل من دقيقة، والصالون كان ممتازاً. شكراً BarberFlow Pro!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar"><i class="fas fa-user"></i></div>
+                        <div class="author-info">
+                            <h4>أحمد بن علي</h4>
+                            <span>زبون منذ 2025</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"كصاحب صالون، BarberFlow Pro غيّر طريقة عملي. الحجوزات زادت 40% في شهر واحد!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar"><i class="fas fa-user"></i></div>
+                        <div class="author-info">
+                            <h4>يوسف المراكشي</h4>
+                            <span>صاحب صالون VIP</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="testimonial-text">"المنتجات الأصلية بأسعار منافسة، والتوصيل سريع. أنصح الجميع بالتجربة."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar"><i class="fas fa-user"></i></div>
+                        <div class="author-info">
+                            <h4>فاطمة الزهراء</h4>
+                            <span>زبونة مميزة</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- Pro - ثابت -->
+    <!-- ============================================ -->
+    <section class="pro-section" data-scroll-reveal>
+        <div class="container">
+            <div class="section-header light">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title" style="color:#fff"><i class="fas fa-crown"></i> انضم إلى برنامج BarberFlow Pro</h2>
+                    <span class="pro-badge">حصري</span>
+                </div>
+                <p class="section-subtitle" style="color:rgba(255,255,255,0.7)">مزايا حصرية لأصحاب الصالونات والمحترفين</p>
+            </div>
+            <div class="pro-features-grid">
+                <div class="pro-feature-card">
+                    <div class="pro-feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>إحصائيات متقدمة</h3>
+                    <p>تحليلات مفصلة لأداء صالونك وعملائك</p>
+                </div>
+                <div class="pro-feature-card">
+                    <div class="pro-feature-icon"><i class="fas fa-bullhorn"></i></div>
+                    <h3>ترويج مميز</h3>
+                    <p>ظهور صالونك في النتائج الأولى</p>
+                </div>
+                <div class="pro-feature-card">
+                    <div class="pro-feature-icon"><i class="fas fa-infinity"></i></div>
+                    <h3>حجوزات غير محدودة</h3>
+                    <p>بدون حدود على عدد الحجوزات</p>
+                </div>
+                <div class="pro-feature-card">
+                    <div class="pro-feature-icon"><i class="fas fa-headset"></i></div>
+                    <h3>دعم فني 24/7</h3>
+                    <p>فريق دعم مخصص على مدار الساعة</p>
+                </div>
+            </div>
+            <div class="pro-cta">
+                <a href="#" data-path="PRO" class="cta-btn primary">
+                    <i class="fas fa-crown"></i> اكتشف باقات Pro
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- انضم إلينا - ثابت -->
+    <!-- ============================================ -->
+    <section class="join-section" data-scroll-reveal>
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-users"></i> انضم إلى آلاف المحترفين</h2>
+                <p class="section-subtitle">سواء كنت صاحب صالون، متجر، أو زبون، BarberFlow Pro هو مكانك</p>
+            </div>
+            <div class="join-grid">
+                <a href="#" data-path="REGISTER" class="join-card">
+                    <div class="join-icon"><i class="fas fa-cut"></i></div>
+                    <h3>سجل كصالون</h3>
+                    <p>أدر مواعيدك واحصل على عملاء جدد</p>
+                </a>
+                <a href="#" data-path="REGISTER" class="join-card">
+                    <div class="join-icon"><i class="fas fa-store"></i></div>
+                    <h3>سجل كمتجر</h3>
+                    <p>اعرض منتجاتك لآلاف العملاء</p>
+                </a>
+                <a href="#" data-path="REGISTER" class="join-card">
+                    <div class="join-icon"><i class="fas fa-user"></i></div>
+                    <h3>سجل كزبون</h3>
+                    <p>احجز بسهولة واحصل على عروض حصرية</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- التذييل -->
+    <!-- ============================================ -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fas fa-cut"></i> BarberFlow Pro
+                    </div>
+                    <p class="footer-desc">المنصة المغربية الأولى التي تجمع بين حجز الصالونات وشراء منتجات العناية في مكان واحد.</p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="فيسبوك"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="انستغرام"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="يوتيوب"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>روابط سريعة</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-path="INDEX">الرئيسية</a></li>
+                        <li><a href="#" data-path="SALONS">الصالونات</a></li>
+                        <li><a href="#" data-path="SHOP">المتجر</a></li>
+                        <li><a href="#" data-path="PRO">باقات Pro</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>الدعم</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-path="ABOUT">من نحن</a></li>
+                        <li><a href="#" data-path="CONTACT">اتصل بنا</a></li>
+                        <li><a href="#" data-path="SURVEY">استطلاع الرأي</a></li>
+                        <li><a href="#" data-path="FAQ">الأسئلة الشائعة</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>تواصل معنا</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-envelope"></i> contact@barberflow.ma</li>
+                        <li><i class="fas fa-phone"></i> +212 5XX-XXXXXX</li>
+                        <li><i class="fas fa-map-marker-alt"></i> المغرب</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 BarberFlow Pro. جميع الحقوق محفوظة.</p>
+                <div class="footer-bottom-links">
+                    <a href="#" data-path="PRIVACY">سياسة الخصوصية</a>
+                    <a href="#" data-path="TERMS">شروط الاستخدام</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="shared/layout/global-navbar.js"></script>
+    <script type="module" src="index.js"></script>
 </body>
 </html>
 

@@ -1,6 +1,6 @@
 /**
  * BarberFlow Pro - صفحة إضافة المتجر (Wizard متعدد الخطوات)
- * المسار: onboarding/add-store.js
+ * المسار: onboarding/add/store.js
  * المميزات:
  * - تقسيم إلى 5 مراحل
  * - حفظ تلقائي للبيانات
@@ -399,7 +399,7 @@ async function saveStoreData() {
         showNotification("تم حفظ بيانات المتجر بنجاح! 🎉", "success");
         
         sessionStorage.setItem('storeSetupCompleted', 'true');
-        sessionStorage.setItem('lastActivePage', 'add-store');
+        sessionStorage.setItem('lastActivePage', 'store');
         
         setTimeout(() => {
             window.location.href = resolvePath('SETUP_STORE');
@@ -580,7 +580,7 @@ form.addEventListener('submit', async (e) => {
 // ============================================
 window.addEventListener('beforeunload', () => {
     if (currentUser) {
-        sessionStorage.setItem('lastActivePage', 'add-store');
+        sessionStorage.setItem('lastActivePage', 'store');
         sessionStorage.setItem('sessionTimestamp', Date.now().toString());
         saveDraft();
     }

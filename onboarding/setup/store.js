@@ -1,6 +1,6 @@
 /**
  * BarberFlow Pro - صفحة إعداد الهوية البصرية للمتجر (Wizard)
- * المسار: onboarding/setup-store.js
+ * المسار: onboarding/store.js
  * المميزات:
  * - تقسيم إلى 4 مراحل
  * - رفع ومعالجة الصور
@@ -439,7 +439,7 @@ async function saveSetupData() {
         showNotification("تهانينا! تم إنشاء ملف متجرك بنجاح 🪄", "success");
         
         sessionStorage.removeItem('storeSetupDraft');
-        sessionStorage.setItem('lastActivePage', 'setup-store');
+        sessionStorage.setItem('lastActivePage', 'store');
         
         setTimeout(() => {
             window.location.replace(resolvePath('PROFILE_STORE'));
@@ -592,7 +592,7 @@ function restoreDraft() {
 // ============================================
 window.addEventListener('beforeunload', () => {
     if (currentUid) {
-        sessionStorage.setItem('lastActivePage', 'setup-store');
+        sessionStorage.setItem('lastActivePage', 'store');
         sessionStorage.setItem('sessionTimestamp', Date.now().toString());
         saveDraft();
     }

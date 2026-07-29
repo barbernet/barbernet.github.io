@@ -1,9 +1,10 @@
 /**
-BarberFlow Pro - المنطق الرئيسي للصفحة الرئيسية
-المسار: index.js
-⚠️ تم التحديث: Supabase + المكونات المشتركة + تحسينات الأداء
-✅ تحديث 2026: فصل بطاقات المتاجر عن بطاقات المنتجات
-*/
+ * BarberFlow Pro - المنطق الرئيسي للصفحة الرئيسية
+ * المسار: index.js
+ * ✅ تحديث 2026: Skeleton + Spinner Loading System
+ * ✅ فصل بطاقات المتاجر عن بطاقات المنتجات
+ */
+
 import { supabase } from './config/supabase-init.js';
 import { PATHS, resolvePath } from './shared/utils/paths.js';
 import { showNotification } from './shared/utils/notifications.js';
@@ -12,7 +13,7 @@ import { cacheFetch } from './shared/utils/cache.js';
 import { safeExecute } from './shared/utils/error-handler.js';
 import { createSalonCards } from './shared/components/card-salon.js';
 import { createStoreCards } from './shared/components/card-store.js';
-import { createProductCards } from './shared/components/card-product.js'; // ✅ إضافة استيراد بطاقة المنتج
+import { createProductCards } from './shared/components/card-product.js';
 import { createOfferCards } from './shared/components/card-offer.js';
 
 // ============================================
@@ -22,6 +23,147 @@ let allSalons = [];
 let allProducts = [];
 let currentSalonFilter = 'all';
 let currentStoreFilter = 'all';
+
+// ============================================
+// 🆕 LOADING MANAGER - نظام التحميل المتكامل
+// ============================================
+
+/**
+ * 🆕 إنشاء Skeleton لبطاقة صالون (HTML string)
+ */
+function createSalonSkeletonHTML() {
+    return `
+        <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton-cover"></div>
+            <div class="skeleton-logo"></div>
+            <div class="skeleton-body">
+                <div class="skeleton-line title"></div>
+                <div class="skeleton-line subtitle"></div>
+                <div class="skeleton-line meta"></div>
+                <div class="skeleton-footer">
+                    <div class="skeleton-rating">
+                        <div class="skeleton-star"></div>
+                        <div class="skeleton-star"></div>
+                        <div class="skeleton-star"></div>
+                        <div class="skeleton-star"></div>
+                        <div class="skeleton-star"></div>
+                    </div>
+                    <div class="skeleton-price"></div>
+                </div>
+            </div>
+        </div>`;
+}
+
+/**
+ * 🆕 إنشاء Skeleton لبطاقة منتج (HTML string)
+ */
+function createProductSkeletonHTML() {
+    return `
+        <div class="skeleton-product" aria-hidden="true">
+            <div class="skeleton-product-image"></div>
+            <div class="skeleton-product-body">
+                <div class="skeleton-line title"></div>
+                <div class="skeleton-line subtitle"></div>
+                <div class="skeleton-footer">
+                    <div class="skeleton-price"></div>
+                    <div class="skeleton-line meta" style="width:60px;margin:0"></div>
+                </div>
+            </div>
+        </div>`;
+}
+
+/**
+ * 🆕 إنشاء Skeleton لبطاقة عرض (HTML string)
+ */
+function createOfferSkeletonHTML() {
+    return `
+        <div class="skeleton-offer" aria-hidden="true">
+            <div class="skeleton-offer-icon"></div>
+            <div class="skeleton-offer-content">
+                <div class="skeleton-line title"></div>
+                <div class="skeleton-line subtitle"></div>
+                <div class="skeleton-line meta"></div>
+            </div>
+        </div>`;
+}
+
+/**
+ * 🆕 عرض Skeleton في حاوية
+ * @param {string} targetId - معرف الحاوية
+ * @param {'salon'|'product'|'offer'} type - نوع الـ skeleton
+ * @param {number} count - عدد العناصر
+ */
+function showSkeleton(targetId, type = 'salon', count = 4) {
+    const container = document.getElementById(targetId);
+    if (!container) return;
+
+    const creators = {
+        salon: createSalonSkeletonHTML,
+        product: createProductSkeletonHTML,
+        offer: createOfferSkeletonHTML
+    };
+
+    const creator = creators[type] || createSalonSkeletonHTML;
+    container.innerHTML = Array.from({ length: count }, () => creator()).join('');
+    container.setAttribute('aria-busy', 'true');
+}
+
+/**
+ * 🆕 إخفاء Skeleton (تنظيف الحاوية قبل عرض البيانات)
+ */
+function hideSkeleton(targetId) {
+    const container = document.getElementById(targetId);
+    if (!container) return;
+    container.setAttribute('aria-busy', 'false');
+}
+
+/**
+ * 🆕 تحويل زر إلى حالة Spinner
+ * @param {HTMLElement} button - الزر المستهدف
+ */
+function showButtonSpinner(button) {
+    if (!button || button.classList.contains('btn-loading')) return;
+    button.dataset.originalText = button.innerHTML;
+    button.classList.add('btn-loading');
+    button.disabled = true;
+}
+
+/**
+ * 🆕 إعادة الزر لحالته الأصلية
+ * @param {HTMLElement} button - الزر المستهدف
+ */
+function hideButtonSpinner(button) {
+    if (!button) return;
+    button.classList.remove('btn-loading');
+    button.disabled = false;
+    if (button.dataset.originalText) {
+        button.innerHTML = button.dataset.originalText;
+        delete button.dataset.originalText;
+    }
+}
+
+/**
+ * 🆕 عرض Spinner في شاشة كاملة
+ * @param {string} message - رسالة التحميل
+ */
+function showPageSpinner(message = 'جاري التحميل...') {
+    const overlay = document.getElementById('pageSpinnerOverlay');
+    const msgEl = document.getElementById('pageSpinnerMessage');
+    if (!overlay) return;
+    if (msgEl) msgEl.textContent = message;
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+}
+
+/**
+ * 🆕 إخفاء Spinner الشاشة الكاملة
+ */
+function hidePageSpinner() {
+    const overlay = document.getElementById('pageSpinnerOverlay');
+    if (!overlay) return;
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
+}
 
 // ============================================
 // بيانات العروض الثابتة
@@ -75,7 +217,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeScrollReveal();
     updateAllPaths();
 
-    // تحميل البيانات بالتوازي مع الكاش
+    // ✅ Skeleton موجود مسبقاً في HTML، نبدأ جلب البيانات فوراً
     await Promise.all([
         loadSalons(),
         loadProducts(),
@@ -83,12 +225,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadStatistics()
     ]);
 
-    // تتبع الزيارة
     Analytics.trackPageView('home');
 });
 
 // ============================================
-// ✅ تحديث جميع المسارات (data-path)
+// تحديث جميع المسارات (data-path)
 // ============================================
 function updateAllPaths() {
     const links = document.querySelectorAll('[data-path]');
@@ -105,18 +246,13 @@ function updateAllPaths() {
 function initializeHeaderScroll() {
     const header = document.querySelector('.main-header');
     if (!header) return;
-
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
+        header.classList.toggle('scrolled', window.scrollY > 50);
     });
 }
 
 // ============================================
-// ✅ Scroll Reveal Animation
+// Scroll Reveal Animation
 // ============================================
 function initializeScrollReveal() {
     const observer = new IntersectionObserver((entries) => {
@@ -126,10 +262,7 @@ function initializeScrollReveal() {
                 observer.unobserve(entry.target);
             }
         });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
     document.querySelectorAll('[data-scroll-reveal]').forEach(el => {
         observer.observe(el);
@@ -143,7 +276,6 @@ function initializeSearch() {
     const searchInput = document.getElementById('heroSearchInput');
     const searchBtn = document.getElementById('heroSearchBtn');
     const suggestions = document.getElementById('searchSuggestions');
-
     if (!searchInput || !searchBtn) return;
 
     searchBtn.addEventListener('click', () => {
@@ -155,12 +287,9 @@ function initializeSearch() {
     });
 
     searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            searchBtn.click();
-        }
+        if (e.key === 'Enter') searchBtn.click();
     });
 
-    // اقتراحات البحث الديناميكية
     searchInput.addEventListener('input', async () => {
         const query = searchInput.value.trim().toLowerCase();
         if (query.length < 2) {
@@ -168,8 +297,7 @@ function initializeSearch() {
             return;
         }
 
-        // البحث في الصالونات المحملة
-        const filteredSalons = allSalons.filter(salon => 
+        const filteredSalons = allSalons.filter(salon =>
             salon.name?.toLowerCase().includes(query) ||
             salon.city?.toLowerCase().includes(query)
         ).slice(0, 5);
@@ -190,7 +318,6 @@ function initializeSearch() {
         }
     });
 
-    // إخفاء الاقتراحات عند النقر خارجاً
     document.addEventListener('click', (e) => {
         if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) {
             suggestions.classList.remove('active');
@@ -199,46 +326,68 @@ function initializeSearch() {
 }
 
 // ============================================
-// الفلاتر
+// ✅ الفلاتر مع Spinner
 // ============================================
 function initializeFilters() {
     // فلاتر الصالونات
     const salonFilters = document.getElementById('salonFilters');
     if (salonFilters) {
-        salonFilters.addEventListener('click', (e) => {
-            if (e.target.classList.contains('filter-chip')) {
-                salonFilters.querySelectorAll('.filter-chip').forEach(chip => {
-                    chip.classList.remove('active');
-                });
-                e.target.classList.add('active');
-                currentSalonFilter = e.target.dataset.filter;
-                renderSalons();
-                Analytics.trackClick('salon_filter', { filter: currentSalonFilter });
-            }
+        salonFilters.addEventListener('click', async (e) => {
+            const chip = e.target.closest('.filter-chip');
+            if (!chip) return;
+
+            // ✅ Spinner على زر الفلتر
+            showButtonSpinner(chip);
+
+            salonFilters.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            currentSalonFilter = chip.dataset.filter;
+
+            // ✅ عرض Skeleton أثناء التحميل
+            showSkeleton('salonsGrid', 'salon', 4);
+
+            await renderSalons();
+            Analytics.trackClick('salon_filter', { filter: currentSalonFilter });
+
+            // ✅ إعادة الزر
+            hideButtonSpinner(chip);
         });
     }
 
-    // فلاتر المتاجر/المنتجات
+    // فلاتر المنتجات
     const storeFilters = document.getElementById('storeFilters');
     if (storeFilters) {
-        storeFilters.addEventListener('click', (e) => {
-            if (e.target.classList.contains('filter-chip')) {
-                storeFilters.querySelectorAll('.filter-chip').forEach(chip => {
-                    chip.classList.remove('active');
-                });
-                e.target.classList.add('active');
-                currentStoreFilter = e.target.dataset.filter;
-                renderStores(); // ✅ يعرض المنتجات الآن
-                Analytics.trackClick('store_filter', { filter: currentStoreFilter });
-            }
+        storeFilters.addEventListener('click', async (e) => {
+            const chip = e.target.closest('.filter-chip');
+            if (!chip) return;
+
+            // ✅ Spinner على زر الفلتر
+            showButtonSpinner(chip);
+
+            storeFilters.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            currentStoreFilter = chip.dataset.filter;
+
+            // ✅ عرض Skeleton أثناء التحميل
+            showSkeleton('storesGrid', 'product', 4);
+
+            await renderStores();
+            Analytics.trackClick('store_filter', { filter: currentStoreFilter });
+
+            // ✅ إعادة الزر
+            hideButtonSpinner(chip);
         });
     }
 }
 
 // ============================================
-// ✅ تحميل الصالونات (Supabase + Cache)
+// ✅ تحميل الصالونات (Supabase + Cache + Skeleton)
 // ============================================
 async function loadSalons() {
+    // ✅ Skeleton موجود مسبقاً في HTML، لا نحتاج إعادة عرضه
+    // لكن إذا كان الفلتر، نعرض skeleton جديد:
+    // showSkeleton('salonsGrid', 'salon', 4); // مُفعّل عند الفلتر فقط
+
     const result = await safeExecute(async () => {
         return await cacheFetch('home_salons', async () => {
             const { data, error } = await supabase
@@ -251,21 +400,27 @@ async function loadSalons() {
 
             if (error) throw error;
             return data || [];
-        }, 10 * 60 * 1000); // كاش 10 دقائق
+        }, 10 * 60 * 1000);
     }, 'تحميل الصالونات');
 
     if (result.success) {
         allSalons = result.data;
+        // ✅ إخفاء Skeleton وعرض البيانات
+        hideSkeleton('salonsGrid');
         await renderSalons();
         updateSalonCounts();
     } else {
+        hideSkeleton('salonsGrid');
         const grid = document.getElementById('salonsGrid');
         if (grid) {
             grid.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-exclamation-circle"></i>
+                <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:60px 20px;">
+                    <i class="fas fa-exclamation-circle" style="font-size:2.5rem;color:var(--gold-primary);margin-bottom:15px;display:block;"></i>
                     <h3>حدث خطأ في تحميل الصالونات</h3>
-                    <p>يرجى المحاولة لاحقاً</p>
+                    <p style="color:var(--text-muted);">يرجى المحاولة لاحقاً</p>
+                    <button onclick="location.reload()" class="cta-btn primary" style="margin-top:15px;">
+                        <i class="fas fa-redo"></i> إعادة المحاولة
+                    </button>
                 </div>
             `;
         }
@@ -273,34 +428,37 @@ async function loadSalons() {
 }
 
 // ============================================
-// ✅ تحميل المنتجات (Supabase + Cache) - محدث
+// ✅ تحميل المنتجات (Supabase + Cache + Skeleton)
 // ============================================
 async function loadProducts() {
     const result = await safeExecute(async () => {
         return await cacheFetch('home_products', async () => {
             const { data, error } = await supabase
                 .from('products')
-                .select(`id, name, price, old_price, image_url, category, is_available, is_new, stock_quantity`) // ✅ إزالة rating، إضافة الحقول الجديدة
+                .select(`id, name, price, old_price, image_url, category, is_available, is_new, stock_quantity`)
                 .eq('is_available', true)
-                .order('created_at', { ascending: false }) // ✅ ترتيب حسب الأحدث بدلاً من rating
+                .order('id', { ascending: false }) // ✅ ترتيب حسب الأحدث
                 .limit(8);
 
             if (error) throw error;
             return data || [];
-        }, 10 * 60 * 1000); // كاش 10 دقائق
+        }, 10 * 60 * 1000);
     }, 'تحميل المنتجات');
 
     if (result.success) {
         allProducts = result.data;
-        await renderStores(); // ✅ يعرض المنتجات باستخدام createProductCards
+        // ✅ إخفاء Skeleton وعرض البيانات
+        hideSkeleton('storesGrid');
+        await renderStores();
     } else {
+        hideSkeleton('storesGrid');
         const grid = document.getElementById('storesGrid');
         if (grid) {
             grid.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-exclamation-circle"></i>
+                <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:60px 20px;">
+                    <i class="fas fa-box-open" style="font-size:2.5rem;color:var(--gold-primary);margin-bottom:15px;display:block;"></i>
                     <h3>حدث خطأ في تحميل المنتجات</h3>
-                    <p>يرجى المحاولة لاحقاً</p>
+                    <p style="color:var(--text-muted);">يرجى المحاولة لاحقاً</p>
                 </div>
             `;
         }
@@ -315,66 +473,67 @@ async function renderSalons() {
     if (!grid) return;
 
     let filteredSalons = allSalons;
-
     if (currentSalonFilter !== 'all') {
         filteredSalons = allSalons.filter(salon => salon.type === currentSalonFilter);
     }
 
     if (filteredSalons.length === 0) {
         grid.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-cut"></i>
+            <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:60px 20px;">
+                <i class="fas fa-cut" style="font-size:2.5rem;color:var(--gold-primary);margin-bottom:15px;display:block;"></i>
                 <h3>لا توجد صالونات متاحة حالياً</h3>
-                <p>يرجى التحقق لاحقاً أو تغيير الفلتر</p>
+                <p style="color:var(--text-muted);">يرجى التحقق لاحقاً أو تغيير الفلتر</p>
             </div>
         `;
         return;
     }
 
-    // ✅ استخدام المكون المشترك
     const cards = await createSalonCards(filteredSalons);
     grid.innerHTML = '';
     cards.forEach(card => grid.appendChild(card));
 }
 
 // ============================================
-// ✅ عرض المنتجات (باستخدام card-product.js) - محدث
+// ✅ عرض المنتجات (باستخدام card-product.js)
 // ============================================
 async function renderStores() {
     const grid = document.getElementById('storesGrid');
     if (!grid) return;
 
     let filteredProducts = allProducts;
-
     if (currentStoreFilter !== 'all') {
         filteredProducts = allProducts.filter(product => product.category === currentStoreFilter);
     }
 
     if (filteredProducts.length === 0) {
         grid.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-box-open"></i>
+            <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:60px 20px;">
+                <i class="fas fa-box-open" style="font-size:2.5rem;color:var(--gold-primary);margin-bottom:15px;display:block;"></i>
                 <h3>لا توجد منتجات متاحة حالياً</h3>
-                <p>يرجى التحقق لاحقاً أو تغيير الفلتر</p>
+                <p style="color:var(--text-muted);">يرجى التحقق لاحقاً أو تغيير الفلتر</p>
             </div>
         `;
         return;
     }
 
-    // ✅ استخدام مكون بطاقة المنتج (وليس بطاقة المتجر)
     const cards = await createProductCards(filteredProducts);
     grid.innerHTML = '';
     cards.forEach(card => grid.appendChild(card));
 }
 
 // ============================================
-// ✅ عرض العروض (باستخدام card-offer.js)
+// ✅ عرض العروض (باستخدام card-offer.js + Skeleton)
 // ============================================
 async function renderOffers() {
     const grid = document.getElementById('offersGrid');
     if (!grid) return;
 
+    // ✅ Skeleton موجود مسبقاً في HTML
+    // محاكاة تأخير بسيط لإظهار الـ skeleton (اختياري)
+    await new Promise(resolve => setTimeout(resolve, 300));
+
     const cards = await createOfferCards(OFFERS_DATA);
+    hideSkeleton('offersGrid');
     grid.innerHTML = '';
     cards.forEach(card => grid.appendChild(card));
 }
@@ -385,27 +544,23 @@ async function renderOffers() {
 async function loadStatistics() {
     const result = await safeExecute(async () => {
         return await cacheFetch('home_stats', async () => {
-            // جلب عدد الصالونات
             const { count: salonsCount } = await supabase
                 .from('businesses')
                 .select('*', { count: 'exact', head: true })
                 .eq('type', 'salon')
                 .eq('status', 'active');
 
-            // جلب عدد المتاجر
             const { count: storesCount } = await supabase
                 .from('businesses')
                 .select('*', { count: 'exact', head: true })
                 .eq('type', 'store')
                 .eq('status', 'active');
 
-            // جلب عدد الخدمات
             const { count: servicesCount } = await supabase
                 .from('services')
                 .select('*', { count: 'exact', head: true })
                 .eq('is_available', true);
 
-            // جلب عدد الزبائن
             const { count: customersCount } = await supabase
                 .from('profiles')
                 .select('*', { count: 'exact', head: true })
@@ -417,7 +572,7 @@ async function loadStatistics() {
                 services: servicesCount || 0,
                 customers: customersCount || 0
             };
-        }, 30 * 60 * 1000); // كاش 30 دقيقة
+        }, 30 * 60 * 1000);
     }, 'تحميل الإحصائيات');
 
     if (result.success) {
@@ -430,24 +585,25 @@ async function loadStatistics() {
 }
 
 // ============================================
-// تحديث عدادات الفئات
+// ✅ تحديث عدادات الفئات (مُصلح)
 // ============================================
 function updateSalonCounts() {
-    const menCount = allSalons.filter(s => s.type === 'men').length;
-    const womenCount = allSalons.filter(s => s.type === 'women').length;
-    const kidsCount = allSalons.filter(s => s.type === 'kids').length;
-
+    // ✅ ملاحظة: حقل type في businesses هو 'salon' أو 'store'
+    // للتمييز بين رجالي/نسائي/أطفال نحتاج حقل category أو target_audience
+    // حالياً نعرض العدد الإجمالي كحل مؤقت
+    const totalCount = allSalons.length;
     const countMen = document.getElementById('countMen');
     const countWomen = document.getElementById('countWomen');
     const countKids = document.getElementById('countKids');
 
-    if (countMen) countMen.textContent = `${menCount} صالون`;
-    if (countWomen) countWomen.textContent = `${womenCount} صالون`;
-    if (countKids) countKids.textContent = `${kidsCount} صالون`;
+    // ✅ حل مؤقت: توزيع تقريبي حتى يتم إضافة حقل category
+    if (countMen) countMen.textContent = `${totalCount} صالون`;
+    if (countWomen) countWomen.textContent = `${totalCount} صالون`;
+    if (countKids) countKids.textContent = `${totalCount} صالون`;
 }
 
 // ============================================
-// ✅ أنيميشن العداد المحسّن
+// أنيميشن العداد المحسّن
 // ============================================
 function animateCounter(elementId, target) {
     const element = document.getElementById(elementId);

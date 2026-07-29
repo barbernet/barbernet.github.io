@@ -1,6 +1,6 @@
 /* ==========================================================================
-BarberFlow Pro - إضافة متجر (Wizard)
-المسار: onboarding/css/add-store.css
+BarberFlow Pro - إضافة صالون (Wizard)
+المسار: onboarding/css/add/salon.css
 ========================================================================== */
 
 /* ============================================
@@ -54,7 +54,8 @@ BarberFlow Pro - إضافة متجر (Wizard)
     opacity: 0.8;
 }
 
-.icon-btn {
+.back-btn,
+.cancel-btn {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -69,7 +70,8 @@ BarberFlow Pro - إضافة متجر (Wizard)
     font-size: 1rem;
 }
 
-.icon-btn:hover {
+.back-btn:hover,
+.cancel-btn:hover {
     background: rgba(0, 0, 0, 0.2);
     transform: scale(1.1);
 }
@@ -265,9 +267,9 @@ BarberFlow Pro - إضافة متجر (Wizard)
 }
 
 /* ============================================
-بطاقات نوع المتجر
+بطاقات نوع الصالون
 ============================================ */
-.store-types-grid {
+.salon-types-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
@@ -322,16 +324,16 @@ BarberFlow Pro - إضافة متجر (Wizard)
 }
 
 /* ============================================
-الأقسام التجارية
+الخدمات
 ============================================ */
-.categories-list {
+.services-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
     margin-bottom: 20px;
 }
 
-.category-item {
+.service-item {
     display: flex;
     gap: 10px;
     align-items: flex-start;
@@ -349,8 +351,11 @@ BarberFlow Pro - إضافة متجر (Wizard)
     }
 }
 
-.category-fields {
+.service-fields {
     flex: 1;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
 }
 
 .field-group label {
@@ -377,7 +382,7 @@ BarberFlow Pro - إضافة متجر (Wizard)
     border-color: var(--brand-accent);
 }
 
-.delete-category-btn {
+.delete-service-btn {
     width: 40px;
     height: 40px;
     border-radius: var(--radius-sm);
@@ -392,13 +397,13 @@ BarberFlow Pro - إضافة متجر (Wizard)
     margin-top: 20px;
 }
 
-.delete-category-btn:hover {
+.delete-service-btn:hover {
     background: var(--brand-danger);
     color: #fff;
     transform: rotate(90deg);
 }
 
-.add-category-btn {
+.add-service-btn {
     width: 100%;
     padding: 15px;
     background: transparent;
@@ -416,34 +421,34 @@ BarberFlow Pro - إضافة متجر (Wizard)
     transition: all var(--transition-fast);
 }
 
-.add-category-btn:hover {
+.add-service-btn:hover {
     background: rgba(212, 175, 55, 0.1);
     border-style: solid;
 }
 
-.empty-categories {
+.empty-services {
     text-align: center;
     padding: 40px 20px;
     color: var(--text-muted);
 }
 
-.empty-categories i {
+.empty-services i {
     font-size: 3rem;
     margin-bottom: 10px;
     opacity: 0.5;
 }
 
-.empty-categories p {
+.empty-services p {
     margin: 0 0 5px 0;
     font-size: 1rem;
 }
 
-.empty-categories small {
+.empty-services small {
     font-size: 0.85rem;
 }
 
 /* ============================================
-خيارات التوصيل والدفع
+أيام العمل
 ============================================ */
 .form-section {
     margin-bottom: 25px;
@@ -457,63 +462,6 @@ BarberFlow Pro - إضافة متجر (Wizard)
     color: var(--text-secondary);
 }
 
-.options-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.option-card {
-    position: relative;
-    cursor: pointer;
-}
-
-.option-card input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-}
-
-.option-content {
-    display: flex;
-    gap: 15px;
-    padding: 15px;
-    background: var(--bg-tertiary);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
-    transition: all var(--transition-fast);
-}
-
-.option-content i {
-    font-size: 1.5rem;
-    color: var(--brand-accent);
-    width: 40px;
-    text-align: center;
-}
-
-.option-content h4 {
-    margin: 0 0 5px 0;
-    font-size: 1rem;
-    color: var(--text-primary);
-}
-
-.option-content p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
-.option-card input[type="checkbox"]:checked + .option-content {
-    border-color: var(--brand-accent);
-    background: rgba(212, 175, 55, 0.1);
-}
-
-.option-card:hover .option-content {
-    border-color: var(--brand-accent);
-}
-
-/* ============================================
-أيام العمل
-============================================ */
 .days-selector {
     display: flex;
     flex-wrap: wrap;
@@ -571,24 +519,76 @@ BarberFlow Pro - إضافة متجر (Wizard)
 }
 
 /* ============================================
-نصائح
+طريقة الحجز
 ============================================ */
-.step-hint {
+.booking-types {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px;
-    background: rgba(212, 175, 55, 0.1);
-    border-right: 3px solid var(--brand-accent);
-    border-radius: var(--radius-sm);
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-top: 20px;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.step-hint i {
+.booking-card {
+    position: relative;
+    cursor: pointer;
+}
+
+.booking-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.booking-content {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.booking-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--brand-accent);
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.booking-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.booking-info p {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.booking-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(212, 175, 55, 0.2);
     color: var(--brand-accent);
-    font-size: 1.2rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.booking-card input[type="radio"]:checked + .booking-content {
+    border-color: var(--brand-accent);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.booking-card:hover .booking-content {
+    border-color: var(--brand-accent);
 }
 
 /* ============================================
@@ -676,12 +676,25 @@ Responsive
         padding: 20px;
     }
     
-    .store-types-grid {
+    .salon-types-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .service-fields {
         grid-template-columns: 1fr;
     }
     
     .time-group {
         grid-template-columns: 1fr;
+    }
+    
+    .booking-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .booking-icon {
+        margin: 0 auto;
     }
     
     .wizard-actions {

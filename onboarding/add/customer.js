@@ -1,6 +1,6 @@
 /**
  * BarberFlow Pro - صفحة إضافة الزبون
- * المسار: onboarding/add-customer.js
+ * المسار: onboarding/add/customer.js
  * المميزات:
  * - معلومات بسيطة للزبون
  * - حفظ تلقائي للبيانات
@@ -204,7 +204,7 @@ async function saveCustomerData() {
         
         // حفظ حالة الجلسة
         sessionStorage.setItem('customerSetupCompleted', 'true');
-        sessionStorage.setItem('lastActivePage', 'add-customer');
+        sessionStorage.setItem('lastActivePage', 'customer');
         
         setTimeout(() => {
             window.location.href = resolvePath('SETUP_CUSTOMER');
@@ -318,7 +318,7 @@ function restoreDraft() {
 // ============================================
 window.addEventListener('beforeunload', () => {
     if (currentUser) {
-        sessionStorage.setItem('lastActivePage', 'add-customer');
+        sessionStorage.setItem('lastActivePage', 'customer');
         sessionStorage.setItem('sessionTimestamp', Date.now().toString());
         saveDraft();
     }

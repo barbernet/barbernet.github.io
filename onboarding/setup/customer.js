@@ -1,6 +1,6 @@
 /**
  * BarberFlow Pro - صفحة تخصيص تفضيلات الزبون (Wizard)
- * المسار: onboarding/setup-customer.js
+ * المسار: onboarding/setup/customer.js
  * المميزات:
  * - تقسيم إلى 4 مراحل
  * - حفظ تلقائي للبيانات
@@ -436,7 +436,7 @@ document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
 // ============================================
 window.addEventListener('beforeunload', () => {
     if (currentUser) {
-        sessionStorage.setItem('lastActivePage', 'setup-customer');
+        sessionStorage.setItem('lastActivePage', 'customer');
         sessionStorage.setItem('sessionTimestamp', Date.now().toString());
         saveDraft();
     }

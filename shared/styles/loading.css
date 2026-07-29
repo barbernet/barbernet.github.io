@@ -1,0 +1,370 @@
+/* ==========================================================================
+Loading System - نظام التحميل المتكامل
+المسار: shared/styles/loading.css
+⚠️ يحتوي على جميع أنماط التحميل: Skeleton + Spinner + Overlays
+⚠️ يُستخدم في جميع الصفحات العامة والمحمية
+📅 التحديث: 2026-07-29 - دمج skeleton.css + spinner.css
+========================================================================== */
+
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║                    1. المتغيرات المشتركة                   ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+:root {
+    --skel-base: rgba(0, 0, 0, 0.06);
+    --skel-shine: rgba(0, 0, 0, 0.12);
+    --spinner-border: rgba(212, 175, 55, 0.2);
+    --spinner-active: var(--gold-primary, #d4af37);
+}
+
+[data-theme="dark"] {
+    --skel-base: rgba(255, 255, 255, 0.05);
+    --skel-shine: rgba(255, 255, 255, 0.12);
+    --spinner-border: rgba(212, 175, 55, 0.2);
+    --spinner-active: var(--gold-primary, #d4af37);
+}
+
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║                    2. الأنيميشن المشتركة                   ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.5; }
+}
+
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║                  3. Skeleton Loading                       ║
+   ║          (للهياكل الثابتة قبل جلب البيانات)                ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* ---------- 3.1 Skeleton Card (للصالونات) ---------- */
+.skeleton-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.skeleton-cover {
+    width: 100%;
+    height: 180px;
+    background: linear-gradient(90deg, var(--skel-base) 0%, var(--skel-shine) 50%, var(--skel-base) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite ease-in-out;
+}
+
+.skeleton-logo {
+    position: absolute;
+    top: 150px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--skel-base) 0%, var(--skel-shine) 50%, var(--skel-base) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite ease-in-out;
+    border: 3px solid var(--card-bg);
+    z-index: 2;
+}
+
+.skeleton-body {
+    padding: 20px;
+    padding-top: 35px;
+}
+
+.skeleton-line {
+    height: 14px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg, var(--skel-base) 0%, var(--skel-shine) 50%, var(--skel-base) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite ease-in-out;
+}
+
+.skeleton-line.title    { width: 70%; height: 18px; }
+.skeleton-line.subtitle { width: 50%; height: 12px; }
+.skeleton-line.meta     { width: 40%; height: 12px; }
+
+.skeleton-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(128, 128, 128, 0.1);
+}
+
+.skeleton-rating { display: flex; gap: 4px; }
+
+.skeleton-star {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--skel-base) 0%, var(--skel-shine) 50%, var(--skel-base) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite ease-in-out;
+}
+
+.skeleton-price {
+    width: 80px;
+    height: 16px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, var(--skel-base) 0%, var(--skel-shine) 50%, var(--skel-base) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite ease-in-out;
+}
+
+/* ---------- 3.2 Skeleton Product (للمنتجات) ---------- */
+.skeleton-product {
+    background: var(--card-bg);
+    border: 1px solid rgba(128, 128, 128, 0.12);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.skeleton-product-image {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(90deg, var(--skel-base) 0%, var(--skel-shine) 50%, var(--skel-base) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite ease-in-out;
+}
+
+.skeleton-product-body { padding: 15px; }
+
+/* ---------- 3.3 Skeleton Offer (للعروض) ---------- */
+.skeleton-offer {
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(212, 175, 55, 0.04) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.skeleton-offer-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, var(--skel-base) 0%, var(--skel-shine) 50%, var(--skel-base) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite ease-in-out;
+}
+
+.skeleton-offer-content { flex: 1; }
+
+/* ---------- 3.4 Skeleton Service (للخدمات) ---------- */
+.skeleton-service {
+    background: var(--card-bg);
+    border: 1px solid rgba(128, 128, 128, 0.12);
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.skeleton-service-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, var(--skel-base) 0%, var(--skel-shine) 50%, var(--skel-base) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite ease-in-out;
+}
+
+.skeleton-service-content { flex: 1; }
+
+/* ---------- 3.5 Skeleton Review (للتقييمات) ---------- */
+.skeleton-review {
+    background: var(--card-bg);
+    border: 1px solid rgba(128, 128, 128, 0.12);
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.skeleton-review-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.skeleton-review-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--skel-base) 0%, var(--skel-shine) 50%, var(--skel-base) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite ease-in-out;
+}
+
+/* ---------- 3.6 Skeleton List (للقوائم البسيطة) ---------- */
+.skeleton-list-item {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding: 15px;
+    background: var(--card-bg);
+    border: 1px solid rgba(128, 128, 128, 0.12);
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.skeleton-list-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, var(--skel-base) 0%, var(--skel-shine) 50%, var(--skel-base) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite ease-in-out;
+}
+
+.skeleton-list-content { flex: 1; }
+
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║                  4. Spinner Loading                        ║
+   ║         (للتفاعلات اللحظية والأزرار)                       ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* ---------- 4.1 Spinner الأساسي ---------- */
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid var(--spinner-border);
+    border-top-color: var(--spinner-active);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+}
+
+/* الأحجام */
+.spinner.sm { width: 14px; height: 14px; border-width: 2px; }
+.spinner.md { width: 24px; height: 24px; border-width: 3px; }
+.spinner.lg { width: 40px; height: 40px; border-width: 4px; }
+.spinner.xl { width: 60px; height: 60px; border-width: 5px; }
+
+/* الألوان */
+.spinner.white { border-color: rgba(255, 255, 255, 0.2); border-top-color: #fff; }
+.spinner.dark  { border-color: rgba(0, 0, 0, 0.1); border-top-color: #212529; }
+.spinner.gold  { border-color: rgba(212, 175, 55, 0.2); border-top-color: var(--gold-primary); }
+
+/* ---------- 4.2 زر في حالة التحميل ---------- */
+.btn-loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+    cursor: not-allowed;
+    user-select: none;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    margin: -9px 0 0 -9px;
+    border: 2.5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+/* للأزرار الفاتحة / المحيطية */
+.cta-btn.secondary.btn-loading::after,
+.filter-chip.btn-loading::after,
+.btn-outline.btn-loading::after {
+    border-color: rgba(0, 0, 0, 0.12);
+    border-top-color: var(--gold-primary, #d4af37);
+}
+
+/* ---------- 4.3 Page Spinner Overlay (شاشة كاملة) ---------- */
+.page-spinner-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.page-spinner-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.page-spinner-box {
+    background: var(--card-bg);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 20px;
+    padding: 35px 55px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.page-spinner-box p {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin: 0;
+    font-family: 'Cairo', sans-serif;
+}
+
+/* ---------- 4.4 Inline Spinner (داخل النصوص) ---------- */
+.inline-spinner {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║                  5. Responsive                             ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+@media (max-width: 768px) {
+    .skeleton-card,
+    .skeleton-product,
+    .skeleton-offer {
+        flex: 0 0 75% !important;
+        width: 75% !important;
+        min-width: 0 !important;
+    }
+
+    .page-spinner-box {
+        padding: 25px 35px;
+        margin: 0 20px;
+    }
+}
+

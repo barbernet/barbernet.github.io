@@ -11,11 +11,11 @@ export const initPageRouter = () => {
         if (event !== 'INITIAL_SESSION' || !session) {
             const currentPath = window.location.pathname;
             const isOnboardingZone = currentPath.includes("welcome.html") ||
-                currentPath.includes("add-salon.html") ||
-                currentPath.includes("add-store.html") ||
-                currentPath.includes("add-customer.html") ||
-                currentPath.includes("setup-salon.html") ||
-                currentPath.includes("setup-store.html");
+                currentPath.includes("salon.html") ||
+                currentPath.includes("store.html") ||
+                currentPath.includes("customer.html") ||
+                currentPath.includes("salon.html") ||
+                currentPath.includes("store.html");
 
             if (isOnboardingZone) {
                 window.location.replace(PATHS.LOGIN);
@@ -27,11 +27,11 @@ export const initPageRouter = () => {
 
         const currentPath = window.location.pathname;
         const isWelcomePage = currentPath.includes("welcome.html");
-        const isAddPage = currentPath.includes("add-salon.html") ||
-            currentPath.includes("add-store.html") ||
-            currentPath.includes("add-customer.html");
-        const isSetupPage = currentPath.includes("setup-salon.html") ||
-            currentPath.includes("setup-store.html");
+        const isAddPage = currentPath.includes("salon.html") ||
+            currentPath.includes("store.html") ||
+            currentPath.includes("customer.html");
+        const isSetupPage = currentPath.includes("salon.html") ||
+            currentPath.includes("store.html");
         const isOnboardingZone = isWelcomePage || isAddPage || isSetupPage;
 
         const user = session.user;

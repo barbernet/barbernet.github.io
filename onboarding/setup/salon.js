@@ -1,6 +1,6 @@
 /**
  * BarberFlow Pro - صفحة إعداد الصالون (Wizard)
- * المسار: onboarding/setup-salon.js
+ * المسار: onboarding/salon.js
  * المميزات:
  * - تقسيم إلى 4 مراحل
  * - رفع ومعالجة الصور
@@ -431,7 +431,7 @@ async function saveSetupData() {
         showNotification("تهانينا! تم إنشاء ملف صالونك بنجاح ", "success");
         
         sessionStorage.removeItem('salonDraft');
-        sessionStorage.setItem('lastActivePage', 'setup-salon');
+        sessionStorage.setItem('lastActivePage', 'salon');
         
         setTimeout(() => {
             window.location.replace(resolvePath('PROFILE_SALON'));
@@ -573,7 +573,7 @@ form.addEventListener('submit', async (e) => {
 // ============================================
 window.addEventListener('beforeunload', () => {
     if (currentUser) {
-        sessionStorage.setItem('lastActivePage', 'setup-salon');
+        sessionStorage.setItem('lastActivePage', 'salon');
         sessionStorage.setItem('sessionTimestamp', Date.now().toString());
         saveDraft();
     }
